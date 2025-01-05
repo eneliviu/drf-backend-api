@@ -2,12 +2,7 @@ from pathlib import Path
 import os
 import re
 import dj_database_url
-from corsheaders.defaults import default_headers
 from datetime import timedelta
-
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
 
 # ----------------------------------------------------------------#
 # HOT TO SET UP CORS:
@@ -90,7 +85,7 @@ CSRF_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
 # JWT_AUTH_SAMESITE = 'None'
 
 REST_AUTH = {
-    'USER_DETAILS_SERIALIZER': 'drf_api.serializers.CurrentUserSerializer'
+    'USER_DETAILS_SERIALIZER': 'api.serializers.CurrentUserSerializer'
 }
 
 LOGIN_REDIRECT_URL = '/'
@@ -99,7 +94,6 @@ LOGIN_REDIRECT_URL = '/'
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-$pee69*^#acm@1altks^&^!n1p^=oh%yj=1%xpxji(pph7tpxj'
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # To use the API with React app: ALLOWED_HOST and CLIENT_ORIGIN_DEV in heroku
@@ -136,12 +130,12 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
 
     # Own applications
-    'profiles',
-    #'posts',
-    'trips'
-    'comments',
-    'likes',
-    'followers',
+    # 'profiles',
+    # #'posts',
+    # 'trips'
+    # 'comments',
+    # 'likes',
+    # 'followers',
 ]
 
 SITE_ID = 1
@@ -217,7 +211,7 @@ CSRF_TRUSTED_ORIGINS = [
 # JWT_AUTH_SAMESITE = 'None'  # Frontend and the API on different platforms
 
 
-ROOT_URLCONF = 'drf_api.urls'
+ROOT_URLCONF = 'api.urls'
 
 TEMPLATES = [
     {
@@ -235,7 +229,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'drf_api.wsgi.application'
+WSGI_APPLICATION = 'api.wsgi.application'
 
 
 # Database
