@@ -7,7 +7,8 @@ class TripSerializer(serializers.ModelSerializer):
     Serializer for the Trip model.
     This serializer converts Trip model instances to JSON format
     and vice versa.
-    By default, It includes all fields of the Trip model.
+    It includes the following fields:
+
     Attributes:
         Meta (class): Meta options for the serializer.
             model (Trip): The model that is being serialized.

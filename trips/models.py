@@ -87,10 +87,6 @@ class Trip(models.Model):
         default=None,
         blank=True
     )
-    coordinates = models.CharField(
-        max_length=100,
-        blank=True
-    )
 
     # Raise Validation Error In Model Save Method:
     # https://ilovedjango.com/django/models-and-databases/tips/sub/raise-validation-error-in-model-save-method/
