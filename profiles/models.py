@@ -65,6 +65,12 @@ class Profile(models.Model):
         null=True,
         validators=[validate_image]
     )
+    # follows = models.ManyToManyField(
+    #     'self',
+    #     related_name='followed_by',
+    #     symmetrical=False,
+    #     blank=True
+    # )
 
     class Meta:
         ordering = ['-created_at']

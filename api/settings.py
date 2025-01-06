@@ -27,7 +27,6 @@ REST_FRAMEWORK = {
 
     #  JWT authentication takes precedence when DEBUG=False
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        
         'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -121,7 +120,7 @@ INSTALLED_APPS = [
     # 'trips'
     # 'comments',
     # 'likes',
-    # 'followers',
+    'followers',
 ]
 
 SITE_ID = 1
