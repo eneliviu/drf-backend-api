@@ -116,8 +116,7 @@ INSTALLED_APPS = [
 
     # Own applications
     'profiles',
-    # #'posts',
-    # 'trips'
+    'trips',
     # 'comments',
     # 'likes',
     'followers',
