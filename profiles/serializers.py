@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Profile
-# from followers.models import Follower
+from followers.models import Follower
 from cloudinary.utils import cloudinary_url
 
 
@@ -40,32 +40,32 @@ class ProfileSerializer(serializers.ModelSerializer):
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
-    # following_id = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
     posts_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     image = serializers.ImageField()
 
-    # def get_following_id(self, obj):
-    #     """
-    #     Retrieve the ID of the following relationship between the
-    #     authenticated user and the owner of the given object.
-    #     Args:
-    #         obj: The object whose owner's following relationship
-    #             is to be checked.
-    #     Returns:
-    #         int or None: The ID of the following relationship if it exists,
-    #             otherwise None.
-    #     """
-    #     user = self.context['request'].user
+    def get_following_id(self, obj):
+        """
+        Retrieve the ID of the following relationship between the
+        authenticated user and the owner of the given object.
+        Args:
+            obj: The object whose owner's following relationship
+                is to be checked.
+        Returns:
+            int or None: The ID of the following relationship if it exists,
+                otherwise None.
+        """
+        user = self.context['request'].user
 
-    #     if user.is_authenticated:
-    #         following = Follower.objects.filter(
-    #             owner=user,
-    #             followed=obj.owner
-    #         ).first()
-    #         return following.id if following else None
-    #     return None
+        if user.is_authenticated:
+            following = Follower.objects.filter(
+                owner=user,
+                followed=obj.owner
+            ).first()
+            return following.id if following else None
+        return None
 
     def get_image(self, obj):
         """
@@ -79,19 +79,19 @@ class ProfileSerializer(serializers.ModelSerializer):
             return cloudinary_url(obj.image.name)[0]
         return None
 
-    # def get_is_following(self, obj):
-    #     """
-    #     Check if the authenticated user is following the given profile.
-    #     Args:
-    #         obj: The profile object to check against.
-    #     Returns:
-    #         bool: True if the authenticated user is following the profile,
-    #                 False otherwise.
-    #     """
-    #     request = self.context.get('request')
-    #     if request and request.user.is_authenticated:
-    #         return obj.followed_by.filter(id=request.user.profile.id).exists()
-    #     return False
+    def get_is_following(self, obj):
+        """
+        Check if the authenticated user is following the given profile.
+        Args:
+            obj: The profile object to check against.
+        Returns:
+            bool: True if the authenticated user is following the profile,
+                    False otherwise.
+        """
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.followed_by.filter(id=request.user.profile.id).exists()
+        return False
 
     def get_is_owner(self, obj):
         """
@@ -118,11 +118,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         """
 
         model = Profile
-        # fields = [
-        #     'id', 'owner', 'is_owner', 'created_at', 'updated_at', 'name',
-        #     'alias', 'content', 'image',  'following_id', 'posts_count',
-        #     'followers_count', 'following_count',
-        # ]
-        fields = '__all__'
+        fields = [
+            'id', 'owner', 'is_owner', 'created_at', 'updated_at', 'name',
+            'alias', 'content', 'image',  'following_id', 'posts_count',
+            'followers_count', 'following_count',
+        ]
+        # fields = '__all__'
 
         read_only_fields = ['owner', 'created_at', 'updated_at']

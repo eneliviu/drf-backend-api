@@ -25,28 +25,28 @@ class ProfileList(generics.ListAPIView):
     """
 
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
-    # queryset = Profile.objects.annotate(
-    #     trips_count=Count('owner__trip', distinct=True),
-    #     followers_count=Count('owner__followed', distinct=True),
-    #     following_count=Count('owner__following', distinct=True)
-    # ).order_by('-created_at')
+    # queryset = Profile.objects.all()
+    queryset = Profile.objects.annotate(
+        # trips_count=Count('owner__trip', distinct=True),
+        followers_count=Count('owner__followed', distinct=True),
+        following_count=Count('owner__following', distinct=True)
+    ).order_by('-created_at')
 
-    # filter_backends = [
-    #     filters.OrderingFilter,
-    #     DjangoFilterBackend,
-    # ]
-    # filterset_fields = [
-    #     'owner__following__followed__profile',
-    #     'owner__followed__owner__profile',
-    #     ]
-    # ordering_fields = [
-    #     'trips_count',
-    #     'followers_count',
-    #     'following_count',
-    #     'owner__following__created_at',
-    #     'owner__followed__created_at'
-    #     ]
+    filter_backends = [
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+    ]
+    filterset_fields = [
+        'owner__following__followed__profile',
+        'owner__followed__owner__profile',
+        ]
+    ordering_fields = [
+        'trips_count',
+        'followers_count',
+        'following_count',
+        'owner__following__created_at',
+        'owner__followed__created_at'
+        ]
 
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -68,9 +68,9 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.first()
-    # queryset = Profile.objects.annotate(
-    #     posts_count=Count('owner__post', distinct=True),
-    #     followers_count=Count('owner__followed', distinct=True),
-    #     following_count=Count('owner__following', distinct=True)
-    # ).order_by('-created_at')
+    # queryset = Profile.objects.first()
+    queryset = Profile.objects.annotate(
+        # posts_count=Count('owner__post', distinct=True),
+        followers_count=Count('owner__followed', distinct=True),
+        following_count=Count('owner__following', distinct=True)
+    ).order_by('-created_at')

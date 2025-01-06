@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 
 
 class Follower(models.Model):
@@ -7,7 +7,7 @@ class Follower(models.Model):
     Represents a follower relationship between two users.
     Attributes:
         owner (ForeignKey): The user who is following another user.
-        followed_user (ForeignKey): The user who is being followed.
+        followed (ForeignKey): The user who is being followed.
         created_at (DateTimeField): The timestamp when the follow relationship
             was created.
     Meta:
@@ -21,20 +21,20 @@ class Follower(models.Model):
     """
 
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         related_name='following',
         on_delete=models.CASCADE
     )
-    followed_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='followers',
+    followed = models.ForeignKey(
+        User,
+        related_name='followed',
         on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_at']
-        unique_together = ('owner', 'followed_user')
+        unique_together = ('owner', 'followed')
 
     def __str__(self):
-        return f"{self.owner} follows {self.followed_user}"
+        return f"{self.owner} follows {self.followed}"
