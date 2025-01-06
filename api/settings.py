@@ -27,8 +27,9 @@ REST_FRAMEWORK = {
 
     #  JWT authentication takes precedence when DEBUG=False
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
         'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -48,7 +49,7 @@ if not DEBUG:
 SIMPLE_JWT = {
     'ALGORITHM': 'HS256',  # Common choice
     'AUTH_COOKIE': 'jwt-auth',
-    'AUTH_COOKIE_SECURE': not DEBUG,  # for local dev False, True for production
+    'AUTH_COOKIE_SECURE': not DEBUG,  # local dev False, True for production
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
     'AUTH_COOKIE_SAMESITE': 'Lax',
@@ -115,7 +116,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
 
     # Own applications
-    # 'profiles',
+    'profiles',
     # #'posts',
     # 'trips'
     # 'comments',
@@ -137,10 +138,6 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-# if 'CLIENT_ORIGIN' in os.environ:  # For Heroku deployment only
-# The API will use the CLIENT_ORIGIN variable, which is the front end app's url.
-# If the variable is not present, the project is still in development, so then
-# the regular expression in the else statement will allow requests that are coming from your IDE.
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -156,6 +153,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000/'
     "http://localhost:3000",
     'https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net',
     'https://3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
@@ -163,36 +161,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://dj-drf-api-763634fa56e5.herokuapp.com'
 ]
 
-
-# else:
-#     CORS_ALLOWED_ORIGIN_REGEXES = [
-#         # r"^https:\/\/.*\.codeinstitute-ide\.net$"
-#         r"^https://\w+\.codeinstitute-ide\.net$",
-#     ]
-
-# Allow All Origins for Debug:
-# CORS_ALLOWED_ORIGINS = [
-#     'https://react-frontend-api-b166a083b609.herokuapp.com',
-# ]
-
-
-# if 'CLIENT_ORIGIN_DEV' in os.environ:
-#     extracted_url = re.match(
-#         r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE
-#     ).group(0)
-#     CORS_ALLOWED_ORIGIN_REGEXES = [
-#         # rf"{extracted_url}(eu|us)\d+\w\.codeinstitute-ide\.net$",
-#         r"^https:\/\/.*\.codeinstitute-ide\.net$",
-#     ]
-
-# For Heroku deployment:
-# if 'CLIENT_ORIGIN_DEV' in os.environ:
-#     CORS_ALLOWED_ORIGIN_REGEXES = [
-#         r"^https:\/\/.*\.codeinstitute-ide\.net$",
-#     ]
-
-
-# JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
 # JWT_AUTH_SAMESITE = 'None'  # Frontend and the API on different platforms
 
 
