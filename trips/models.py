@@ -18,7 +18,7 @@ class Trip(models.Model):
         trip_category (CharField): The category of the trip.
         start_date (DateField): The start date of the trip.
         end_date (DateField): The end date of the trip.
-        created_on (DateTimeField): Date and time when the trip was created.
+        created_at (DateTimeField): Date and time when the trip was created.
         trip_status (CharField): The status of the trip.
         shared (CharField): Indicates if the trip is shared.
         image (CloudinaryField): An image associated with the trip.
@@ -45,7 +45,7 @@ class Trip(models.Model):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='trip'
+        related_name='trips'
     )
 
     place = models.CharField(
@@ -70,7 +70,8 @@ class Trip(models.Model):
     )
     start_date = models.DateField()
     end_date = models.DateField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     trip_status = models.CharField(
         choices=TRIP_STATUS,
         default='PLANNED',
@@ -80,12 +81,6 @@ class Trip(models.Model):
         max_length=3,
         choices=SHARE_CHOICES,
         default='YES'
-    )
-
-    image = CloudinaryField(
-        'image',
-        default=None,
-        blank=True
     )
 
     # Raise Validation Error In Model Save Method:
@@ -109,6 +104,10 @@ class Trip(models.Model):
         else:
             self.lat = coords[0]
             self.lon = coords[1]
+
+        if self.start_date > self.end_date:
+            raise ValidationError("Start date must be before end date.")
+
         super(Trip, self).clean()
 
     def save(self, *args, **kwargs):
@@ -131,30 +130,33 @@ class Trip(models.Model):
         return f'{self.trip_category} trip to {self.place}, {self.country}'
 
     class Meta:
-        ordering = ["-created_on", 'country', 'start_date']
+        ordering = ["-created_at", 'country', 'start_date']
 
 
 class Image(models.Model):
+
     owner = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
-        related_name='images'
+        on_delete=models.CASCADE
     )
+
     trip = models.ForeignKey(
         Trip,
         on_delete=models.CASCADE,
         related_name='images'
     )
-    # image = models.ImageField(upload_to='images/')
-    title = models.CharField(
+
+    image_title = models.CharField(
         max_length=50,
         blank=False,
         validators=[MinLengthValidator(2)])
+
     image = CloudinaryField(
         'image',
         default=None,
         blank=False
     )
+
     description = models.TextField(
         blank=False,
         validators=[
@@ -162,12 +164,13 @@ class Image(models.Model):
             MaxLengthValidator(500)
             ]
         )
+
     shared = models.BooleanField(default=True)
+
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.trip.title}, {self.trip.place},\
-                 {self.trip.country}'
+        return f'Taken at {self.trip.place}, {self.trip.country}'
 
     class Meta:
         ordering = ["-uploaded_at"]

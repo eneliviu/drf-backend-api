@@ -7,27 +7,26 @@ from .serializers import ProfileSerializer
 
 
 class ProfileList(generics.ListAPIView):
-    """
-    API view to retrieve a list of profiles with dynamic ordering
-    and filtering.
-    Attributes:
-        serializer_class (ProfileSerializer): Serializer class for
-                                                profile data.
-        permission_classes (list): Permission classes to apply to the view.
-        filter_backends (list): List of filter backends to use for ordering
-                                    and filtering.
-        ordering_fields (list): List of fields that can be used for ordering
-                                    the results.
-    Methods:
-        get_queryset(self):
-            Retrieves the queryset of profiles with additional computed fields
-            and optional filtering by owner username.
-    """
 
+    '''
+        API view to retrieve a list of profiles with dynamic ordering
+        and filtering.
+        Attributes:
+            serializer_class (ProfileSerializer): Serializer class for
+                                                    profile data.
+            permission_classes (list): Permission classes to apply to the view.
+            filter_backends (list): List of filter backends to use for ordering
+                                        and filtering.
+            ordering_fields (list): List of fields that can be used for ordering
+                                        the results.
+        Methods:
+            get_queryset(self):
+                Retrieves the queryset of profiles with additional computed fields
+                and optional filtering by owner username.
+    '''
     serializer_class = ProfileSerializer
-    # queryset = Profile.objects.all()
     queryset = Profile.objects.annotate(
-        trips_count=Count('owner__trip', distinct=True),
+        trips_count=Count('owner__trips', distinct=True),
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')
@@ -69,7 +68,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
     queryset = Profile.objects.annotate(
-        trips_count=Count('owner__trip', distinct=True),
+        trips_count=Count('owner__trips', distinct=True),
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')

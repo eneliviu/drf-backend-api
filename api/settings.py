@@ -4,8 +4,6 @@ import re
 import dj_database_url
 from datetime import timedelta
 
-
-
 if os.path.exists('env.py'):
     import env
 
@@ -13,7 +11,7 @@ if os.path.exists('env.py'):
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
@@ -24,13 +22,11 @@ MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
-
     #  JWT authentication takes precedence when DEBUG=False
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    #     # 'rest_framework.authentication.SessionAuthentication',
+    # ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
@@ -39,10 +35,24 @@ REST_FRAMEWORK = {
     ),
 }
 
-if not DEBUG:
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+else:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
     ]
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
+
+# if not DEBUG:
+REST_USE_JWT = True
 
 # JWT configuration
 SIMPLE_JWT = {
@@ -52,16 +62,13 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
     'AUTH_COOKIE_SAMESITE': 'Lax',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=600),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,  # Update last_login field on token issue
 }
-
-if not DEBUG:
-    REST_USE_JWT = True
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
@@ -82,12 +89,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # To use the API with React app: ALLOWED_HOST and CLIENT_ORIGIN_DEV in heroku
 ALLOWED_HOSTS = [
-    # "8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net",
-    # '3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
     '127.0.0.1',
-    '127.0.0.1:8000'
+    '127.0.0.1:8000',
     'localhost',
-    # 'dj-drf-api-763634fa56e5.herokuapp.com'
 ]
 
 # Application definition
@@ -138,29 +142,29 @@ MIDDLEWARE = [
 
 
 CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
+    'http://localhost',
     "http://localhost:3000",
     'https://react-dj-restapi-eb6a7149ec97.herokuapp.com',
     'https://3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
     'https://react-frontend-api-b166a083b609.herokuapp.com',
     'https://dj-drf-api-763634fa56e5.herokuapp.com'
 ]
-client_origin = os.environ.get('CLIENT_ORIGIN')
-if client_origin:
-    CORS_ALLOWED_ORIGINS.append(client_origin)
-CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000/'
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
+    'http://localhost',
     "http://localhost:3000",
     'https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net',
     'https://3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
     'https://react-frontend-api-b166a083b609.herokuapp.com/signup',
     'https://dj-drf-api-763634fa56e5.herokuapp.com'
 ]
-
-# JWT_AUTH_SAMESITE = 'None'  # Frontend and the API on different platforms
-
 
 ROOT_URLCONF = 'api.urls'
 

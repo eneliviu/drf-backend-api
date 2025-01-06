@@ -1,7 +1,7 @@
 from rest_framework import serializers
+from cloudinary.utils import cloudinary_url
 from .models import Profile
 from followers.models import Follower
-from cloudinary.utils import cloudinary_url
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -123,6 +123,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             'alias', 'content', 'image',  'following_id', 'posts_count',
             'followers_count', 'following_count',
         ]
-        # fields = '__all__'
 
         read_only_fields = ['owner', 'created_at', 'updated_at']
