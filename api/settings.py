@@ -4,10 +4,6 @@ import re
 import dj_database_url
 from datetime import timedelta
 
-# ----------------------------------------------------------------#
-# HOT TO SET UP CORS:
-# https://github.com/adamchainz/django-cors-headers#configuration
-# ----------------------------------------------------------------#
 
 
 if os.path.exists('env.py'):
@@ -17,15 +13,13 @@ if os.path.exists('env.py'):
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-# DEBUG is False - the authentication token will be stored in cookies
-# rather than being passed in the Authorization header.
+DEBUG = True
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': CLOUDINARY_URL
 }
-MEDIA_URL = '/media/'  # or any prefix you choose
+MEDIA_URL = '/media/'
 # MEDIA_URL = os.environ.get('MEDIA_URL')
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
@@ -77,32 +71,23 @@ CSRF_COOKIE_HTTPONLY = False  # Must be False for frontend access
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
 
-
-# PRODUCTION SETTINGS
-# JWT_AUTH_SECURE = False if DEBUG else True
-# JWT_AUTH_COOKIE = 'my-app-auth'
-# JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
-# JWT_AUTH_SAMESITE = 'None'
-
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'api.serializers.CurrentUserSerializer'
 }
 
 LOGIN_REDIRECT_URL = '/'
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # To use the API with React app: ALLOWED_HOST and CLIENT_ORIGIN_DEV in heroku
 ALLOWED_HOSTS = [
-    "8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net",
-    '3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
+    # "8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net",
+    # '3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
     '127.0.0.1',
+    '127.0.0.1:8000'
     'localhost',
-    'dj-drf-api-763634fa56e5.herokuapp.com'
+    # 'dj-drf-api-763634fa56e5.herokuapp.com'
 ]
 
 # Application definition
@@ -237,18 +222,18 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 # Database Configuration
 # if not DEBUG:  # Production
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
-}
-# else:  # Development
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
+#     'default': dj_database_url.config(
+#         default=os.environ.get("DATABASE_URL")
+#     )
 # }
+# else:  # Development
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
