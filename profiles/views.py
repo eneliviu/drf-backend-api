@@ -49,6 +49,7 @@ class ProfileList(generics.ListAPIView):
         'images_count',
         'followers_count',
         'following_count',
+        'likes_count',
         'owner__following__created_at',
         'owner__followed__created_at'
         ]

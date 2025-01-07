@@ -170,7 +170,12 @@ class Image(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Taken at {self.trip.place}, {self.trip.country}'
+        formatted_uploaded_at = self.uploaded_at.strftime('%Y-%m-%d %H:%M')
+        return (
+            f'Taken at {self.trip.place}, '
+            f'{self.trip.country}, '
+            f'uploaded at {formatted_uploaded_at}'
+        )
 
     class Meta:
         ordering = ["-uploaded_at"]
