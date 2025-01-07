@@ -11,7 +11,7 @@ if os.path.exists('env.py'):
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
@@ -51,8 +51,8 @@ else:
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 
-# if not DEBUG:
-REST_USE_JWT = True
+if not DEBUG:
+    REST_USE_JWT = True
 
 # JWT configuration
 SIMPLE_JWT = {
@@ -61,7 +61,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SECURE': not DEBUG,  # local dev False, True for production
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
-    'AUTH_COOKIE_SAMESITE': 'Lax',
+    'AUTH_COOKIE_SAMESITE': 'None',
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -70,12 +70,12 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': True,  # Update last_login field on token issue
 }
 
-SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
 
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = False  # Must be False for frontend access
-CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
 
 REST_AUTH = {

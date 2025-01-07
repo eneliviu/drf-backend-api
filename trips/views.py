@@ -1,32 +1,70 @@
 from django.db.models import Count
-from django_filters import FilterSet, DateFilter, CharFilter, CharFilter, MultipleChoiceFilter
+from django_filters import (
+    FilterSet, DateFilter, CharFilter, MultipleChoiceFilter, BooleanFilter
+)
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
+
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer
-from datetime import datetime
 
 
 class TripFilter(FilterSet):
     """
-    TripFilter is a filter set for filtering Trip objects based on various fields.
+    A filter set for filtering Trip objects based on various criteria.
     Attributes:
-        owner__username (CharFilter): Filters trips by the username of the owner.
-        country (CharFilter): Filters trips by the country.
-        place (CharFilter): Filters trips by the place.
-        trip_category (CharFilter): Filters trips by the trip category.
-        trip_status (CharFilter): Filters trips by the trip status.
-        start_date (DateFilter): Filters trips that start on or after a given date.
-        end_date (DateFilter): Filters trips that end on or before a given date.
-    Meta:
-        model (Model): The model that this filter set is based on.
-        fields (list): The list of fields that can be filtered.
+        owner__username (CharFilter): Filter trips by the owner's username.
+        country (CharFilter): Filter trips by country.
+        place (CharFilter): Filter trips by place.
+        liked_by_user (BooleanFilter): Filter trips liked by the current user.
+        user_trips (BooleanFilter): Filter trips by the user's profile.
+        current_user_trips (BooleanFilter): Filter trips owned by the user.
+        followed_users (BooleanFilter): Filter trips by users followed by
+                                            the current user.
+        trip_category (MultipleChoiceFilter): Filter trips by category.
+        trip_status (MultipleChoiceFilter): Filter trips by status.
+        trip_shared (MultipleChoiceFilter): Filter trips by shared status.
+        start_date (DateFilter): Filter trips starting from a specific date.
+        end_date (DateFilter): Filter trips ending by a specific date.
+    Methods:
+        filter_current_user_trips(queryset, name, value):
+            Filters trips to include only those owned by the current user if
+                the user is authenticated.
+        filter_liked_by_user(queryset, name, value):
+            Filters trips to include only those liked by the current user if
+                the user is authenticated.
+        filter_post_by_profile(queryset, name, value):
+            Filters trips by the owner's profile.
+        filter_followed_users(queryset, name, value):
+            Filters trips to include only those owned by users followed by the
+                current user if the user is authenticated.
+        __init__(*args, **kwargs):
+            Initializes the filter set and sets the owner's username to the
+                current user's username if not provided.
     """
 
     owner__username = CharFilter(field_name='owner__username')
     country = CharFilter(field_name='country')
     place = CharFilter(field_name='place')
+
+    liked_by_user = BooleanFilter(
+        method='filter_liked_by_user',
+        field_name='liked'
+    )
+    user_trips = BooleanFilter(
+        method='filter_trip_by_profile',
+        field_name='user_trips'
+    )
+    current_user_trips = BooleanFilter(
+        method='filter_current_user_trips',
+        field_name='current_user_trips'
+    )
+    followed_users = BooleanFilter(
+        method='filter_followed_users',
+        field_name='followed_users'
+    )
+
     trip_category = MultipleChoiceFilter(
         field_name='trip_category',
         choices=Trip.TRIP_CATEGORY)
@@ -45,36 +83,75 @@ class TripFilter(FilterSet):
         lookup_expr='lte'
     )
 
+    def filter_current_user_trips(self, queryset, name, value):
+        user = self.request.user
+        if value and user.is_authenticated:
+            return queryset.filter(owner=user)
+        return queryset
+
+    def filter_liked_by_user(self, queryset, name, value):
+        user = self.request.user
+        if value and user.is_authenticated:
+            return queryset.filter(likes__owner=user)
+        return queryset
+
+    def filter_post_by_profile(self, queryset, name, value):
+        return queryset.filter(owner__profile=value)
+
+    def filter_followed_users(self, queryset, name, value):
+        user = self.request.user
+        if value and user.is_authenticated:
+            return queryset.filter(owner__followed__owner=user)
+        return queryset
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    #     if not self.data.get('start_date'):
-    #         self.data = self.data.copy()
-    #         self.data['start_date'] = datetime.now().date().strftime('%Y-%m-%d')
-    #     if not self.data.get('end_date'):
-    #         self.data = self.data.copy()
-    #         self.data['end_date'] = datetime.now().date().strftime('%Y-%m-%d')
         if not self.data.get('owner__username') and 'request' in kwargs:
             self.data = self.data.copy()
             self.data['owner__username'] = kwargs['request'].user.username
 
     class Meta:
         model = Trip
-        fields = ['start_date', 'end_date']
+        fields = [
+            'start_date',
+            'end_date',
+            'owner__username',
+            'place',
+            'country',
+            'trip_category',
+            'trip_status',
+            'liked_by_user',
+        ]
 
 
 class TripList(generics.ListCreateAPIView):
-    '''
-    List all trips or create a new trip.
-    '''
+    """
+    API view to retrieve list of trips or create a new trip.
+    Attributes:
+        serializer_class (TripSerializer): Serializer class used for the view.
+        permission_classes (list): Permission classes for access to the view.
+        queryset (QuerySet): The base queryset for retrieving trips,
+                                annotated with likes and images count, and
+                                ordered by creation date.
+        filter_backends (list): List of filter backends used for filtering and
+                                    searching the queryset.
+        filterset_class (TripFilter): The filter class for the queryset.
+        search_fields (list): List of fields that can be searched.
+        ordering_fields (list): List of fields for ordering the queryset.
+    Methods:
+        perform_create(serializer):
+            Saves the new trip instance with the owner set to the current user.
+        get_serializer_context():
+            Adds the current user to the serializer context.
+    """
+
     serializer_class = TripSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    def get_queryset(self):
-        return Trip.objects.annotate(
-            # comments_count=Count('comment', distinct=True),
-            # likes_count=Count('likes', distinct=True),
-            images_count=Count('images', distinct=True)
-        ).order_by('-created_at')
+    queryset = Trip.objects.annotate(
+       likes_count=Count('images__likes', distinct=True),
+       images_count=Count('images', distinct=True),
+    ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
@@ -83,24 +160,20 @@ class TripList(generics.ListCreateAPIView):
     ]
 
     filterset_class = TripFilter
-    # filterset_fields = [
-    #     'owner__username',
-    #     'country',
-    #     'place',
-    #     'trip_category',
-    #     'trip_status',
-    #     'start_date',
-    #     'end_date',
-    # ]
 
+    search_fields = [
+        'owner__username',
+        'place',
+        'country',
+        'trip_category',
+        'trip_status',
+        'liked_by_user',
+    ]
     ordering_fields = [
         'owner__username',
         'created_at',
         'updated_at',
-        # 'liked_by_user',
-        # 'user_posts',
-        # 'current_user_posts',
-        # 'followed_users'
+        'likes_count',
     ]
 
     def perform_create(self, serializer):
@@ -115,49 +188,87 @@ class TripList(generics.ListCreateAPIView):
 class TripDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     API view to retrieve, update, or delete a Trip instance.
+    This view supports the following operations:
+    - Retrieve a single Trip instance.
+    - Update a Trip instance.
+    - Delete a Trip instance.
+    The queryset is annotated with:
+    - likes_count: The count of likes associated with the images of the trip.
+    - images_count: The count of images associated with the trip.
+    The results are ordered by the creation date in descending order.
     Attributes:
         queryset (QuerySet): The base queryset for retrieving Trip instances.
-        serializer_class (Serializer): Serializer class for Trip instances.
-        permission_classes (list): Dermission classes for access control.
-    Methods:
-        get_queryset(): Annotates queryset with the count of related images.
+        serializer_class (Serializer): The serializer class used for
+            validating and deserializing input, and for serializing output.
+        permission_classes (list): The list of permission classes that
+            determine access control.
     """
-    queryset = Trip.objects.all()
+
     serializer_class = TripSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    def get_queryset(self):
-        return Trip.objects.annotate(
-            images_count=Count('images')
-        )
+    queryset = Trip.objects.annotate(
+       likes_count=Count('images__likes', distinct=True),
+       images_count=Count('images', distinct=True),
+    ).order_by('-created_at')
 
 
 class ImageList(generics.ListCreateAPIView):
-    '''
-    List all images or create a new image.
-    '''
-    queryset = Image.objects.all()
+    """
+    API view to retrieve a list of images or create a new image.
+    Attributes:
+        serializer_class (ImageSerializer): The serializer class for the view.
+        permission_classes (list): Permission classes that the user must pass.
+        filter_backends (list): List of filter backends used for ordering.
+        ordering_fields (list): List of fields that can be used for ordering.
+    Methods:
+        get_queryset(self):
+            Retrieves the queryset of images filtered by trip ID and owner.
+        perform_create(self, serializer):
+            Saves a new image instance with the current user as the owner and
+                associates it with the specified trip.
+    """
+
     serializer_class = ImageSerializer
     permission_classes = [IsOwnerOrReadOnly]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['uploaded_at']
 
     def get_queryset(self):
-        queryset = Image.objects.order_by('-uploaded_at')
-        owner_username = self.request.query_params.get('owner__username', None)
-        if owner_username:
-            queryset = queryset.filter(owner__username=owner_username)
-        return queryset
+        user = self.request.user
+        trip_id = self.kwargs.get('trip_id')
+        return Image.objects.filter(
+            trip__id=trip_id,
+            trip__owner=user
+            ).order_by('-uploaded_at')
+
+    def perform_create(self, serializer):
+        trip_id = self.kwargs.get('trip_id')
+        trip = Trip.objects.get(id=trip_id, owner=self.request.user)
+        serializer.save(owner=self.request.user, trip=trip)
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''
-    Retrieve, update or delete an image instance.
-    '''
-    queryset = Image.objects.all()
+    """
+    API view to retrieve, update, or delete an Image instance.
+    Allows users to perform the following actions on an Image instance:
+    - Retrieve the details of an image.
+    - Update the details of an image.
+    - Delete an image.
+    The view is restricted to the owner of the trip associated with the image.
+    Attributes:
+        serializer_class (ImageSerializer): Serializer class for the image.
+        permission_classes (list): Permission classes for access to the view.
+    Methods:
+        get_queryset(self):
+            Returns a queryset of Image objects filtered by the trip ID and
+            the owner of the trip.
+    """
+
     serializer_class = ImageSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
+        user = self.request.user
         trip_id = self.kwargs['trip_id']
-        return Image.objects.filter(trip__id=trip_id)
+        return Image.objects.filter(trip__id=trip_id, trip__owner=user)

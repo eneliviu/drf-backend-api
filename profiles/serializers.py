@@ -43,6 +43,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     following_id = serializers.SerializerMethodField()
     trips_count = serializers.ReadOnlyField()
     images_count = serializers.ReadOnlyField()
+    likes_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     image = serializers.ImageField()
@@ -109,7 +110,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id', 'owner', 'is_owner', 'created_at', 'updated_at', 'name',
             'alias', 'content', 'image',  'following_id',
             'followers_count', 'following_count',
-            'trips_count', 'images_count'
+            'trips_count', 'images_count', 'likes_count'
         ]
 
         read_only_fields = ['owner', 'created_at', 'updated_at']

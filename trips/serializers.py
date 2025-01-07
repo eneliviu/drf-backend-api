@@ -2,6 +2,7 @@ import os
 from rest_framework import serializers
 from .models import Trip, Image
 
+
 class TripSerializer(serializers.ModelSerializer):
     """
     Serializer for the Trip model.
@@ -20,6 +21,7 @@ class TripSerializer(serializers.ModelSerializer):
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     images_count = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
         request = self.context.get('request')
@@ -28,11 +30,14 @@ class TripSerializer(serializers.ModelSerializer):
     def get_images_count(self, obj):
         return getattr(obj, 'images_count', 0)
 
-    # def to_representation(self, instance):
-    #     # Adding the annotated field to the representation explicitly
-    #     representation = super().to_representation(instance)
-    #     representation['images_count'] = self.get_images_count(instance)
-    #     return representation
+    def get_likes_count(self, obj):
+        return getattr(obj, 'likes_count', 0)
+
+    def to_representation(self, instance):
+        # Adding the annotated field to the representation explicitly
+        representation = super().to_representation(instance)
+        representation['images_count'] = self.get_images_count(instance)
+        return representation
 
     class Meta:
         model = Trip
@@ -40,7 +45,7 @@ class TripSerializer(serializers.ModelSerializer):
             "id", "owner", 'is_owner',  'profile_id', "profile_image",
             "place", "country", "trip_category", "start_date", "end_date",
             "created_at", "updated_at", "trip_status", "shared",
-            "images_count", "lat", "lon"
+            "images_count", "likes_count", "lat", "lon"
         ]
 
 

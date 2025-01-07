@@ -30,6 +30,7 @@ class ProfileList(generics.ListAPIView):
     queryset = Profile.objects.annotate(
         trips_count=Count('owner__trips', distinct=True),
         images_count=Count('owner__trips__images', distinct=True),
+        likes_count=Count('owner__trips__images', distinct=True),
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')
