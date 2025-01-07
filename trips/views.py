@@ -20,12 +20,13 @@ class TripList(generics.ListCreateAPIView):
     def get_queryset(self):
         return Trip.objects.annotate(
             # comments_count=Count('comment', distinct=True),
-            # likes_count=Count('likes', distinct=True)
+            # likes_count=Count('likes', distinct=True),
             images_count=Count('images', distinct=True)
         ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
+        filters.SearchFilter,
         DjangoFilterBackend,
     ]
 
@@ -35,6 +36,7 @@ class TripList(generics.ListCreateAPIView):
         'owner__username',
         # 'owner__follows__followed_by__profile',
         # 'owner__followed_by__owner__profile',
+        # trips_count,
         # 'images_count'
     ]
 
@@ -47,6 +49,14 @@ class TripList(generics.ListCreateAPIView):
         # 'current_user_posts',
         # 'followed_users'
     ]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
 
 
 class TripDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
 from api.permissions import IsOwnerOrReadOnly
-from followers.models import Follower
+from .models import Follower
 from .serializers import FollowerSerializer
 
 

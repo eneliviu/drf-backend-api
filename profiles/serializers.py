@@ -41,10 +41,25 @@ class ProfileSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
-    posts_count = serializers.ReadOnlyField()
+    trips_count = serializers.ReadOnlyField()
+    images_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     image = serializers.ImageField()
+
+    def get_is_owner(self, obj):
+        """
+        Determine if the current user is the owner of the given object.
+        Args:
+            obj: The object to check ownership against.
+        Returns:
+            bool: True if the current user is authenticated and is the owner
+                    of the object, False otherwise.
+        """
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.owner == request.user
+        return False
 
     def get_following_id(self, obj):
         """
@@ -79,34 +94,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             return cloudinary_url(obj.image.name)[0]
         return None
 
-    def get_is_following(self, obj):
-        """
-        Check if the authenticated user is following the given profile.
-        Args:
-            obj: The profile object to check against.
-        Returns:
-            bool: True if the authenticated user is following the profile,
-                    False otherwise.
-        """
-        request = self.context.get('request')
-        if request and request.user.is_authenticated:
-            return obj.followed_by.filter(id=request.user.profile.id).exists()
-        return False
-
-    def get_is_owner(self, obj):
-        """
-        Determine if the current user is the owner of the given object.
-        Args:
-            obj: The object to check ownership against.
-        Returns:
-            bool: True if the current user is authenticated and is the owner
-                    of the object, False otherwise.
-        """
-        request = self.context.get('request')
-        if request and request.user.is_authenticated:
-            return obj.owner == request.user
-        return False
-
     class Meta:
         """
         Meta class for the Profile serializer.
@@ -120,8 +107,9 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = [
             'id', 'owner', 'is_owner', 'created_at', 'updated_at', 'name',
-            'alias', 'content', 'image',  'following_id', 'posts_count',
+            'alias', 'content', 'image',  'following_id',
             'followers_count', 'following_count',
+            'trips_count', 'images_count'
         ]
 
         read_only_fields = ['owner', 'created_at', 'updated_at']

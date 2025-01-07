@@ -24,9 +24,12 @@ class ProfileList(generics.ListAPIView):
                 Retrieves the queryset of profiles with additional computed fields
                 and optional filtering by owner username.
     '''
+
     serializer_class = ProfileSerializer
+
     queryset = Profile.objects.annotate(
         trips_count=Count('owner__trips', distinct=True),
+        images_count=Count('owner__trips__images', distinct=True),
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')
@@ -35,12 +38,15 @@ class ProfileList(generics.ListAPIView):
         filters.OrderingFilter,
         DjangoFilterBackend,
     ]
+
     filterset_fields = [
         'owner__following__followed__profile',
         'owner__followed__owner__profile',
         ]
+
     ordering_fields = [
         'trips_count',
+        'images_count',
         'followers_count',
         'following_count',
         'owner__following__created_at',
@@ -69,6 +75,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.annotate(
         trips_count=Count('owner__trips', distinct=True),
+        images_count=Count('owner__trips__images', distinct=True) ,
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')
