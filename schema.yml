@@ -1,0 +1,2361 @@
+openapi: 3.0.3
+info:
+  title: LovinEscapades API
+  version: 1.0.0
+  description: Your project description
+paths:
+  /:
+    get:
+      operationId: root_retrieve
+      description: |-
+        This is the root route of the API.
+        It is public and does not require authentication
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api-auth/token/:
+    post:
+      operationId: api_auth_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api-auth/token/refresh/:
+    post:
+      operationId: api_auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /dj-rest-auth/login/:
+    post:
+      operationId: dj_rest_auth_login_create
+      description: |-
+        Check the credentials and return the REST Token
+        if the credentials are valid and authenticated.
+        Calls Django Auth login method to register User ID
+        in Django session framework
+
+        Accept the following POST parameters: username, password
+        Return the REST Framework Token Object's key.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: ''
+  /dj-rest-auth/logout/:
+    post:
+      operationId: dj_rest_auth_logout_create
+      description: |-
+        Calls Django logout method and delete the Token object
+        assigned to the current User object.
+
+        Accepts/Returns nothing.
+      tags:
+      - dj-rest-auth
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /dj-rest-auth/password/change/:
+    post:
+      operationId: dj_rest_auth_password_change_create
+      description: |-
+        Calls Django Auth SetPasswordForm save method.
+
+        Accepts the following POST parameters: new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /dj-rest-auth/password/reset/:
+    post:
+      operationId: dj_rest_auth_password_reset_create
+      description: |-
+        Calls Django Auth PasswordResetForm save method.
+
+        Accepts the following POST parameters: email
+        Returns the success/fail message.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /dj-rest-auth/password/reset/confirm/:
+    post:
+      operationId: dj_rest_auth_password_reset_confirm_create
+      description: |-
+        Password reset e-mail link is confirmed, therefore
+        this resets the user's password.
+
+        Accepts the following POST parameters: token, uid,
+            new_password1, new_password2
+        Returns the success/fail message.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /dj-rest-auth/registration/:
+    post:
+      operationId: dj_rest_auth_registration_create
+      description: |-
+        Registers a new user.
+
+        Accepts the following POST parameters: username, email, password1, password2.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: ''
+  /dj-rest-auth/registration/resend-email/:
+    post:
+      operationId: dj_rest_auth_registration_resend_email_create
+      description: |-
+        Resends another email to an unverified email.
+
+        Accepts the following POST parameter: email.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendEmailVerification'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResendEmailVerification'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResendEmailVerification'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /dj-rest-auth/registration/verify-email/:
+    post:
+      operationId: dj_rest_auth_registration_verify_email_create
+      description: |-
+        Verifies the email associated with the provided key.
+
+        Accepts the following POST parameter: key.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestAuthDetail'
+          description: ''
+  /dj-rest-auth/user/:
+    get:
+      operationId: dj_rest_auth_user_retrieve
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - dj-rest-auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+          description: ''
+    put:
+      operationId: dj_rest_auth_user_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrentUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CurrentUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CurrentUser'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+          description: ''
+    patch:
+      operationId: dj_rest_auth_user_partial_update
+      description: |-
+        Reads and updates UserModel fields
+        Accepts GET, PUT, PATCH methods.
+
+        Default accepted fields: username, first_name, last_name
+        Default display fields: pk, username, email, first_name, last_name
+        Read-only fields: pk, email
+
+        Returns UserModel fields.
+      tags:
+      - dj-rest-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCurrentUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCurrentUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCurrentUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+          description: ''
+  /followers/:
+    get:
+      operationId: followers_list
+      description: |-
+        API view to retrieve list of followers or create a new follower.
+        - GET: Returns a list of all followers.
+        - POST: Creates a new follower with the authenticated user as the owner.
+        Attributes:
+            permission_classes (list): List of permission classes that determine
+                                        access to the view.
+            queryset (QuerySet): QuerySet of all Follower objects.
+            serializer_class (Serializer): Serializer class to validate input,
+                                            deserialize input, serialize output.
+        Methods:
+            perform_create(serializer): Saves the new follower instance with the
+                                            authenticated user as the owner.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - followers
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFollowerList'
+          description: ''
+    post:
+      operationId: followers_create
+      description: |-
+        API view to retrieve list of followers or create a new follower.
+        - GET: Returns a list of all followers.
+        - POST: Creates a new follower with the authenticated user as the owner.
+        Attributes:
+            permission_classes (list): List of permission classes that determine
+                                        access to the view.
+            queryset (QuerySet): QuerySet of all Follower objects.
+            serializer_class (Serializer): Serializer class to validate input,
+                                            deserialize input, serialize output.
+        Methods:
+            perform_create(serializer): Saves the new follower instance with the
+                                            authenticated user as the owner.
+      tags:
+      - followers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Follower'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Follower'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Follower'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follower'
+          description: ''
+  /followers/{id}/:
+    get:
+      operationId: followers_retrieve
+      description: |-
+        FollowerDetail view for retrieving and deleting a follower instance.
+        This view allows the owner of the follower model instance to retrieve
+        or delete it.
+        It uses the IsOwnerOrReadOnly permission class to ensure that only the
+        owner can delete the follower instance, while others can only read it.
+        Attributes:
+            permission_classes (list): Permission classes that this view requires.
+            queryset (QuerySet): The queryset that this view operates on.
+            serializer_class (Serializer): The serializer class used for
+                                            serializing the follower instances.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - followers
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follower'
+          description: ''
+    delete:
+      operationId: followers_destroy
+      description: |-
+        FollowerDetail view for retrieving and deleting a follower instance.
+        This view allows the owner of the follower model instance to retrieve
+        or delete it.
+        It uses the IsOwnerOrReadOnly permission class to ensure that only the
+        owner can delete the follower instance, while others can only read it.
+        Attributes:
+            permission_classes (list): Permission classes that this view requires.
+            queryset (QuerySet): The queryset that this view operates on.
+            serializer_class (Serializer): The serializer class used for
+                                            serializing the follower instances.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - followers
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /likes/:
+    get:
+      operationId: likes_list
+      description: |-
+        API view to retrieve list of likes or create a new like.
+        - GET: Returns a list of all likes.
+        - POST: Creates a new like. Only authenticated users can post likes.
+        Attributes:
+            permission_classes (list): Permission classes for access to the view.
+            serializer_class (LikeSerializer): Serializer class used to validate
+                                                    and serialize data.
+            queryset (QuerySet): QuerySet of all Like objects.
+        Methods:
+            perform_create(serializer):
+                Sets the user creating the like as its owner.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - likes
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLikeList'
+          description: ''
+    post:
+      operationId: likes_create
+      description: |-
+        API view to retrieve list of likes or create a new like.
+        - GET: Returns a list of all likes.
+        - POST: Creates a new like. Only authenticated users can post likes.
+        Attributes:
+            permission_classes (list): Permission classes for access to the view.
+            serializer_class (LikeSerializer): Serializer class used to validate
+                                                    and serialize data.
+            queryset (QuerySet): QuerySet of all Like objects.
+        Methods:
+            perform_create(serializer):
+                Sets the user creating the like as its owner.
+      tags:
+      - likes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Like'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Like'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Like'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Like'
+          description: ''
+  /likes/{id}/:
+    get:
+      operationId: likes_retrieve
+      description: |-
+        API view to retrieve or delete a Like instance.
+        This view allows the owner of the Like instance to retrieve or delete it.
+        Other users can only read the Like instance.
+        Attributes:
+            permission_classes (list): Permission classes required.
+            serializer_class (class): Serializer to validate and serialize data.
+            queryset (QuerySet): The base queryset for retrieving Like instances.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - likes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Like'
+          description: ''
+    delete:
+      operationId: likes_destroy
+      description: |-
+        API view to retrieve or delete a Like instance.
+        This view allows the owner of the Like instance to retrieve or delete it.
+        Other users can only read the Like instance.
+        Attributes:
+            permission_classes (list): Permission classes required.
+            serializer_class (class): Serializer to validate and serialize data.
+            queryset (QuerySet): The base queryset for retrieving Like instances.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - likes
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /profiles/:
+    get:
+      operationId: profiles_list
+      description: |-
+        API view to retrieve a list of profiles with dynamic ordering
+        and filtering.
+        Attributes:
+            serializer_class (ProfileSerializer): Serializer class for
+                                                    profile data.
+            permission_classes (list): Permission classes to apply to the view.
+            filter_backends (list): List of filter backends to use for ordering
+                                        and filtering.
+            ordering_fields (list): List of fields that can be used for ordering
+                                        the results.
+        Methods:
+            get_queryset(self):
+                Retrieves the queryset of profiles with additional computed fields
+                and optional filtering by owner username.
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: owner__followed__owner__profile
+        schema:
+          type: integer
+      - in: query
+        name: owner__following__followed__profile
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - profiles
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProfileList'
+          description: ''
+  /profiles/{id}/:
+    get:
+      operationId: profiles_retrieve
+      description: |-
+        API view to retrieve, update, or delete a profile instance.
+        Attributes:
+            permission_classes (list): Permission classes required by the view.
+            serializer_class (class): The serializer class that should be used for
+                                        validating and deserializing input, and for
+                                        serializing output.
+            queryset (QuerySet): The queryset that should be used for retrieving
+                                    objects from the database.
+                                 Annotates each profile with:
+                                    - posts_count: No. of trips the user has.
+                                    - followers_count: No. profile followers.
+                                    - following_count: No. of profiles folowed
+                                 Orders the profiles by creation date in
+                                    descending order.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profiles
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    put:
+      operationId: profiles_update
+      description: |-
+        API view to retrieve, update, or delete a profile instance.
+        Attributes:
+            permission_classes (list): Permission classes required by the view.
+            serializer_class (class): The serializer class that should be used for
+                                        validating and deserializing input, and for
+                                        serializing output.
+            queryset (QuerySet): The queryset that should be used for retrieving
+                                    objects from the database.
+                                 Annotates each profile with:
+                                    - posts_count: No. of trips the user has.
+                                    - followers_count: No. profile followers.
+                                    - following_count: No. of profiles folowed
+                                 Orders the profiles by creation date in
+                                    descending order.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Profile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Profile'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    patch:
+      operationId: profiles_partial_update
+      description: |-
+        API view to retrieve, update, or delete a profile instance.
+        Attributes:
+            permission_classes (list): Permission classes required by the view.
+            serializer_class (class): The serializer class that should be used for
+                                        validating and deserializing input, and for
+                                        serializing output.
+            queryset (QuerySet): The queryset that should be used for retrieving
+                                    objects from the database.
+                                 Annotates each profile with:
+                                    - posts_count: No. of trips the user has.
+                                    - followers_count: No. profile followers.
+                                    - following_count: No. of profiles folowed
+                                 Orders the profiles by creation date in
+                                    descending order.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfile'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    delete:
+      operationId: profiles_destroy
+      description: |-
+        API view to retrieve, update, or delete a profile instance.
+        Attributes:
+            permission_classes (list): Permission classes required by the view.
+            serializer_class (class): The serializer class that should be used for
+                                        validating and deserializing input, and for
+                                        serializing output.
+            queryset (QuerySet): The queryset that should be used for retrieving
+                                    objects from the database.
+                                 Annotates each profile with:
+                                    - posts_count: No. of trips the user has.
+                                    - followers_count: No. profile followers.
+                                    - following_count: No. of profiles folowed
+                                 Orders the profiles by creation date in
+                                    descending order.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - profiles
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trips/:
+    get:
+      operationId: trips_list
+      description: |-
+        API view to retrieve list of trips or create a new trip.
+        Attributes:
+            serializer_class (TripSerializer): Serializer class used for the view.
+            permission_classes (list): Permission classes for access to the view.
+            queryset (QuerySet): The base queryset for retrieving trips,
+                                    annotated with likes and images count, and
+                                    ordered by creation date.
+            filter_backends (list): List of filter backends used for filtering and
+                                        searching the queryset.
+            filterset_class (TripFilter): The filter class for the queryset.
+            search_fields (list): List of fields that can be searched.
+            ordering_fields (list): List of fields for ordering the queryset.
+        Methods:
+            perform_create(serializer):
+                Saves the new trip instance with the owner set to the current user.
+            get_serializer_context():
+                Adds the current user to the serializer context.
+      parameters:
+      - in: query
+        name: country
+        schema:
+          type: string
+      - in: query
+        name: current_user_trips
+        schema:
+          type: boolean
+      - in: query
+        name: end_date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: followed_users
+        schema:
+          type: boolean
+      - in: query
+        name: liked_by_user
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: owner__username
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: place
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: start_date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: trip_category
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - Adventure
+            - Business
+            - Family
+            - Leisure
+            - Romantic
+        description: |-
+          * `Leisure` - LEISURE
+          * `Business` - BUSINESS
+          * `Adventure` - ADVENTURE
+          * `Family` - FAMILY
+          * `Romantic` - ROMANTIC
+        explode: true
+        style: form
+      - in: query
+        name: trip_shared
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - 'NO'
+            - 'Yes'
+        description: |-
+          * `Yes` - YES
+          * `NO` - No
+        explode: true
+        style: form
+      - in: query
+        name: trip_status
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - Completed
+            - Ongoing
+            - Planned
+        description: |-
+          * `Completed` - COMPLETED
+          * `Ongoing` - ONGOING
+          * `Planned` - PLANNED
+        explode: true
+        style: form
+      - in: query
+        name: user_trips
+        schema:
+          type: boolean
+      tags:
+      - trips
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTripList'
+          description: ''
+    post:
+      operationId: trips_create
+      description: |-
+        API view to retrieve list of trips or create a new trip.
+        Attributes:
+            serializer_class (TripSerializer): Serializer class used for the view.
+            permission_classes (list): Permission classes for access to the view.
+            queryset (QuerySet): The base queryset for retrieving trips,
+                                    annotated with likes and images count, and
+                                    ordered by creation date.
+            filter_backends (list): List of filter backends used for filtering and
+                                        searching the queryset.
+            filterset_class (TripFilter): The filter class for the queryset.
+            search_fields (list): List of fields that can be searched.
+            ordering_fields (list): List of fields for ordering the queryset.
+        Methods:
+            perform_create(serializer):
+                Saves the new trip instance with the owner set to the current user.
+            get_serializer_context():
+                Adds the current user to the serializer context.
+      tags:
+      - trips
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trip'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Trip'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Trip'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+  /trips/{id}/:
+    get:
+      operationId: trips_retrieve
+      description: |-
+        API view to retrieve, update, or delete a Trip instance.
+        This view supports the following operations:
+        - Retrieve a single Trip instance.
+        - Update a Trip instance.
+        - Delete a Trip instance.
+        The queryset is annotated with:
+        - likes_count: The count of likes associated with the images of the trip.
+        - images_count: The count of images associated with the trip.
+        The results are ordered by the creation date in descending order.
+        Attributes:
+            queryset (QuerySet): The base queryset for retrieving Trip instances.
+            serializer_class (Serializer): The serializer class used for
+                validating and deserializing input, and for serializing output.
+            permission_classes (list): The list of permission classes that
+                determine access control.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+    put:
+      operationId: trips_update
+      description: |-
+        API view to retrieve, update, or delete a Trip instance.
+        This view supports the following operations:
+        - Retrieve a single Trip instance.
+        - Update a Trip instance.
+        - Delete a Trip instance.
+        The queryset is annotated with:
+        - likes_count: The count of likes associated with the images of the trip.
+        - images_count: The count of images associated with the trip.
+        The results are ordered by the creation date in descending order.
+        Attributes:
+            queryset (QuerySet): The base queryset for retrieving Trip instances.
+            serializer_class (Serializer): The serializer class used for
+                validating and deserializing input, and for serializing output.
+            permission_classes (list): The list of permission classes that
+                determine access control.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trip'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Trip'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Trip'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+    patch:
+      operationId: trips_partial_update
+      description: |-
+        API view to retrieve, update, or delete a Trip instance.
+        This view supports the following operations:
+        - Retrieve a single Trip instance.
+        - Update a Trip instance.
+        - Delete a Trip instance.
+        The queryset is annotated with:
+        - likes_count: The count of likes associated with the images of the trip.
+        - images_count: The count of images associated with the trip.
+        The results are ordered by the creation date in descending order.
+        Attributes:
+            queryset (QuerySet): The base queryset for retrieving Trip instances.
+            serializer_class (Serializer): The serializer class used for
+                validating and deserializing input, and for serializing output.
+            permission_classes (list): The list of permission classes that
+                determine access control.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrip'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrip'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrip'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+    delete:
+      operationId: trips_destroy
+      description: |-
+        API view to retrieve, update, or delete a Trip instance.
+        This view supports the following operations:
+        - Retrieve a single Trip instance.
+        - Update a Trip instance.
+        - Delete a Trip instance.
+        The queryset is annotated with:
+        - likes_count: The count of likes associated with the images of the trip.
+        - images_count: The count of images associated with the trip.
+        The results are ordered by the creation date in descending order.
+        Attributes:
+            queryset (QuerySet): The base queryset for retrieving Trip instances.
+            serializer_class (Serializer): The serializer class used for
+                validating and deserializing input, and for serializing output.
+            permission_classes (list): The list of permission classes that
+                determine access control.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trips/{id}/images/:
+    get:
+      operationId: trips_images_list
+      description: |-
+        API view to retrieve a list of images or create a new image.
+        Attributes:
+            serializer_class (ImageSerializer): The serializer class for the view.
+            permission_classes (list): Permission classes that the user must pass.
+            filter_backends (list): List of filter backends used for ordering.
+            ordering_fields (list): List of fields that can be used for ordering.
+        Methods:
+            get_queryset(self):
+                Retrieves the queryset of images filtered by trip ID and owner.
+            perform_create(self, serializer):
+                Saves a new image instance with the current user as the owner and
+                    associates it with the specified trip.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - trips
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedImageList'
+          description: ''
+    post:
+      operationId: trips_images_create
+      description: |-
+        API view to retrieve a list of images or create a new image.
+        Attributes:
+            serializer_class (ImageSerializer): The serializer class for the view.
+            permission_classes (list): Permission classes that the user must pass.
+            filter_backends (list): List of filter backends used for ordering.
+            ordering_fields (list): List of fields that can be used for ordering.
+        Methods:
+            get_queryset(self):
+                Retrieves the queryset of images filtered by trip ID and owner.
+            perform_create(self, serializer):
+                Saves a new image instance with the current user as the owner and
+                    associates it with the specified trip.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Image'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Image'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+  /trips/{trip_id}/images/{id}/:
+    get:
+      operationId: trips_images_retrieve
+      description: |-
+        API view to retrieve, update, or delete an Image instance.
+        Allows users to perform the following actions on an Image instance:
+        - Retrieve the details of an image.
+        - Update the details of an image.
+        - Delete an image.
+        The view is restricted to the owner of the trip associated with the image.
+        Attributes:
+            serializer_class (ImageSerializer): Serializer class for the image.
+            permission_classes (list): Permission classes for access to the view.
+        Methods:
+            get_queryset(self):
+                Returns a queryset of Image objects filtered by the trip ID and
+                the owner of the trip.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+    put:
+      operationId: trips_images_update
+      description: |-
+        API view to retrieve, update, or delete an Image instance.
+        Allows users to perform the following actions on an Image instance:
+        - Retrieve the details of an image.
+        - Update the details of an image.
+        - Delete an image.
+        The view is restricted to the owner of the trip associated with the image.
+        Attributes:
+            serializer_class (ImageSerializer): Serializer class for the image.
+            permission_classes (list): Permission classes for access to the view.
+        Methods:
+            get_queryset(self):
+                Returns a queryset of Image objects filtered by the trip ID and
+                the owner of the trip.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Image'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Image'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+    patch:
+      operationId: trips_images_partial_update
+      description: |-
+        API view to retrieve, update, or delete an Image instance.
+        Allows users to perform the following actions on an Image instance:
+        - Retrieve the details of an image.
+        - Update the details of an image.
+        - Delete an image.
+        The view is restricted to the owner of the trip associated with the image.
+        Attributes:
+            serializer_class (ImageSerializer): Serializer class for the image.
+            permission_classes (list): Permission classes for access to the view.
+        Methods:
+            get_queryset(self):
+                Returns a queryset of Image objects filtered by the trip ID and
+                the owner of the trip.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedImage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedImage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedImage'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+    delete:
+      operationId: trips_images_destroy
+      description: |-
+        API view to retrieve, update, or delete an Image instance.
+        Allows users to perform the following actions on an Image instance:
+        - Retrieve the details of an image.
+        - Update the details of an image.
+        - Delete an image.
+        The view is restricted to the owner of the trip associated with the image.
+        Attributes:
+            serializer_class (ImageSerializer): Serializer class for the image.
+            permission_classes (list): Permission classes for access to the view.
+        Methods:
+            get_queryset(self):
+                Returns a queryset of Image objects filtered by the trip ID and
+                the owner of the trip.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trips
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    CurrentUser:
+      type: object
+      description: |-
+        Serializer for the current user, extending the UserDetailsSerializer.
+        This serializer adds additional read-only fields for the user's profile ID,
+        profile image URL, and trip image URL.
+        Attributes:
+            profile_id (serializers.ReadOnlyField): The ID of the user's profile.
+            profile_image (serializers.ReadOnlyField): URL for user profile image.
+            image (serializers.ReadOnlyField): The URL of the user's trip image.
+        Meta:
+            fields (tuple): The fields to be included in the serialization:
+                            fields from UserDetailsSerializer.Meta.fields
+                            along with 'profile_id', 'profile_image', and 'image'.
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: Email address
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        profile_id:
+          type: integer
+          readOnly: true
+        profile_image:
+          type: string
+          readOnly: true
+        image:
+          type: string
+          readOnly: true
+      required:
+      - email
+      - image
+      - pk
+      - profile_id
+      - profile_image
+      - username
+    Follower:
+      type: object
+      description: |-
+        Serializer for the Follower model.
+        This serializer handles the serialization and deserialization of
+        Follower model instances,
+        including read-only fields for the owner's username and the followed
+            user's username.
+        Attributes:
+            owner (ReadOnlyField): The username of the owner of the follower
+                model instance.
+            followed (ReadOnlyField): The username of the followed user.
+        Meta:
+            model (Follower): The model that is being serialized.
+            fields (list): The list of fields to be included in the serialization.
+        Methods:
+            create(validated_data):
+                Creates a new Follower instance. If an IntegrityError occurs,
+                    raises a ValidationError
+                indicating a possible duplicate.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        followed:
+          type: integer
+        followed_name:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+      required:
+      - created_at
+      - followed
+      - followed_name
+      - id
+      - owner
+    Image:
+      type: object
+      description: |-
+        Serializer for the Image model that automatically handles the
+        CloudinaryField and convert it to a URL string in the JSON output.
+        It includes the following fields:
+        - id: The unique identifier for the image.
+        - owner: The user who owns the image.
+        - trip: The trip associated with the image.
+        - title: The title of the image.
+        - image: The image file.
+        - description: A description of the image.
+        - shared: A boolean indicating if the image is shared.
+        - uploaded_at: The timestamp when the image was uploaded.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: integer
+        trip:
+          type: integer
+        image_title:
+          type: string
+          maxLength: 50
+          minLength: 2
+        image:
+          type: string
+        description:
+          type: string
+          minLength: 2
+          maxLength: 500
+        shared:
+          type: boolean
+        uploaded_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - description
+      - id
+      - image_title
+      - owner
+      - trip
+      - uploaded_at
+    Like:
+      type: object
+      description: |-
+        Serializer for the Like model.
+        This serializer handles the serialization and deserialization
+            of Like model instances.
+        It includes fields for the ID, creation timestamp, owner (read-only),
+            and the associated trip.
+        Additionally, it handles the creation of Like instances, raising a
+            validation error if a duplicate like is detected.
+
+        Attributes:
+            owner (serializers.ReadOnlyField): username of the like's owner.
+        Meta:
+            model (Like): The model that this serializer is for.
+            fields (list): The fields to be included for serialization.
+        Methods:
+            create(validated_data):
+                Creates a new Like instance, raising a validation error if
+                    a duplicate like is detected.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        image:
+          type: integer
+      required:
+      - created_at
+      - id
+      - image
+      - owner
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - password
+    PaginatedFollowerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Follower'
+    PaginatedImageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+    PaginatedLikeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Like'
+    PaginatedProfileList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Profile'
+    PaginatedTripList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trip'
+    PasswordChange:
+      type: object
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+      required:
+      - new_password1
+      - new_password2
+    PasswordReset:
+      type: object
+      description: Serializer for requesting a password reset e-mail.
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    PasswordResetConfirm:
+      type: object
+      description: Serializer for confirming a password reset attempt.
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - new_password1
+      - new_password2
+      - token
+      - uid
+    PatchedCurrentUser:
+      type: object
+      description: |-
+        Serializer for the current user, extending the UserDetailsSerializer.
+        This serializer adds additional read-only fields for the user's profile ID,
+        profile image URL, and trip image URL.
+        Attributes:
+            profile_id (serializers.ReadOnlyField): The ID of the user's profile.
+            profile_image (serializers.ReadOnlyField): URL for user profile image.
+            image (serializers.ReadOnlyField): The URL of the user's trip image.
+        Meta:
+            fields (tuple): The fields to be included in the serialization:
+                            fields from UserDetailsSerializer.Meta.fields
+                            along with 'profile_id', 'profile_image', and 'image'.
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: Email address
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        profile_id:
+          type: integer
+          readOnly: true
+        profile_image:
+          type: string
+          readOnly: true
+        image:
+          type: string
+          readOnly: true
+    PatchedImage:
+      type: object
+      description: |-
+        Serializer for the Image model that automatically handles the
+        CloudinaryField and convert it to a URL string in the JSON output.
+        It includes the following fields:
+        - id: The unique identifier for the image.
+        - owner: The user who owns the image.
+        - trip: The trip associated with the image.
+        - title: The title of the image.
+        - image: The image file.
+        - description: A description of the image.
+        - shared: A boolean indicating if the image is shared.
+        - uploaded_at: The timestamp when the image was uploaded.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: integer
+        trip:
+          type: integer
+        image_title:
+          type: string
+          maxLength: 50
+          minLength: 2
+        image:
+          type: string
+        description:
+          type: string
+          minLength: 2
+          maxLength: 500
+        shared:
+          type: boolean
+        uploaded_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProfile:
+      type: object
+      description: |-
+        Serializer for the Profile model.
+        This serializer handles the serialization and deserialization of Profile
+        instances, including custom fields and methods for additional data.
+
+        Fields:
+            owner (ReadOnlyField): The username of the profile owner.
+            is_owner (SerializerMethodField): Indicates if the current user is
+                the owner of the profile.
+            following_id (SerializerMethodField): The ID of the following
+                relationship between the current user and the profile owner.
+            posts_count (ReadOnlyField): The number of posts associated
+                with the profile.
+            followers_count (ReadOnlyField): The number of followers
+                the profile has.
+            following_count (ReadOnlyField): The number of profiles the profile
+                owner is following.
+            image (ImageField): The image associated with the profile.
+
+        Methods:
+            get_following_id(obj): Retrieve the ID of the following relationship
+                between the authenticated user and the profile owner.
+            get_image(obj): Retrieve the URL of the image associated
+                with the profile.
+            get_is_following(obj): Check if the authenticated user is
+                following the profile.
+            get_is_owner(obj): Determine if the current user is the owner
+                of the profile.
+        Meta:
+            fields (list): Fields to be included in the serialization.
+            read_only_fields (list): Read-only fields that are not modified
+                during serialization.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        is_owner:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        alias:
+          type: string
+          maxLength: 50
+        content:
+          type: string
+        image:
+          type: string
+          format: uri
+        following_id:
+          type: string
+          readOnly: true
+        followers_count:
+          type: string
+          readOnly: true
+        following_count:
+          type: string
+          readOnly: true
+        trips_count:
+          type: string
+          readOnly: true
+        images_count:
+          type: string
+          readOnly: true
+        likes_count:
+          type: string
+          readOnly: true
+    PatchedTrip:
+      type: object
+      description: |-
+        Serializer for the Trip model.
+        This serializer converts Trip model instances to JSON format
+        and vice versa.
+        It includes the following fields:
+
+        Attributes:
+            Meta (class): Meta options for the serializer.
+                model (Trip): The model that is being serialized.
+                fields (str): Specifies that all fields of the model should be
+                                included in the serialization.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        is_owner:
+          type: string
+          readOnly: true
+        profile_id:
+          type: integer
+          readOnly: true
+        profile_image:
+          type: string
+          readOnly: true
+        place:
+          type: string
+          maxLength: 100
+          minLength: 2
+        country:
+          type: string
+          maxLength: 100
+          minLength: 2
+        trip_category:
+          $ref: '#/components/schemas/TripCategoryEnum'
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        trip_status:
+          $ref: '#/components/schemas/TripStatusEnum'
+        shared:
+          $ref: '#/components/schemas/SharedEnum'
+        images_count:
+          type: string
+          readOnly: true
+        likes_count:
+          type: string
+          readOnly: true
+        lat:
+          type: number
+          format: double
+          nullable: true
+        lon:
+          type: number
+          format: double
+          nullable: true
+    Profile:
+      type: object
+      description: |-
+        Serializer for the Profile model.
+        This serializer handles the serialization and deserialization of Profile
+        instances, including custom fields and methods for additional data.
+
+        Fields:
+            owner (ReadOnlyField): The username of the profile owner.
+            is_owner (SerializerMethodField): Indicates if the current user is
+                the owner of the profile.
+            following_id (SerializerMethodField): The ID of the following
+                relationship between the current user and the profile owner.
+            posts_count (ReadOnlyField): The number of posts associated
+                with the profile.
+            followers_count (ReadOnlyField): The number of followers
+                the profile has.
+            following_count (ReadOnlyField): The number of profiles the profile
+                owner is following.
+            image (ImageField): The image associated with the profile.
+
+        Methods:
+            get_following_id(obj): Retrieve the ID of the following relationship
+                between the authenticated user and the profile owner.
+            get_image(obj): Retrieve the URL of the image associated
+                with the profile.
+            get_is_following(obj): Check if the authenticated user is
+                following the profile.
+            get_is_owner(obj): Determine if the current user is the owner
+                of the profile.
+        Meta:
+            fields (list): Fields to be included in the serialization.
+            read_only_fields (list): Read-only fields that are not modified
+                during serialization.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        is_owner:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        alias:
+          type: string
+          maxLength: 50
+        content:
+          type: string
+        image:
+          type: string
+          format: uri
+        following_id:
+          type: string
+          readOnly: true
+        followers_count:
+          type: string
+          readOnly: true
+        following_count:
+          type: string
+          readOnly: true
+        trips_count:
+          type: string
+          readOnly: true
+        images_count:
+          type: string
+          readOnly: true
+        likes_count:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - followers_count
+      - following_count
+      - following_id
+      - id
+      - image
+      - images_count
+      - is_owner
+      - likes_count
+      - owner
+      - trips_count
+      - updated_at
+    Register:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 150
+          minLength: 1
+        email:
+          type: string
+          format: email
+        password1:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+      required:
+      - password1
+      - password2
+      - username
+    ResendEmailVerification:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+    RestAuthDetail:
+      type: object
+      properties:
+        detail:
+          type: string
+          readOnly: true
+      required:
+      - detail
+    SharedEnum:
+      enum:
+      - 'Yes'
+      - 'NO'
+      type: string
+      description: |-
+        * `Yes` - YES
+        * `NO` - No
+    Token:
+      type: object
+      description: Serializer for Token model.
+      properties:
+        key:
+          type: string
+          maxLength: 40
+      required:
+      - key
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    Trip:
+      type: object
+      description: |-
+        Serializer for the Trip model.
+        This serializer converts Trip model instances to JSON format
+        and vice versa.
+        It includes the following fields:
+
+        Attributes:
+            Meta (class): Meta options for the serializer.
+                model (Trip): The model that is being serialized.
+                fields (str): Specifies that all fields of the model should be
+                                included in the serialization.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        owner:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        is_owner:
+          type: string
+          readOnly: true
+        profile_id:
+          type: integer
+          readOnly: true
+        profile_image:
+          type: string
+          readOnly: true
+        place:
+          type: string
+          maxLength: 100
+          minLength: 2
+        country:
+          type: string
+          maxLength: 100
+          minLength: 2
+        trip_category:
+          $ref: '#/components/schemas/TripCategoryEnum'
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        trip_status:
+          $ref: '#/components/schemas/TripStatusEnum'
+        shared:
+          $ref: '#/components/schemas/SharedEnum'
+        images_count:
+          type: string
+          readOnly: true
+        likes_count:
+          type: string
+          readOnly: true
+        lat:
+          type: number
+          format: double
+          nullable: true
+        lon:
+          type: number
+          format: double
+          nullable: true
+      required:
+      - country
+      - created_at
+      - end_date
+      - id
+      - images_count
+      - is_owner
+      - likes_count
+      - owner
+      - place
+      - profile_id
+      - profile_image
+      - start_date
+      - updated_at
+    TripCategoryEnum:
+      enum:
+      - Leisure
+      - Business
+      - Adventure
+      - Family
+      - Romantic
+      type: string
+      description: |-
+        * `Leisure` - LEISURE
+        * `Business` - BUSINESS
+        * `Adventure` - ADVENTURE
+        * `Family` - FAMILY
+        * `Romantic` - ROMANTIC
+    TripStatusEnum:
+      enum:
+      - Completed
+      - Ongoing
+      - Planned
+      type: string
+      description: |-
+        * `Completed` - COMPLETED
+        * `Ongoing` - ONGOING
+        * `Planned` - PLANNED
+    VerifyEmail:
+      type: object
+      properties:
+        key:
+          type: string
+          writeOnly: true
+      required:
+      - key
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

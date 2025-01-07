@@ -95,7 +95,7 @@ class TripFilter(FilterSet):
             return queryset.filter(likes__owner=user)
         return queryset
 
-    def filter_post_by_profile(self, queryset, name, value):
+    def filter_trip_by_profile(self, queryset, name, value):
         return queryset.filter(owner__profile=value)
 
     def filter_followed_users(self, queryset, name, value):

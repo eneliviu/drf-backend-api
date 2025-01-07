@@ -4,6 +4,11 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView
 )
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView
+)
 from .views import root_route
 
 urlpatterns = [
@@ -31,4 +36,13 @@ urlpatterns = [
     path('', include('trips.urls')),
     path('', include('likes.urls')),
     path('', include('followers.urls')),
+
+    path(
+        'schema/',
+        SpectacularAPIView.as_view(),
+        name='schema'
+    ),
+    # Optional UI:
+    path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

@@ -1,0 +1,12 @@
+
+###
+GET https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net/ HTTP/1.1
+
+###
+POST https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "John",
+    "age": 30
+}

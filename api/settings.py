@@ -33,6 +33,15 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'LovinEscapades API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 if DEBUG:
@@ -122,6 +131,8 @@ INSTALLED_APPS = [
     'trips',
     'likes',
     'followers',
+    
+    'drf_spectacular'
 ]
 
 SITE_ID = 1
