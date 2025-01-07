@@ -1,12 +1,67 @@
 from django.db.models import Count
+from django_filters import FilterSet, DateFilter, CharFilter, CharFilter, MultipleChoiceFilter
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer
+from datetime import datetime
 
 
-# Create your views here.
+class TripFilter(FilterSet):
+    """
+    TripFilter is a filter set for filtering Trip objects based on various fields.
+    Attributes:
+        owner__username (CharFilter): Filters trips by the username of the owner.
+        country (CharFilter): Filters trips by the country.
+        place (CharFilter): Filters trips by the place.
+        trip_category (CharFilter): Filters trips by the trip category.
+        trip_status (CharFilter): Filters trips by the trip status.
+        start_date (DateFilter): Filters trips that start on or after a given date.
+        end_date (DateFilter): Filters trips that end on or before a given date.
+    Meta:
+        model (Model): The model that this filter set is based on.
+        fields (list): The list of fields that can be filtered.
+    """
+
+    owner__username = CharFilter(field_name='owner__username')
+    country = CharFilter(field_name='country')
+    place = CharFilter(field_name='place')
+    trip_category = MultipleChoiceFilter(
+        field_name='trip_category',
+        choices=Trip.TRIP_CATEGORY)
+    trip_status = MultipleChoiceFilter(
+        field_name='trip_status',
+        choices=Trip.TRIP_STATUS)
+    trip_shared = MultipleChoiceFilter(
+        field_name='shared',
+        choices=Trip.SHARE_CHOICES)
+    start_date = DateFilter(
+        field_name='start_date',
+        lookup_expr='gte'
+    )
+    end_date = DateFilter(
+        field_name='end_date',
+        lookup_expr='lte'
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    #     if not self.data.get('start_date'):
+    #         self.data = self.data.copy()
+    #         self.data['start_date'] = datetime.now().date().strftime('%Y-%m-%d')
+    #     if not self.data.get('end_date'):
+    #         self.data = self.data.copy()
+    #         self.data['end_date'] = datetime.now().date().strftime('%Y-%m-%d')
+        if not self.data.get('owner__username') and 'request' in kwargs:
+            self.data = self.data.copy()
+            self.data['owner__username'] = kwargs['request'].user.username
+
+    class Meta:
+        model = Trip
+        fields = ['start_date', 'end_date']
+
+
 class TripList(generics.ListCreateAPIView):
     '''
     List all trips or create a new trip.
@@ -27,17 +82,16 @@ class TripList(generics.ListCreateAPIView):
         DjangoFilterBackend,
     ]
 
-    # `filterset_fields` for advanced filtering through complex
-    # relationship pathways
-    filterset_fields = [
-        'owner__username',
-        'country',
-        'place',
-        'trip_category',
-        'trip_status',
-        'start_date',
-        'end_date',
-    ]
+    filterset_class = TripFilter
+    # filterset_fields = [
+    #     'owner__username',
+    #     'country',
+    #     'place',
+    #     'trip_category',
+    #     'trip_status',
+    #     'start_date',
+    #     'end_date',
+    # ]
 
     ordering_fields = [
         'owner__username',
