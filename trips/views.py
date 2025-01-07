@@ -14,9 +14,6 @@ class TripList(generics.ListCreateAPIView):
     serializer_class = TripSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
     def get_queryset(self):
         return Trip.objects.annotate(
             # comments_count=Count('comment', distinct=True),
