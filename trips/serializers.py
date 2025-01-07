@@ -1,8 +1,6 @@
 import os
 from rest_framework import serializers
 from .models import Trip, Image
-from cloudinary.utils import cloudinary_url
-
 
 class TripSerializer(serializers.ModelSerializer):
     """

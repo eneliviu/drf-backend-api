@@ -31,10 +31,12 @@ class TripList(generics.ListCreateAPIView):
     # relationship pathways
     filterset_fields = [
         'owner__username',
-        # 'owner__follows__followed_by__profile',
-        # 'owner__followed_by__owner__profile',
-        # trips_count,
-        # 'images_count'
+        'country',
+        'place',
+        'trip_category',
+        'trip_status',
+        'start_date',
+        'end_date',
     ]
 
     ordering_fields = [
@@ -57,15 +59,20 @@ class TripList(generics.ListCreateAPIView):
 
 
 class TripDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''
-    Retrieve, update or delete a trip instance.
-    '''
-    queryset = Trip.objects.first()
+    """
+    API view to retrieve, update, or delete a Trip instance.
+    Attributes:
+        queryset (QuerySet): The base queryset for retrieving Trip instances.
+        serializer_class (Serializer): Serializer class for Trip instances.
+        permission_classes (list): Dermission classes for access control.
+    Methods:
+        get_queryset(): Annotates queryset with the count of related images.
+    """
+    queryset = Trip.objects.all()
     serializer_class = TripSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        # Annotate the queryset with the image count
         return Trip.objects.annotate(
             images_count=Count('images')
         )
@@ -77,7 +84,7 @@ class ImageList(generics.ListCreateAPIView):
     '''
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    permission_classes = [IsOwnerOrReadOnly]  # [IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['uploaded_at']
 
@@ -93,24 +100,10 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
     '''
     Retrieve, update or delete an image instance.
     '''
+    queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    queryset = Image.objects.first()
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         trip_id = self.kwargs['trip_id']
         return Image.objects.filter(trip__id=trip_id)
-
-
-class TripImageUploadView(generics.CreateAPIView):
-    '''
-    Upload an image to a trip.
-    '''
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    permission_classes = [IsOwnerOrReadOnly]
-
-    def perform_create(self, serializer):
-        trip_id = self.kwargs['trip_id']
-        trip = Trip.objects.get(pk=trip_id)
-        serializer.save(owner=self.request.user, trip=trip)
