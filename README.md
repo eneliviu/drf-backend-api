@@ -1,131 +1,844 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
-Welcome USER_NAME,
+# ***<center><font color="red"> LovinEscapades</font>***: The Ultimate Trip Tracking Tool!</center>
+## <center> A Django web app </center>
 
-This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
+### **Table of content:**
+- [Overview](#overview)
+- [Application Development](#application-development)
+- [Main Features](#main-features)
+- [Application Structure](#project-structure)
+- [Technologies Used](#technologies-used)
+- [Accessibility and Design](#accessibility-and-design)
+- [Usage and Screenshots](#usage-and-screenshots)
+- [Online Validators](#online-validators)
+- [Manual Testing](#manual-testing)
+- [Unit Testing](#unit-testing)
+- [Known bugs and issues](#known-bugs-and-issues)
+- [Further improvements](#further-improvements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [Documentation version](#documentation-version)
 
-You can safely delete this README.md file or change it for your own project. Please do read it at least once, though! It contains some important information about Gitpod and the extensions we use. Some of this information has been updated since the video content was created. The last update to this file was: **June 18, 2024**
 
-## Gitpod Reminders
+## Overview
 
-To run a frontend (HTML, CSS, Javascript only) application in Gitpod, in the terminal, type:
+**Project Inspiration**
+This backend API project builds upon the knowledge and skills acquired during the development of "LovinEscapades" Django web application completed as part of Milestone Project 4 at Code Institute ([more here](https://github.com/eneliviu/LovinEscapades.git)).
 
-`python3 -m http.server`
+The application envisioned utilizes a full-stack development approach, leveraging:
 
-A blue button should appear to click: _Make Public_,
+* Backend: Python with the Django framework
+* Frontend: Technologies like Javascript and CSS (specific libraries to be determined)
 
-Another blue button should appear to click: _Open Browser_.
+LovinEscapades aims to empower users to manage their travel experiences through features like:
 
-To run a backend Python file, type `python3 app.py` if your Python file is named `app.py`, of course.
+* User Authentication: Secure login and user management.
+* Trip Management: Create, update, and manage trip details.
+* Image Management: Upload, store, and associate images with trips.
+* Trip Sharing: Share trip information and images with others (public or private).
+* Social Features: Potential future functionalities like user interaction and testimonials.
 
-A blue button should appear to click: _Make Public_,
+**Public Access**:
 
-Another blue button should appear to click: _Open Browser_.
+* Trip Exploration: Unregistered users might be able to view public trip locations on a map.
+* Content Discovery: Access to shared trip details and images (depending on privacy settings).
 
-By Default, Gitpod gives you superuser security privileges. Therefore, you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
+**Future Considerations**:
 
-To log into the Heroku toolbelt CLI:
+* User-friendly interface for a seamless user experience.
+* Integration with mapping libraries for interactive trip visualization.
+* Potential social features for user interaction and community building.
 
-1. Log in to your Heroku account and go to *Account Settings* in the menu under your avatar.
-2. Scroll down to the *API Key* and click *Reveal*
-3. Copy the key
-4. In Gitpod, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
+**Disclaimer**:
 
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you, so do not share it. If you accidentally make it public, you can create a new one with _Regenerate API Key_.
+This API serves as a backend foundation for a potential application. The envisioned features and functionalities are subject to change and refinement based on further development and user feedback.
 
-### Connecting your Mongo database
 
-- **Connect to Mongo CLI on a IDE**
-- navigate to your MongoDB Clusters Sandbox
-- click **"Connect"** button
-- select **"Connect with the MongoDB shell"**
-- select **"I have the mongo shell installed"**
-- choose **mongosh (2.0 or later)** for : **"Select your mongo shell version"**
-- choose option: **"Run your connection string in your command line"**
-- in the terminal, paste the copied code `mongo "mongodb+srv://<CLUSTER-NAME>.mongodb.net/<DBname>" --apiVersion 1 --username <USERNAME>`
-  - replace all `<angle-bracket>` keys with your own data
-- enter password _(will not echo **\*\*\*\*** on screen)_
+## Application development (DONE)
+This application was developed using an iterative approach, following Agile principles.
 
-------
+**User Stories & Epics**
 
-## Release History
+We employed a user-centric approach, defining key epics and user stories to guide development.
 
-We continually tweak and adjust this template to help give you the best experience. Here is the version history:
+**Example Epic**:
+Epic: As an API developer,
+I want to implement robust and secure user authentication,
+so that API consumers can securely access and interact with protected resources.
 
-**June 18, 2024,** Add Mongo back into template
+**Example User Story**:
 
-**June 14, 2024,** Temporarily remove Mongo until the key issue is resolved
+As an API consumer,
+I can authenticate with the API using JWT (JSON Web Tokens),
+So that I can access protected resources and perform authorized actions.
 
-**May 28 2024:** Fix Mongo and Links installs
+**Key Epics**:
 
-**April 26 2024:** Update node version to 16
+* User Authentication: Implement secure and reliable user authentication.
+* Trip Management: Enable users to create, manage, and share trip plans.
+* Social Interaction: Allow users to interact with other users and their content (e.g., liking posts, following users).
+* API Documentation: Provide comprehensive and user-friendly API documentation.
 
-**September 20 2023:** Update Python version to 3.9.17.
 
-**September 1 2021:** Remove `PGHOSTADDR` environment variable.
+All critical user stories identified as "must-have" were successfully implemented within the project timeline.
 
-**July 19 2021:** Remove `font_fix` script now that the terminal font issue is fixed.
+![Main menu](static/docs/Kanban.webp#center)
+*<center><font color="red">LovinEscapades</font>: Github Kanban baord with project User stories*.</center><br>
 
-**July 2 2021:** Remove extensions that are not available in Open VSX.
+![Main menu](static/docs/Kanban_detail.webp#center)
+*<center><font color="red">LovinEscapades</font>: Custom template for User Stories*.</center><br>
 
-**June 30 2021:** Combined the P4 and P5 templates into one file, added the uptime script. See the FAQ at the end of this file.
+This project builds upon the "LovinEscapades" project from Milestone Project 4 at Code Institute. It provides an opportunity to apply API development concepts and enhance my understanding of backend development principles. During development, I focused on code quality and maintainability, adhering to the DRY principle and utilizing frequent Git commits for effective version control.
 
-**June 10 2021:** Added: `font_fix` script and alias to fix the Terminal font issue
 
-**May 10 2021:** Added `heroku_config` script to allow Heroku API key to be stored as an environment variable.
+[*Back to top*](#)
 
-**April 7 2021:** Upgraded the template for VS Code instead of Theia.
 
-**October 21 2020:** Versions of the HTMLHint, Prettier, Bootstrap4 CDN and Auto Close extensions updated. The Python extension needs to stay the same version for now.
+## Main Features
 
-**October 08 2020:** Additional large Gitpod files (`core.mongo*` and `core.python*`) are now hidden in the Explorer, and have been added to the `.gitignore` by default.
+### **Robust User Authentication:**
+* Securely authenticate users using industry-standard JSON Web Tokens (JWT).
+* Provide endpoints for obtaining and refreshing access tokens.
+* Implement robust user registration, login, logout, and password management functionalities.
 
-**September 22 2020:** Gitpod occasionally creates large `core.Microsoft` files. These are now hidden in the Explorer. A `.gitignore` file has been created to make sure these files will not be committed, along with other common files.
+### **Comprehensive Trip Management:**
+* Enable users to create, retrieve, update, and delete their travel itineraries.
+* Facilitate the upload, storage, and association of images with specific trips.
+* Allow users to filter and search for trips based on various criteria, such as destination, travel dates, and user preferences.
 
-**April 16 2020:** The template now automatically installs MySQL instead of relying on the Gitpod MySQL image. The message about a Python linter not being installed has been dealt with, and the set-up files are now hidden in the Gitpod file explorer.
+### **Interactive Map:**
+* Show trip locations on a Leaflet map with markers.
+* Connect map markers to trip details and photo galleries.
 
-**April 13 2020:** Added the _Prettier_ code beautifier extension instead of the code formatter built-in to Gitpod.
+### **Engaging Social Features:**
+* Empower users to connect with other travelers by following other users.
+* Enable users to express their interest in trips by liking posts.
+* Potentially facilitate user-to-user communication and collaboration within the context of shared trips.
 
-**February 2020:** The initialisation files now _do not_ auto-delete. They will remain in your project. You can safely ignore them. They just make sure that your workspace is configured correctly each time you open it. It will also prevent the Gitpod configuration popup from appearing.
+### **Interactive Map:**
+* Show trip locations on a Leaflet map with markers.
+* Connect map markers to trip details and photo galleries.
 
-**December 2019:** Added Eventyret's Bootstrap 4 extension. Type `!bscdn` in a HTML file to add the Bootstrap boilerplate. Check out the <a href="https://github.com/Eventyret/vscode-bcdn" target="_blank">README.md file at the official repo</a> for more options.
+### **User Testimonials:**
+* Submit testimonials on site experiences, pending admin approval.
 
-------
+### **Well-Defined API:**
+* The API adheres to RESTful principles and provides clear and concise documentation for developers.
+* Includes comprehensive API documentation generated using tools like Swagger or OpenAPI.
+* Provides a smooth user experience by handling errors gracefully and delivering helpful messages.
 
-## FAQ about the uptime script
+More details about the API are provided in the [Usage and Screenshots](#usage-and-screenshots) section.
 
-**Why have you added this script?**
 
-It will help us to calculate how many running workspaces there are at any one time, which greatly helps us with cost and capacity planning. It will help us decide on the future direction of our cloud-based IDE strategy.
+[*Back to top*](#)
 
-**How will this affect me?**
 
-For everyday usage of Gitpod, it doesn’t have any effect at all. The script only captures the following data:
+## Project structure
 
-- An ID that is randomly generated each time the workspace is started.
-- The current date and time
-- The workspace status of “started” or “running”, which is sent every 5 minutes.
+### ***Lovingescapades*** project consists of four apps:
 
-It is not possible for us or anyone else to trace the random ID back to an individual, and no personal data is being captured. It will not slow down the workspace or affect your work.
+### 1. `trip`
+This app features the `Dashboard` page, allowing users to:
+- View updated counts of trips, uploaded photos, and testimonials awaiting approval.
+- Decide if new trip information will be shared publicly or kept private. Public trips are mapped on the landing page, while private trips are visible only to the authenticated user.
+- Quickly access trip details through trip card elements, which provide basic trip information (destination, start and end dates, creation date) along with options to edit/delete trips and upload/delete photos.
+- Display approved user testimonials on the landing page and map the locations of shared trips.
 
-**So….?**
+### 2. `user_profile`
+The user profile app offers two primary sections:
+- Profile update section for editing basic user information such as username, first and last name, and email address.
+- Functionality for posting and deleting testimonials, which are subject to admin approval before appearing on the landing page.
 
-We want to tell you this so that we are being completely transparent about the data we collect and what we do with it.
+### 3. `contact`
+This app provides essential functionality for site visitors to send inquiries to the site admin via a dedicated form.
 
-**Can I opt out?**
+### 4. `gallery`
+- Hosts the photo gallery where all publicly shared photos by registered users can be viewed by any visitor.
+- Users can publish photos even if they choose not to make the associated trip information public.
+- Each photo in the gallery includes a like icon and basic trip details, though the feature for sending and receiving likes has not been implemented yet.
 
-Yes, you can. Since no personally identifiable information is being captured, we'd appreciate it if you let the script run; however if you are unhappy with the idea, simply run the following commands from the terminal window after creating the workspace, and this will remove the uptime script:
+
+[*Back to top*](#)
+
+
+## Technologies Used
+
+### **Django Rest Framework:**
+- A web framework made with Python that helps build web apps quickly and efficiently. It's great for managing databases and organizing code, making it easier to create complex features for ***LovinEscapades-api***.
+
+### **Geopy Python Module:**
+- A library that helps find geographic coordinates, like latitude and longitude, from place names. It’s used to show trip locations accurately on the map.
+
+### **Django graph models:**
+- [Django Extensions](https://shorturl.at/GxkSs) is a collection of custom extensions for the Django Framework that can be used for creating ER (Entity-Relationship) diagrams for the project database. These diagrams make it easier to visualize, understand, and manage the database structure. You can view these database model relationships using the online [GraphViz generator](https://shorturl.at/AAuhy).
+
+### **Python modules**
+The following Python modules were installed using the `pip install` command in the terminal and were listed in the [`requirements.txt`](requirements.txt) file.
+
+### **Markdown**
+* The Markdown formatting for README.md and HELP.md files was done according to the documentation provided at
+[www.markdownguide.org](https://www.markdownguide.org/basic-syntax/).
+
+### Cloudinary serving
+This project utilizes Cloudinary for efficient and secure image storage and delivery.
+
+### Cloud deployment
+* The app is currently deployed on [Heroku Cloud Application Platform](https://www.heroku.com)
+* For cloud deployment, the [dependency requirements file](requirements.txt) was compiled using the following command:
+```
+pip freeze --local > requirements.txt
+```
+
+* The processes to run on the Heroku platform are specified in the `Procfile` file.
+* Sensitive information is stored in the `env.py` file, which is listed in the `.gitignore` to prevent it from being uploaded to GitHub.
+* The app can be accessed at [***LovinEscapades-api***](https://github.com/eneliviu/drf-backend-api.git).
+
+### Local deployment
+* For development or deployment on a local development, the web server can be started using the terminal command:
 
 ```
-pkill uptime.sh
-rm .vscode/uptime.sh
+python manage.py runserver
 ```
 
-**Anything more?**
+[*Back to top*](#)
 
-Yes! We'd strongly encourage you to look at the source code of the `uptime.sh` file so that you know what it's doing. As future software developers, it will be great practice to see how these shell scripts work.
+
+## Accessibility and Design
+
+### Accessibility
+- Attention was given to the ARIA (Accessible Rich Internet Applications) content, ensuring that screen readers can effectively retrieve information when needed.
+
+### Fonts
+- The font 'Lato' was chosen for the logo and related statement text. It is both legible and adds a rough, gritty   texture, breaking the clean visual of the site.
+- The font 'Roboto' was used for general text, both offering a clean and easily readable appearance.
+
+### Colors and Themes
+- The website’s style is minimalistic, primarily based on predefined Bootstrap 5.3 themes and touches of custom CSS. This approach ensures good contrast and a decent aesthetic, supporting accessibility and visual appeal.
+
+### Icons
+- Font Awesome were used for the Logo, social media icons in the Footer, `My profile`-page link and like buttons on share photos in the `Gallery`-page. 
+
+[*Back to top*](#)
+
+
+## Usage and Screenshots
+
+### Responsive design
+- The 
+![Main menu](static/clips/Responsive_large_screen.webp#center)
+*<font color="red">LovinEscapades</font>: Responsive design: large screen*.<br>
+
+
+![Main menu](static/clips/Responsive_tablet_phone.webp#center)
+*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
+
+
+### User Registration
+
+- The site visitor must fill in a standard registration form:
+
+![Main menu](static/clips/User_registration_form.webp#center)
+*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
+
+- The user instroduces username, email and a strong password
+![Main menu](static/clips/User_registration_form_fill.webp#center)
+*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
+
+- If the registration is successful, the user is redirect to the home page and a success message is posted.
+- For logged-in users, the Registration navbar menu is not visible anymore, and the 'My profile'- page with a user icon appears on the right side of the navbar.
+- Authenticated users can navigate to the Dashboard page
+
+![Main menu](static/clips/User_registration_logged.webp#center)
+*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
+
+
+### User Dashboard
+- The Dashboard offers CRUD fuctionality for managing trips and images
+
+![Main menu](static/clips/Dashboard_clean.webp#center)
+*<font color="red">LovinEscapades</font>: Dashboard page*.<br>
+
+#### **Create new trip**
+- On the Dashboard, the stats are null and the user can create a new trip record by clicking on the 'Add new trip' button to open an empty form in a Bootstrap modal.
+- By design, all form fields are required
+
+![Main menu](static/clips/Add_new_trip_start.webp#center)
+*<font color="red">LovinEscapades</font>:Add new trip form*.<br>
+
+- Using Javascript, the date picker entries are corroborated in real-time to the Trip status category (Completed, On-going and Planned) to avoid erroneous choices and to increase the UX. The eventual error are shown in browser alerrs, and the user can chose other entries accordingly. 
+- On the backend, the date entries are checked against those form other planned trips to eliminate possible collusions. There errors are hadled by Python logic in `trip.views.py`, and a Django error message is sent if necessary.
+
+
+
+![Main menu](static/clips/Add_trip_Completed_error.webp#center)
+
+*<font color="red">LovinEscapades</font>: Add new trip form: date choice missmatch for COMPLETED trips*.<br>
+
+
+
+![Main menu](static/clips/Add_trip_Planned_error.webp#center)
+
+*<font color="red">LovinEscapades</font>: Add new trip form: date choice missmatch for PLANNED trips*.<br>
+
+- After a new trip is created and posted as a trip card containg basic trip info  
+- Django success message is sent to the user.
+- The Dasboard is paginated such that it can handle a large number of trip instances 
+
+
+
+![Main menu](static/clips/Add_new_trip_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Add new trip form: correct date choice for ON-GOING trips*.<br>
+
+- The created trip, if the shared choice is `YES`, it will be sent to the Leaflet map on the landing page. By clicking on the marker, trip information and a redirecting link appear in a tooltip while the map zooms in at the marker location
+- The coordinates are calculated using the `geopy` Python module that uses the trip destination (Place and Country) to localize and retrieve the Longitude and the Latitude for mapping the location.
+- Although the form does not show the coordinates fields when creating a new trip, these fields exist and are populated when the coordinates are saved.  
+- If the location cannot be geolocated, a Django error message is sent to the user.  
+
+
+![Main menu](static/clips/Add_new_trip_on_map.webp#center)
+
+*<font color="red">LovinEscapades</font>: Add new trip form: correct date choice for ON-GOING trips*.</center><br>
+
+
+![Main menu](static/clips/Add_new_trip_on_map_tooltip.webp#center)
+
+*<font color="red">LovinEscapades</font>: Add new trip form: correct date choice for ON-GOING trips*.<br>
+
+#### **Managing trips**
+- After a  new trip is created, the dashboard stats are updated accordigly
+
+
+
+![Main menu](static/clips/Dashboard_update_stats.webp#center)
+
+*<font color="red">LovinEscapades</font>: Trip card with CRUD functionalitys*.<br>
+
+- The trip cards have CRUD functionality for editing trip data and uploading photos.
+
+
+![Main menu](static/clips/Trip_card.webp#center)
+
+*<font color="red">LovinEscapades</font>: Trip card with CRUD functionalitys*.<br>
+
+- By clicking on the `Update` button, the user is directed to a page containing two choices: 
+    - `Update trip` for changing the trip info.
+    - `Upload photo` for uploading trip photos.
+
+
+
+![Main menu](static/clips/Update_trip_page.webp#center)
+
+*<font color="red">LovinEscapades</font>: Trip card with CRUD functionalitys*.<br>
+
+- Selecting `Update trip` opens the create trip form with all fields filled in, such that the user can modify and save the new trip information.
+
+
+![Main menu](static/clips/Edit_trip_form.webp#center)
+
+*<font color="red">LovinEscapades</font>: Edit trip page*.<br>
+
+- Selecting `Update photo` option opens a form for loading photos.
+- All form fields are mandatory and must be non-empty.
+- Constraints on min and max text length are in place using Django Validators.
+- After upload, a success message is sent to the user.
+- If the user chooses to share it, then the photo is also sent to the `Gallery`-page.
+
+
+
+![Main menu](static/clips/Upload_photos_form.webp#center)
+
+*<font color="red">LovinEscapades</font>: Upload photo form*.<br>
+
+
+
+![Main menu](static/clips/Upload_photo_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Upload photo success*.<br>
+
+- After image upload, the stats on the dashboard are updated accordingly
+
+
+![Main menu](static/clips/Dasboard_stats_1_photo_1_trip.webp#center)
+
+*<font color="red">LovinEscapades</font>: Updated dashboard with trip and photo added*.<br>
+
+- The user can access the uploaded photo using the `Photos` button on the trip card to navigate to a `details<image_id>` URL that opens a masonry gallery of image cards. 
+
+
+
+![Main menu](static/clips/User_trip_photo.webp#center)
+
+*<font color="red">LovinEscapades</font>: Gallery page with shared photo*.<br>
+
+- Shared photos can be seen by any site visitor on the `Gallery`-page.
+
+
+![Main menu](static/clips/Gallery_shared_photo.webp#center)
+
+*<font color="red">LovinEscapades</font>: Gallery page with shared photo*.<br>
+
+- Each photo can be individually deleted form the  `details<image_id>`
+
+
+
+![Main menu](static/clips/Delete_photo.webp#center)
+
+*<font color="red">LovinEscapades</font>: Delete photo modal confirmation*.<br>
+
+- After the photo is being deleted, the user is redirected to Dashboard and a Django success message is sent to the user.
+- The stats on the Dashboard are updated accordingly
+
+
+
+![Main menu](static/clips/Delete_photo_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Delete photo success message and updated dashboard stats*.<br>
+
+### Manage the user profile
+- Initially, the user profile contains only the username and email address that are required 
+    by the registration process, but the fields for first and last name are empty.
+
+
+![Main menu](static/clips/User_profile_clean.webp#center)
+
+*<font color="red">LovinEscapades</font>: User profile page*.<br>
+
+- The `Update` button opens a form for updating the user information
+
+
+
+![Main menu](static/clips/Update_user_profile.webp#center)
+
+*<font color="red">LovinEscapades</font>: Update user profile form*.<br>
+
+- After submitting the form, the user is redirected back to `My Profile`-page where the personalia has been updated
+
+
+
+![Main menu](static/clips/Update_user_profile_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Update user profile form*.<br>
+
+- The user can post testimonials to the landing page using the 'New testimonial' button
+
+
+
+ ![Main menu](static/clips/Testimonials_form.webp#center)
+
+*<font color="red">LovinEscapades</font>: Post testimonial form*.<br>
+
+- After submitting the testimonial, the user is redirected to `My Profile`-page where the post is loaded and pending approval. 
+
+
+
+ ![Main menu](static/clips/Testimonials_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Posted testimonial*.<br>
+
+
+
+ ![Main menu](static/clips/Testimonial_admin.webp#center)
+
+*<font color="red">LovinEscapades</font>: Testimonial pending approval on admin page*.<br>
+
+
+
+ ![Main menu](static/clips/Testimonial_approved.webp#center)
+
+*<font color="red">LovinEscapades</font>: Approved testimonial on admin page*.<br>
+
+
+
+ ![Main menu](static/clips/Testimonial_approved_user_profile.webp#center)
+
+*<font color="red">LovinEscapades</font>: Approved testimonial on admin page*.<br>
+
+- The `Dashboard`-page has also been udated with a new testimonial post
+
+
+ ![Main menu](static/clips/Dashboard_trip_testimonial_approved.webp#center)
+
+*<font color="red">LovinEscapades</font>: Updated dashboard page with trip and approved testimonial*.<br>
+
+- After approval, the testimonial is posted on the landing page
+
+
+ ![Main menu](static/clips/Landing_page_with_testimonial.webp#center)
+
+*<font color="red">LovinEscapades</font>: Updated dashboard page with trip and approved testimonial*.<br>
+
+
+
+- Deleteing a trip will remove all the linked trip photos as well
+- The dasboard stats and the landing page map are also updated  
+
+ ![Main menu](static/clips/Example_two_trips_two_photos.webp#center)
+
+*<font color="red">LovinEscapades</font>: Updated dashboard page with trip and approved testimonial*.<br>
+
+ ![Main menu](static/clips/Map_two_trips.webp#center)
+
+*<font color="red">LovinEscapades</font>: Updated map with new trip marker added*.<br>
+
+ ![Main menu](static/clips/Delete_trip.webp#center)
+
+*<font color="red">LovinEscapades</font>: Delete trip and associated photo*.<br>
+
+
+ ![Main menu](static/clips/Delete_trip_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Delete trip and associated photo*.<br>
+
+ ![Main menu](static/clips/Map_one_trip_after_delete.webp#center)
+
+*<font color="red">LovinEscapades</font>: Delete trip marker from map after trip deletion*.<br>
+
+
+[*Back to top*](#)
+
+
+#### **Managing site admin inquiries**
+
+ ![Main menu](static/clips/Contact_us_form.webp#center)
+
+*<font color="red">LovinEscapades</font>: Form for sending inquiries to site admin*.<br>
+
+
+ ![Main menu](static/clips/Contact_success.webp#center)
+
+*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
+
+
+ ![Main menu](static/clips/Inquiry_to_site_admin.webp#center)
+
+*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
+
+
+ ![Main menu](static/clips/Inquiry_to_site_admin_read.webp#center)
+
+*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
+
+
+[*Back to top*](#)
+
+#### **Managing photo gallery page**
+
+- The `Gallery`-page contains all the photos sahred by the user. 
+- A user can choose to share a photo, but not to make the entire trip public.
+- Deleting a trip will delete also the associated photos from the `Gallery`-page
+
+
+
+ ![Main menu](static/clips/Shared_gallery.webp#center)
+
+*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
+
+
+[*Back to top*](#)
+
+
+## Database schema
+
+The Entity Relationship Diagram (EDR) for the full project database shcema was produced using the 
+[Graph models extention](https://shorturl.at/psHzX) and visualized using the online [GraphViz generator](https://shorturl.at/AAuhy). 
+
+
+
+![Main menu](static/docs/graphviz_all_models.webp#center)
+
+*<font color="red">LovinEscapades</font>: EDR project database diagram*.<br>
+
+
+## Online Validators
+
+### **PEP8**
+The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
+
+| App            | File         | CI Linter Result           |  Status |
+| --- | --- | --- | --- |
+| `trip`         | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `filters.py` | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `utils.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `contact`      | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `gallery`      | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `user_profile` | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 
 ---
 
-Happy coding!
+### **JSHint**
+The [JSHint](https://jshint.com/) validator flagged two warnings across all JavaScript files concerning the use of Bootstrap 5.3 modals and Leaflet `L` objects.
+
+
+![Main menu](static/docs/JSHint.webp#center)
+
+*<font color="red">LovinEscapades</font>: JSHint validator results*.<br>
+
+### **Lighthouse**
+The Lighthouse validator showed very good results, with an warning related to a Leaflet internal issue. 
+
+
+![Main menu](static/docs/Lighthouse_navtest.webp#center)
+
+*<font color="red">LovinEscapades</font>: Lighthouse navigation test*.<br>
+
+
+![Main menu](static/docs/Lighthouse_snapshot_test.webp#center)
+
+*<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
+
+
+### Jigsaw CSS Validator
+
+The Jigsaw CSS Validator reported no errors for the custom CSS.
+
+![Main menu](static/docs/W3C-CSS-CustomCSS.webp#center)
+
+*<font color="red">LovinEscapades</font>: Jigsaw CSS Validator test for custom style*.<br>
+
+However, it identified two errors in the Leaflet CSS, both related to Leaflet specifically:
+
+![Main menu](static/docs/W3C-CSS-Errors-URL.webp#center)
+
+*<font color="red">LovinEscapades</font>: Jigsaw CSS Validator test errors*.<br>
+
+Upon further investigation using [caniuse.com](https://caniuse.com), it was confirmed that `plus-lighter` is a valid value for the `mix-blend-mode` property.
+
+![Main menu](static/docs/CANIUSE_plus-lighter.webp#center)
+
+*<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
+
+For the second error, no relevant results were found, and I am unable to provide an explanation or a fix.
+
+![Main menu](static/docs/CANIUSE_behaviour.webp#center)
+
+*<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
+
+
+### Web Accessibility Evaluation Tool (WAVE) 
+
+The WAVE Tool reports no errors but does issue an alert.
+
+![Main menu](static/docs/WAVE_test.webp#center)
+
+*<font color="red">LovinEscapades</font>: WAVE accessibility test*.<br>
+
+
+Upon investigating further, it suggests that both the site logo and the "Home" navbar element have the same link pointing to the homepage. I have not addressed this alert because having multiple links leading to the home page is a common practice and does not typically impede navigation or accessibility.
+
+![Main menu](static/docs/WAVE_test_alert.webp#center)
+
+<font color="red">LovinEscapades</font>: WAVE accessibility test alert*.<br>
+
+Finally, the WAVE contrast check test also passes successfully.
+
+![Main menu](static/docs/WAVE_test_contrast.webp#center)
+
+<font color="red">LovinEscapades</font>: WAVE contrast test*.<br>
+
+
+### W3C Markup Validation Service
+
+The W3C HTML Validator displays parsing errors because of the Django Template Language. Attempting to find alternative validators online didn't yield any viable solutions. I'm open to suggestions on how to address this issue.
+
+
+![Main menu](static/docs/NU_HTML_checker.webp#center)
+
+*<font color="red">LovinEscapades</font>: W3C HTML Validator partial results*.<br>
+
+
+## Manual Testing
+
+- Manual testing primarily concentrated on interacting with the forms to ensure users received appropriate feedback after submission. 
+- The default `clean()` and `save()` methods of the model form class were overridden as necessary to implement specific validations.
+
+- Emphasis was placed on real-time user feedback during form completion.
+- Fields were designed to provide immediate alerts for incorrect inputs.
+- Some form fields were configured with predefined choices to minimize input errors.
+
+- Despite these measures, certain errors might still occur, such as:
+    - Selecting inappropriate trip dates that don't align with the trip status, like planning a trip with past dates.
+    - Overlapping dates when creating a new trip that conflict with previously created trips.   
+
+
+
+| Feature | Expected behaviour | Test | Status |
+| --- | --- | --- | --- |
+| `User registration` | **New user can register**
+| &nbsp;&nbsp;- *Username validation* | Accept a valid username | Non-empty string | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Username validation* | Accept a valid password | Strong password |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Redirect to dashboard* | Innloged user redirected to user dashboard | Successful navigation (200 status code) |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success message* | Returns Django messsage for successful login | Green message box on screen |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `User login` | **User information retrieved, user can login**
+| &nbsp;&nbsp;- *Username validation* | Valid username | Can login with corrent user name | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Password validation* | Valid password | Can login with correct password | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Redirect to home address* | Redirect | User redirected to home after registration |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success message* | Returns messsage for successful login/registration | Green message box on screen |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Welcome message* | Dispalys username and welcome message | Green message box on screen |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Create new trip` | **Authenticated users can create a new trip**
+| &nbsp;&nbsp;- *Select time intervals* | Start date less or equal to end date | Type wrong dates combinations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Select time intervals* | Completed trips cannot be in the future | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Select time intervals* | Planned trips cannot be in the past | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Select time intervals* | Ongoing trips must contain the current date | Type wrong dates combintations | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
+| &nbsp;&nbsp;- *Success messages* | Create/delete trips must return a message to the user | Create and delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Edit trip` | **Modify an existing trip**
+| &nbsp;&nbsp;- *Select time intervals* | Start date less or equal to end date | Type wrong dates combinations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Select time intervals* | Completed trips cannot be in the future | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Select time intervals* | Planned trips cannot be in the past | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Select time intervals* | Ongoing trips must contain the current date | Type wrong dates combintations | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
+| &nbsp;&nbsp;- *Success messages* | Create/delete trips must return a message to the user | Create and delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Change title* |  Title non-empty, min 100 char | Enter title with different  lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Change place* | Place non-empty, min 2 char | Enter place names with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Change country* | Country non-empty, 2-56 chars | Enter country names with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success messages* | Edit trips must return a message to the user | Edit trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Map the shared trips * | Shared trips must be mapped | Create trips with/without sharing rights | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Delete trip` | **Modify an existing trip**
+| &nbsp;&nbsp;- *Remove trip and associated phots* | Deleting a trip must remove all associated photos | Create/delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Remove trip and map markers* | Deleting a trip must remove all associated map markers | Create/delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success messages* | Removing trips must return a message to the user | Remove trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Upload/Delete photos` | **An image can be uploaded to the site**
+| &nbsp;&nbsp;- *File type* | Only valid image files can be uploaded | Upload wrong file types | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Title length* | Title between 2-50 chars | Enter photo titles with different lengths  | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Description length* | Photo description 2-500 chars | Enter photos descriptions with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Upload shared photos ti gallery* | Shared photos must be uploaded to Gallery | Upload photos with/withoud sharing rights | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
+| &nbsp;&nbsp;- *Delete photo* | Upload/delete photos must return a message to the user | Uploade/delete photos | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success messages* | Upload/delete photos must return a message to the user | Uploade/delete photos | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Post testimonials` | **An authenticated user can be post a testimonial**
+| &nbsp;&nbsp;- *Create testimonial* | A post should contain vaild text 2-50 chars | Enter posts with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Testimonial on the landing page* | Approved testimonials should be posted on the lading page | Create and approve posts | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Delete testimonial* | Users can delete their own testimonials | Add and delete testimonials | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success messages* | Add/delete testimonials must return a message to the user | Uploade/delete testimonials | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Send inquiries` | **A site visitor can send an email to site admin**
+| &nbsp;&nbsp;- *Valid sender name* | Sender name of 2-100 chars | Enter sender names with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Valid message* | A message text of 50-500 chars | Enter messages with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Admin can receive message* | The messages are visible on the admin page | Send inquiries | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Admin can approve message* | The admin can approve a message on admin page | Send inquiries | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success messages* | Sent inquries must return a message to the user | Send inquiries | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Create user profile` | **A profile table shoukd be created when a user registers to the site**
+| &nbsp;&nbsp;- *User Profile in the admin page* | Profile can be accessed by the admin | Create new users and check the admin page | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *User Profile can be deleted* | Deleting users removes the profile from admin | Delete User from the admin | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *A users can follow other users* | Can select one or mores users to follow from the admin page| Follow/unfollow users | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Edite user profile` | **A user can edit his profile data**
+| &nbsp;&nbsp;- *User can change/remove name* | User can chose what personal data to display | Add and remove user names | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *User can modify email address* | User can change email address, but a valid email is mandatory have | Edit email address | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Success messages* | User receives a meaasge after editing the profile | Edit profile items | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `Leaflet map` | **A user map shared trips and; the map has basic filtering options**
+| &nbsp;&nbsp;- *Shared trip location is mapped correctly* | User can find the correct trip destination on the map | Add many destinations | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
+| &nbsp;&nbsp;- *Filter trips* | User and site visitors can filter trips | Use different entries for place, country, category and trip status  | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Filter success* | The filter retrieves the correct trips | The right trips are mapped | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| &nbsp;&nbsp;- *Error messages* | User receives an error messasge if no match is found | Use different entries for place, country, category and trip status | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+
+---
+
+### Unit Testing
+
+I  run automatic testing for the simplest case - i.e. the ContactForm `contact` app with the command
+
+```
+python3 manage.py test contact
+```
+
+and I got the following error:
+`django.db.utils.OperationalError: near "None": syntax error`
+
+The error occured when running unit testing with all apps, and I have tried to redo the database migrations, but it didn't work. 
+For the time being, I am open for suggestions.
+
+
+### Additional testing
+
+#### Devices and browsers
+Additional testing was performed by calling the application from my private devices operating on Windows 11 (desktop and laptop), as well as
+on my smartphone (Samsung Galaxy S21) operating on Android OS, using the following web browsers:
+- Google Chrome: Version 129.0.6668.100 (Official Build) (64-bit)
+- Brave: version 1.70.126 Chromium: 125.0.6422.112 (Official Build) (64-bit)
+- Microsoft Edge: Version 129.0.2792.89 (Official build) (64-bit)
+
+
+[*Back to top*](#)
+
+## <font color="red">Known bugs and issues</font>
+- There is a **Javascript error** that occurs when creating trips with the `Ongoing` status. I don't know if it is a logical error or a coding error, but I suspect that the inclusion of the javascript tags onto the Django templates may not be quite right.
+- Mapping remote, exotic or uncharted locations can fail sometimes due to the limitations of the gelocation services
+- The geolocator cannot deal with places having similar names, so a more sophisticated logic must be implemented for selecting the right one.
+
+If you encounter other bugs, please create an issue by clicking [here](https://github.com/eneliviu/LovePlanningCLI/issues).
+
+
+[*Back to top*](#)
+
+
+## Further improvements
+- Refactor the Javascript functions
+- Refactor the delete functions since there is quite a bit of overlap between them.
+- Functionality to reply to user inquiries send through the form on the Contact Us page
+- Filter and sort options to organize and view the trips and photos according to more detailed criteria.
+    - Add a day-time picker to improve the map filter
+    - Add separate filter for the image gallery page
+    - Add separate filter for dashboard page
+- Reminders
+    - Set due dates with automatic reminder to receive timely notifications for upcoming trips and deadlines.
+- Social Sharing:
+    - Share trip experiences and images with other users and visitors.
+    - Comment and interact on shared trip entries.
+
+
+[*Back to top*](#)
+
+
+## Contributing
+
+### To contribute to the ***LovinPlans*** project:
+- Fork the repository on GitHub to create your own copy.
+- Clone the forked repository to your local machine.
+- To fork the project:
+    - Click the "Fork" button on the top-right corner of the repository page
+    - Clone Your Fork by running the following command in the terminal or command prompt:
+        `git clone https://github.com/your-username/repository-name.git`
+- Make your desired changes, whether it's fixing a bug, adding a feature, or updating documentation.
+- Commit your changes with clear messages.
+- Push your commits to your forked repository on GitHub.
+- Submit a pull request detailing your changes and their benefits.
+
+[*Back to top*](#)
+
+## License
+### Open Source
+As an open-source project, ***LovinEscapades*** promotes transparency and community involvement. The code is accessible on GitHub, allowing developers to view, fork, and contribute to the project as they desire.
+
+
+[*Back to top*](#)
+
+
+## Acknowledgements
+- Further details on the usage of Leaflet JS were obtained from https://leafletjs.com/
+- [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and great short examples of using extensions
+- [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=E2bhoCOMlsA&t=44s) for the Django - Leaflet integration idea  
+- [Pagination with Django](https://djangocentral.com/adding-pagination-with-django/#adding-pagination-using-function-based-views)
+- [On handling multiple forms on the same template](https://stackoverflow.com/questions/1395807/proper-way-to-handle-multiple-forms-on-one-page-in-django)
+- [Codemy Youtube channel](https://www.youtube.com/watch?v=H8MmNqDyra8&list=PLCC34OHNcOtoQCR6K4RgBWNi3-7yGgg7b&index=3) for automatically creating profile pages
+- `ChatGPT` was utilized to generate sensible input for text content, assist in crafting the README file, and perform language proof-checking.
+
+
+[*Back to top*](#)
+
+
+## Documentation version
+
+Last updated: Oct 14, 2024
+
+[*Back to top*](#)
