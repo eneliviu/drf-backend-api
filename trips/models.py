@@ -72,6 +72,7 @@ class Trip(models.Model):
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
     trip_status = models.CharField(
         choices=TRIP_STATUS,
         default='PLANNED',

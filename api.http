@@ -1,12 +1,35 @@
 
 ###
-GET https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net/ HTTP/1.1
+GET http://127.0.0.1:8000/ HTTP/1.1
 
 ###
-POST https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net/ HTTP/1.1
+POST http://127.0.0.1:8000/api-auth/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "John",
-    "age": 30
+    "username": "admin",
+    "password": "admin1234!"
 }
+
+###
+POST http://127.0.0.1:8000/api-auth/token/refresh/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczNjM1OTA2MCwiaWF0IjoxNzM2MjcyNjYwLCJqdGkiOiI1OTVjM2NhYTJkOTI0OTZhOTY2MjE1ODRkM2RiOWY5NSIsInVzZXJfaWQiOjF9.AkcrSWn_vsbX0OORkLfC6E8eW7hS5ZIM6EaK3kGGLpY"
+}
+
+###
+GET http://127.0.0.1:8000/profiles/ HTTP/1.1
+
+###
+GET http://127.0.0.1:8000/profiles/1/ HTTP/1.1
+
+###
+GET http://127.0.0.1:8000/trips/
+
+###
+GET http://127.0.0.1:8000/trips/1/
+
+###
+GET http://127.0.0.1:8000/trips/1/images/

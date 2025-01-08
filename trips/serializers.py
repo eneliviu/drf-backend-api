@@ -33,11 +33,10 @@ class TripSerializer(serializers.ModelSerializer):
     def get_likes_count(self, obj):
         return getattr(obj, 'likes_count', 0)
 
-    def to_representation(self, instance):
-        # Adding the annotated field to the representation explicitly
-        representation = super().to_representation(instance)
-        representation['images_count'] = self.get_images_count(instance)
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['images_count'] = self.get_images_count(instance)
+    #     return representation
 
     class Meta:
         model = Trip
@@ -88,6 +87,6 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = [
-            'id', 'owner', 'trip', 'image_title',
+            'id',  'owner', 'trip_id', 'image_title',
             'image', 'description', 'shared', 'uploaded_at'
         ]

@@ -3,8 +3,8 @@ from django_filters import (
     FilterSet, DateFilter, CharFilter, MultipleChoiceFilter, BooleanFilter
 )
 from rest_framework import generics, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
-
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer
@@ -146,12 +146,19 @@ class TripList(generics.ListCreateAPIView):
     """
 
     serializer_class = TripSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     queryset = Trip.objects.annotate(
        likes_count=Count('images__likes', distinct=True),
        images_count=Count('images', distinct=True),
     ).order_by('-created_at')
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Trip.objects.filter(owner=user).annotate(
+    #         likes_count=Count('images__likes', distinct=True),
+    #         images_count=Count('images', distinct=True),
+    #     ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
@@ -207,10 +214,12 @@ class TripDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TripSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    queryset = Trip.objects.annotate(
-       likes_count=Count('images__likes', distinct=True),
-       images_count=Count('images', distinct=True),
-    ).order_by('-created_at')
+    def get_queryset(self):
+        user = self.request.user
+        return Trip.objects.filter(owner=user).annotate(
+            likes_count=Count('images__likes', distinct=True),
+            images_count=Count('images', distinct=True),
+        ).order_by('-created_at')
 
 
 class ImageList(generics.ListCreateAPIView):
@@ -230,22 +239,35 @@ class ImageList(generics.ListCreateAPIView):
     """
 
     serializer_class = ImageSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['uploaded_at']
 
-    def get_queryset(self):
-        user = self.request.user
-        trip_id = self.kwargs.get('trip_id')
-        return Image.objects.filter(
-            trip__id=trip_id,
-            trip__owner=user
-            ).order_by('-uploaded_at')
-
     def perform_create(self, serializer):
-        trip_id = self.kwargs.get('trip_id')
-        trip = Trip.objects.get(id=trip_id, owner=self.request.user)
-        serializer.save(owner=self.request.user, trip=trip)
+        serializer.save(owner=self.request.user)
+
+    # def get_serializer_context(self):
+    #     context = super().get_serializer_context()
+    #     context['user'] = self.request.user
+    #     return context
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     trip_id = self.kwargs.get('trip_id')
+    #     return Image.objects.filter(
+    #         trip__id=trip_id,
+    #         trip__owner=user
+    #         ).order_by('-uploaded_at')
+
+    queryset = Image.objects.all().order_by('-uploaded_at')
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     trip_id = self.kwargs.get('trip_id')
+    #     return Image.objects.filter(
+    #         trip__id=trip_id,
+    #         trip__owner=user
+    #         ).order_by('-uploaded_at')
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -267,8 +289,14 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = ImageSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    queryset = Image.objects.all()
 
-    def get_queryset(self):
-        user = self.request.user
-        trip_id = self.kwargs['trip_id']
-        return Image.objects.filter(trip__id=trip_id, trip__owner=user)
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     trip_id = self.kwargs['trip_id']
+    #     return Image.objects.filter(trip__id=trip_id, trip__owner=user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context

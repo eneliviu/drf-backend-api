@@ -22,11 +22,10 @@ MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
-    #  JWT authentication takes precedence when DEBUG=False
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    #     # 'rest_framework.authentication.SessionAuthentication',
-    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
@@ -34,31 +33,21 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+        if not DEBUG
+        else 'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
 }
+print(REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'])
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'LovinEscapades API',
     'DESCRIPTION': 'Your project description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
 }
 
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ]
-    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
-        'rest_framework.authentication.SessionAuthentication',
-    ]
-else:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-        'rest_framework.renderers.JSONRenderer',
-    ]
-    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
 
 if not DEBUG:
     REST_USE_JWT = True
@@ -70,7 +59,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SECURE': not DEBUG,  # local dev False, True for production
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
-    'AUTH_COOKIE_SAMESITE': 'None',
+    'AUTH_COOKIE_SAMESITE': 'Lax',
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -79,12 +68,12 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': True,  # Update last_login field on token issue
 }
 
-SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
 
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = False  # Must be False for frontend access
-CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
 
 REST_AUTH = {
@@ -158,7 +147,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://react-dj-restapi-eb6a7149ec97.herokuapp.com',
     'https://3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
     'https://react-frontend-api-b166a083b609.herokuapp.com',
-    'https://dj-drf-api-763634fa56e5.herokuapp.com'
+    'https://drf-backend-api-70211104c0c7.herokuapp.com/'
 ]
 
 # CORS_ALLOW_CREDENTIALS = True
@@ -172,7 +161,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://8000-eneliviu-djrestapi-vo4ia7gx81e.ws.codeinstitute-ide.net',
     'https://3000-eneliviu-reactdjrestapi-dm7huyvlcum.ws.codeinstitute-ide.net',
     'https://react-frontend-api-b166a083b609.herokuapp.com/signup',
-    'https://dj-drf-api-763634fa56e5.herokuapp.com'
+    'https://drf-backend-api-70211104c0c7.herokuapp.com/'
 ]
 
 ROOT_URLCONF = 'api.urls'
@@ -200,19 +189,19 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Database Configuration
-# if not DEBUG:  # Production
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.environ.get("DATABASE_URL")
-#     )
-# }
-# else:  # Development
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if not DEBUG:  # Production
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get("DATABASE_URL")
+        )
     }
-}
+else:  # Development
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.sqlite3',
+    #         'NAME': BASE_DIR / 'db.sqlite3',
+    #     }
+    # }
 
 
 # Password validation

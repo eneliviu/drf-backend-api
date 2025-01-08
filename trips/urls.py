@@ -22,4 +22,14 @@ urlpatterns = [
         views.ImageDetail.as_view(),
         name='image-detail'
     ),
+    path(
+        'images/',
+        views.ImageList.as_view(),
+        name='image-detail'
+    ),
+    path(
+        'images/<int:pk>/',
+        views.ImageDetail.as_view(),
+        name='image-detail'
+    ),
 ]
