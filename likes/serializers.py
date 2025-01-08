@@ -37,7 +37,6 @@ class LikeSerializer(serializers.ModelSerializer):
         if not image:
             raise serializers.ValidationError({'image': 'This field is required.'})
         try:
-            # Create like instance while preventing duplicates
             return super().create(validated_data)
         except IntegrityError as err:
             raise serializers.ValidationError(

@@ -3,51 +3,6 @@ from rest_framework import serializers
 from .models import Trip, Image
 
 
-class TripSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Trip model.
-    This serializer converts Trip model instances to JSON format
-    and vice versa.
-    It includes the following fields:
-
-    Attributes:
-        Meta (class): Meta options for the serializer.
-            model (Trip): The model that is being serialized.
-            fields (str): Specifies that all fields of the model should be
-                            included in the serialization.
-    """
-    owner = serializers.ReadOnlyField(source='owner.username')
-    is_owner = serializers.SerializerMethodField()
-    profile_id = serializers.ReadOnlyField(source='owner.profile.id')
-    profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
-    images_count = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
-
-    def get_is_owner(self, obj):
-        request = self.context.get('request')
-        return request.user == obj.owner
-
-    def get_images_count(self, obj):
-        return getattr(obj, 'images_count', 0)
-
-    def get_likes_count(self, obj):
-        return getattr(obj, 'likes_count', 0)
-
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['images_count'] = self.get_images_count(instance)
-    #     return representation
-
-    class Meta:
-        model = Trip
-        fields = [
-            "id", "owner", 'is_owner',  'profile_id', "profile_image",
-            "place", "country", "trip_category", "start_date", "end_date",
-            "created_at", "updated_at", "trip_status", "shared",
-            "images_count", "likes_count", "lat", "lon"
-        ]
-
-
 class ImageSerializer(serializers.ModelSerializer):
     """
     Serializer for the Image model that automatically handles the
@@ -89,4 +44,51 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = [
             'id',  'owner', 'trip_id', 'image_title',
             'image', 'description', 'shared', 'uploaded_at'
+        ]
+
+
+class TripSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Trip model.
+    This serializer converts Trip model instances to JSON format
+    and vice versa.
+    It includes the following fields:
+
+    Attributes:
+        Meta (class): Meta options for the serializer.
+            model (Trip): The model that is being serialized.
+            fields (str): Specifies that all fields of the model should be
+                            included in the serialization.
+    """
+    owner = serializers.ReadOnlyField(source='owner.username')
+    is_owner = serializers.SerializerMethodField()
+    profile_id = serializers.ReadOnlyField(source='owner.profile.id')
+    profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    images_count = serializers.SerializerMethodField()  # all shared or not
+    likes_count = serializers.SerializerMethodField()
+
+    images = ImageSerializer(many=True, read_only=True)
+
+    def get_is_owner(self, obj):
+        request = self.context.get('request')
+        return request.user == obj.owner
+
+    def get_images_count(self, obj):
+        return getattr(obj, 'images_count', 0)
+
+    def get_likes_count(self, obj):
+        return getattr(obj, 'likes_count', 0)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['images_count'] = self.get_images_count(instance)
+        return representation
+
+    class Meta:
+        model = Trip
+        fields = [
+            "id", "owner", 'is_owner',  'profile_id', "profile_image",
+            "place", "country", "trip_category", "start_date", "end_date",
+            "created_at", "updated_at", "trip_status", "shared",
+            "images_count", "likes_count", "lat", "lon", 'images'
         ]

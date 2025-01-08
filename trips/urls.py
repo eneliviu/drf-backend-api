@@ -13,7 +13,7 @@ urlpatterns = [
         name='trip_detail'
     ),
     path(
-        'trips/<int:pk>/images/',
+        'trips/<int:trip_id>/images/',
         views.ImageList.as_view(),
         name='image_list'
     ),
