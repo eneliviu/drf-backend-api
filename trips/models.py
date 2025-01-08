@@ -78,11 +78,6 @@ class Trip(models.Model):
         default='PLANNED',
         max_length=50
     )
-    # shared = models.CharField(
-    #     max_length=3,
-    #     choices=SHARE_CHOICES,
-    #     default='YES'
-    # )
     shared = models.BooleanField(default=True)
 
     # Raise Validation Error In Model Save Method:

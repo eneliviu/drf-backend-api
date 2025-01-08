@@ -10,12 +10,12 @@ urlpatterns = [
     path(
         'trips/<int:pk>/',
         views.TripDetail.as_view(),
-        name='trip_detail'
+        name='trip-detail'
     ),
     path(
         'trips/<int:trip_id>/images/',
         views.ImageList.as_view(),
-        name='image_list'
+        name='image-list-trip'
     ),
     path(
         'trips/<int:trip_id>/images/<int:pk>/',
@@ -24,12 +24,12 @@ urlpatterns = [
     ),
     path(
         'images/',
-        views.ImageList.as_view(),
-        name='image-detail'
+        views.ImageListGallery.as_view(),
+        name='image-list-gallery'
     ),
     path(
         'images/<int:pk>/',
-        views.ImageDetail.as_view(),
-        name='image-detail'
+        views.ImageListGalleryDetail.as_view(),
+        name='image-detail-gallery'
     ),
 ]

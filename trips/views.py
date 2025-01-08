@@ -237,7 +237,7 @@ class ImageList(generics.ListCreateAPIView):
     """
 
     serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['uploaded_at']
 
@@ -298,3 +298,24 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
     #     context = super().get_serializer_context()
     #     context['user'] = self.request.user
     #     return context
+
+
+class ImageListGallery(generics.ListCreateAPIView):
+    serializer_class = ImageSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['uploaded_at']
+    queryset = Image.objects.all().filter(shared=True).order_by('-uploaded_at')
+
+
+class ImageListGalleryDetail(generics.ListCreateAPIView):
+    serializer_class = ImageSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['uploaded_at']
+
+    def get_queryset(self):
+        image_id = self.kwargs['pk']
+        return Image.objects.filter(pk=image_id)
+
+
