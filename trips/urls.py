@@ -25,11 +25,11 @@ urlpatterns = [
     path(
         'images/',
         views.ImageListGallery.as_view(),
-        name='image-list-gallery'
+        name='image-gallery'
     ),
     path(
         'images/<int:pk>/',
         views.ImageListGalleryDetail.as_view(),
-        name='image-detail-gallery'
+        name='detail-gallery'
     ),
 ]

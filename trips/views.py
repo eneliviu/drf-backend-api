@@ -154,8 +154,11 @@ class TripList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
+
         if user.is_authenticated:
-            return Trip.objects.annotate(
+            return Trip.objects.filter(
+                Q(owner=user) | Q(shared=True)
+                ).annotate(
                 likes_count=Count('images__likes', distinct=True),
                 images_count=Count('images', distinct=True),
             ).order_by('-created_at')
@@ -193,7 +196,7 @@ class TripList(generics.ListCreateAPIView):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['user'] = self.request.user
+        context['request'] = self.request
         return context
 
 
@@ -218,6 +221,11 @@ class TripDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TripSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Trip.objects.all()
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class ImageList(generics.ListCreateAPIView):
@@ -242,20 +250,16 @@ class ImageList(generics.ListCreateAPIView):
     ordering_fields = ['uploaded_at']
 
     def get_queryset(self):
-        trip = get_object_or_404(
-            Trip, id=self.kwargs['trip_id']
-        )
-        queryset = Image.objects.none()
-        if trip.shared:
-            queryset = Image.objects.filter(
-                Q(trip=trip) and Q(shared=True)
-            )
+        trip_id = self.kwargs.get('trip_id')
+        trip = get_object_or_404(Trip, id=trip_id)
+        user = self.request.user
 
-        if (self.request.user.is_authenticated and
-                trip.owner == self.request.user):
-            queryset = Image.objects.filter(trip=trip)
+        if user.is_authenticated:
+            queryset = Image.objects.filter(
+                 Q(trip=trip) & (Q(shared=True) | Q(trip__owner=user))
+            )
         else:
-            queryset = queryset | Image.objects.filter(trip=trip, shared=True)
+            queryset = Image.objects.filter(trip=trip, shared=True)
 
         return queryset.distinct().order_by('-uploaded_at')
 
@@ -266,6 +270,11 @@ class ImageList(generics.ListCreateAPIView):
             owner=self.request.user
         )
         serializer.save(trip=trip)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -289,15 +298,10 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Image.objects.all()
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     trip_id = self.kwargs['trip_id']
-    #     return Image.objects.filter(trip__id=trip_id, trip__owner=user)
-
-    # def get_serializer_context(self):
-    #     context = super().get_serializer_context()
-    #     context['user'] = self.request.user
-    #     return context
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class ImageListGallery(generics.ListCreateAPIView):

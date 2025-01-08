@@ -67,7 +67,17 @@ class TripSerializer(serializers.ModelSerializer):
     images_count = serializers.SerializerMethodField()  # all shared or not
     likes_count = serializers.SerializerMethodField()
 
-    images = ImageSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField()
+    # images = ImageSerializer(many=True, read_only=True)
+    
+    def get_images(self, obj):
+        request = self.context.get('request')
+        if request.user.is_authenticated and (obj.owner == request.user or obj.shared):
+            images = obj.images.all()  # All images if user is owner or trip is shared
+        else:
+            images = obj.images.filter(shared=True)  # Only shared images for others
+        return ImageSerializer(images, many=True, context=self.context).data
+
 
     def get_is_owner(self, obj):
         request = self.context.get('request')
