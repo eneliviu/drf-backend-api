@@ -53,8 +53,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 
-if not DEBUG:
-    REST_USE_JWT = True
+# if not DEBUG:
+REST_USE_JWT = True
 
 # JWT configuration
 SIMPLE_JWT = {
@@ -94,6 +94,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '127.0.0.1:8000',
     'localhost',
+    'drf-backend-api-70211104c0c7.herokuapp.com'
 ]
 
 # Application definition
