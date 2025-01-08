@@ -197,11 +197,11 @@ WSGI_APPLICATION = 'api.wsgi.application'
 #         }
 #     }
 # else:
+DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    "default": dj_database_url.config(default=DATABASE_URL)
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
