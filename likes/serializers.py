@@ -35,7 +35,9 @@ class LikeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         image = validated_data.get('image')
         if not image:
-            raise serializers.ValidationError({'image': 'This field is required.'})
+            raise serializers.ValidationError(
+                {'image': 'This field is required.'}
+            )
         try:
             return super().create(validated_data)
         except IntegrityError as err:

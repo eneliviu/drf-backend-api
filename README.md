@@ -55,12 +55,11 @@ LovinEscapades aims to empower users to manage their travel experiences through 
 This API serves as a backend foundation for a potential application. The envisioned features and functionalities are subject to change and refinement based on further development and user feedback.
 
 
-## Application development (DONE)
+## Application development
 This application was developed using an iterative approach, following Agile principles.
 
 **User Stories & Epics**
-
-We employed a user-centric approach, defining key epics and user stories to guide development.
+I employed a user-centric approach, defining key epics and user stories to guide project development.
 
 **Example Epic**:
 Epic: As an API developer,
@@ -68,13 +67,11 @@ I want to implement robust and secure user authentication,
 so that API consumers can securely access and interact with protected resources.
 
 **Example User Story**:
-
 As an API consumer,
 I can authenticate with the API using JWT (JSON Web Tokens),
 So that I can access protected resources and perform authorized actions.
 
 **Key Epics**:
-
 * User Authentication: Implement secure and reliable user authentication.
 * Trip Management: Enable users to create, manage, and share trip plans.
 * Social Interaction: Allow users to interact with other users and their content (e.g., liking posts, following users).
@@ -130,30 +127,28 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 
 More details about the API are provided in the [Usage and Screenshots](#usage-and-screenshots) section.
 
-
 [*Back to top*](#)
-
 
 ## Project structure
 
 ### ***Lovingescapades*** project consists of four apps:
 
-### 1. `trip`
+### 1. `profiles`
+The user profile app offers two primary sections:
+- Profile update section for editing basic user information such as username, first and last name, and email address.
+- Functionality for posting and deleting testimonials, which are subject to admin approval before appearing on the landing page.
+
+### 2. `trips`
 This app features the `Dashboard` page, allowing users to:
 - View updated counts of trips, uploaded photos, and testimonials awaiting approval.
 - Decide if new trip information will be shared publicly or kept private. Public trips are mapped on the landing page, while private trips are visible only to the authenticated user.
 - Quickly access trip details through trip card elements, which provide basic trip information (destination, start and end dates, creation date) along with options to edit/delete trips and upload/delete photos.
 - Display approved user testimonials on the landing page and map the locations of shared trips.
 
-### 2. `user_profile`
-The user profile app offers two primary sections:
-- Profile update section for editing basic user information such as username, first and last name, and email address.
-- Functionality for posting and deleting testimonials, which are subject to admin approval before appearing on the landing page.
-
-### 3. `contact`
+### 3. `likes`
 This app provides essential functionality for site visitors to send inquiries to the site admin via a dedicated form.
 
-### 4. `gallery`
+### 4. `followers`
 - Hosts the photo gallery where all publicly shared photos by registered users can be viewed by any visitor.
 - Users can publish photos even if they choose not to make the associated trip information public.
 - Each photo in the gallery includes a like icon and basic trip details, though the feature for sending and receiving likes has not been implemented yet.
@@ -162,10 +157,16 @@ This app provides essential functionality for site visitors to send inquiries to
 [*Back to top*](#)
 
 
+## API endpoints
+
+
+TODO
+
+
 ## Technologies Used
 
 ### **Django Rest Framework:**
-- A web framework made with Python that helps build web apps quickly and efficiently. It's great for managing databases and organizing code, making it easier to create complex features for ***LovinEscapades-api***.
+- A web framework made with Python that helps build web apps quickly and efficiently. It's great for managing databases and organizing code, making it easier to create complex features.
 
 ### **Geopy Python Module:**
 - A library that helps find geographic coordinates, like latitude and longitude, from place names. It’s used to show trip locations accurately on the map.
@@ -204,35 +205,7 @@ python manage.py runserver
 [*Back to top*](#)
 
 
-## Accessibility and Design
-
-### Accessibility
-- Attention was given to the ARIA (Accessible Rich Internet Applications) content, ensuring that screen readers can effectively retrieve information when needed.
-
-### Fonts
-- The font 'Lato' was chosen for the logo and related statement text. It is both legible and adds a rough, gritty   texture, breaking the clean visual of the site.
-- The font 'Roboto' was used for general text, both offering a clean and easily readable appearance.
-
-### Colors and Themes
-- The website’s style is minimalistic, primarily based on predefined Bootstrap 5.3 themes and touches of custom CSS. This approach ensures good contrast and a decent aesthetic, supporting accessibility and visual appeal.
-
-### Icons
-- Font Awesome were used for the Logo, social media icons in the Footer, `My profile`-page link and like buttons on share photos in the `Gallery`-page. 
-
-[*Back to top*](#)
-
-
 ## Usage and Screenshots
-
-### Responsive design
-- The 
-![Main menu](static/clips/Responsive_large_screen.webp#center)
-*<font color="red">LovinEscapades</font>: Responsive design: large screen*.<br>
-
-
-![Main menu](static/clips/Responsive_tablet_phone.webp#center)
-*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
-
 
 ### User Registration
 
@@ -472,7 +445,7 @@ python manage.py runserver
 
 
 - Deleteing a trip will remove all the linked trip photos as well
-- The dasboard stats and the landing page map are also updated  
+- The dasboard stats and the landing page map are also updated
 
  ![Main menu](static/clips/Example_two_trips_two_photos.webp#center)
 
@@ -525,7 +498,7 @@ python manage.py runserver
 
 #### **Managing photo gallery page**
 
-- The `Gallery`-page contains all the photos sahred by the user. 
+- The `Gallery`-page contains all the photos sahred by the user.
 - A user can choose to share a photo, but not to make the entire trip public.
 - Deleting a trip will delete also the associated photos from the `Gallery`-page
 
@@ -541,7 +514,7 @@ python manage.py runserver
 
 ## Database schema
 
-The Entity Relationship Diagram (EDR) for the full project database shcema was produced using the 
+The Entity Relationship Diagram (EDR) for the full project database shcema was produced using the
 [Graph models extention](https://shorturl.at/psHzX) and visualized using the online [GraphViz generator](https://shorturl.at/AAuhy). 
 
 
@@ -558,37 +531,32 @@ The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
 
 | App            | File         | CI Linter Result           |  Status |
 | --- | --- | --- | --- |
-| `trip`         | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `filters.py` | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+| `trips`        | `models.py`  |All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `utils.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `contact`      | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+| `profiles`      | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `gallery`      | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+| `followers`    | `models.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `user_profile` | `forms.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+| `likes` | `models.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 
 ---
 
-### **JSHint**
-The [JSHint](https://jshint.com/) validator flagged two warnings across all JavaScript files concerning the use of Bootstrap 5.3 modals and Leaflet `L` objects.
-
-
-![Main menu](static/docs/JSHint.webp#center)
-
-*<font color="red">LovinEscapades</font>: JSHint validator results*.<br>
-
 ### **Lighthouse**
-The Lighthouse validator showed very good results, with an warning related to a Leaflet internal issue. 
+The Lighthouse validator showed very good results, with an warning related to a Leaflet internal issue.
 
 
 ![Main menu](static/docs/Lighthouse_navtest.webp#center)
@@ -601,68 +569,9 @@ The Lighthouse validator showed very good results, with an warning related to a 
 *<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
 
 
-### Jigsaw CSS Validator
-
-The Jigsaw CSS Validator reported no errors for the custom CSS.
-
-![Main menu](static/docs/W3C-CSS-CustomCSS.webp#center)
-
-*<font color="red">LovinEscapades</font>: Jigsaw CSS Validator test for custom style*.<br>
-
-However, it identified two errors in the Leaflet CSS, both related to Leaflet specifically:
-
-![Main menu](static/docs/W3C-CSS-Errors-URL.webp#center)
-
-*<font color="red">LovinEscapades</font>: Jigsaw CSS Validator test errors*.<br>
-
-Upon further investigation using [caniuse.com](https://caniuse.com), it was confirmed that `plus-lighter` is a valid value for the `mix-blend-mode` property.
-
-![Main menu](static/docs/CANIUSE_plus-lighter.webp#center)
-
-*<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
-
-For the second error, no relevant results were found, and I am unable to provide an explanation or a fix.
-
-![Main menu](static/docs/CANIUSE_behaviour.webp#center)
-
-*<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
-
-
-### Web Accessibility Evaluation Tool (WAVE) 
-
-The WAVE Tool reports no errors but does issue an alert.
-
-![Main menu](static/docs/WAVE_test.webp#center)
-
-*<font color="red">LovinEscapades</font>: WAVE accessibility test*.<br>
-
-
-Upon investigating further, it suggests that both the site logo and the "Home" navbar element have the same link pointing to the homepage. I have not addressed this alert because having multiple links leading to the home page is a common practice and does not typically impede navigation or accessibility.
-
-![Main menu](static/docs/WAVE_test_alert.webp#center)
-
-<font color="red">LovinEscapades</font>: WAVE accessibility test alert*.<br>
-
-Finally, the WAVE contrast check test also passes successfully.
-
-![Main menu](static/docs/WAVE_test_contrast.webp#center)
-
-<font color="red">LovinEscapades</font>: WAVE contrast test*.<br>
-
-
-### W3C Markup Validation Service
-
-The W3C HTML Validator displays parsing errors because of the Django Template Language. Attempting to find alternative validators online didn't yield any viable solutions. I'm open to suggestions on how to address this issue.
-
-
-![Main menu](static/docs/NU_HTML_checker.webp#center)
-
-*<font color="red">LovinEscapades</font>: W3C HTML Validator partial results*.<br>
-
-
 ## Manual Testing
 
-- Manual testing primarily concentrated on interacting with the forms to ensure users received appropriate feedback after submission. 
+- Manual testing primarily concentrated on interacting with the forms to ensure users received appropriate feedback after submission.
 - The default `clean()` and `save()` methods of the model form class were overridden as necessary to implement specific validations.
 
 - Emphasis was placed on real-time user feedback during form completion.
@@ -671,8 +580,7 @@ The W3C HTML Validator displays parsing errors because of the Django Template La
 
 - Despite these measures, certain errors might still occur, such as:
     - Selecting inappropriate trip dates that don't align with the trip status, like planning a trip with past dates.
-    - Overlapping dates when creating a new trip that conflict with previously created trips.   
-
+    - Overlapping dates when creating a new trip that conflict with previously created trips.
 
 
 | Feature | Expected behaviour | Test | Status |
@@ -783,7 +691,6 @@ If you encounter other bugs, please create an issue by clicking [here](https://g
 
 
 ## Further improvements
-- Refactor the Javascript functions
 - Refactor the delete functions since there is quite a bit of overlap between them.
 - Functionality to reply to user inquiries send through the form on the Contact Us page
 - Filter and sort options to organize and view the trips and photos according to more detailed criteria.
@@ -839,6 +746,6 @@ As an open-source project, ***LovinEscapades*** promotes transparency and commun
 
 ## Documentation version
 
-Last updated: Oct 14, 2024
+Last updated: Jan 9, 2025
 
 [*Back to top*](#)

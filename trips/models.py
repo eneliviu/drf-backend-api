@@ -88,7 +88,7 @@ class Trip(models.Model):
     def clean(self):
         """
         Cleans the Trip instance by setting the `is_cleaned` attribute to True,
-        geocoding the `place` attribute to obtain latitude and longitude coordinates,
+        geocoding the `place` attribute to obtain latitude and longitude,
         and raising a ValidationError if the geocoding fails.
         Raises:
             ValidationError: If the geocoding of the `place` attribute fails.
@@ -111,10 +111,10 @@ class Trip(models.Model):
         """
         Override the save() method to to set the Lat and Lon values
         before saving.
-        This method ensures that the instance is cleaned before saving by calling
-        the full_clean() method if the instance has not been cleaned yet. After
-        performing the cleaning, it calls the parent class's save() method to
-        save the instance.
+        This method ensures that the instance is cleaned before saving by
+        calling the full_clean() method if the instance has not been cleaned.
+        After performing the cleaning, it calls the parent class's save()
+        method to save the instance.
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.

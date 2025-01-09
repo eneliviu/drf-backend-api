@@ -221,7 +221,7 @@ class TripDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TripSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Trip.objects.all()
-    
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['request'] = self.request
@@ -321,5 +321,3 @@ class ImageListGalleryDetail(generics.ListCreateAPIView):
     def get_queryset(self):
         image_id = self.kwargs['pk']
         return Image.objects.filter(pk=image_id)
-
-
