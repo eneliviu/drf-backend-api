@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from cloudinary.models import CloudinaryField
-from .utils import get_coordinates
-
+from .utils import get_coordinates, validate_image
 
 class Trip(models.Model):
     """
@@ -152,7 +151,9 @@ class Image(models.Model):
         'image',
         default='https://res.cloudinary.com/dchoskzxj/image/upload/'
                 'v1721990160/yg9qwd4v15r23bxwv5u4.jpg',
-        blank=False
+        blank=True,
+        null=True,
+        validators=[validate_image]
     )
 
     description = models.TextField(

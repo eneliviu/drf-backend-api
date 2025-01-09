@@ -1,3 +1,5 @@
+import os
+from django.core.exceptions import ValidationError
 from geopy import geocoders
 from geopy.exc import GeocoderTimedOut
 
@@ -37,3 +39,20 @@ def get_coordinates(location, attempt=1, max_attempts=5):
                                    max_attempts=max_attempts)
         # raise GeocoderTimedOut("Max attempts exceeded")
         return 'max-attempts-exceeded-error'
+
+
+def validate_image(image):
+    """
+    Validate the uploaded image file.
+    This function checks the file extension of the uploaded image to ensure
+    that it is one of the allowed types: .jpg, .jpeg, .png, .gif, .webp.
+    If the file extension is not supported, a ValidationError is raised.
+    Args:
+        image (File): The uploaded image file.
+    Raises:
+        ValidationError: If the file extension is not supported.
+    """
+
+    file_extension = os.path.splitext(image.name)[1].lower()
+    if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
+        raise ValidationError("Unsupported file extension.")
