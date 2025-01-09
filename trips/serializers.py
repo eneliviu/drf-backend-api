@@ -17,6 +17,7 @@ class ImageSerializer(serializers.ModelSerializer):
     fields: list
         The fields that are included in the serialized output.
     """
+    image = serializers.ImageField()
 
     def validate_image(self, value):
         # value is the uploaded image
