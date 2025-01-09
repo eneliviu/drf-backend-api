@@ -173,6 +173,11 @@ The following table provides an overview of the available API endpoints for the 
 
 A comprehensive overview of the API endpoints, including detailed documentation, is available through [Swagger-UI](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/swagger-ui/), [Redoc](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/redoc/) or directly in [yaml](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/) format.
 
+
+![alt text](images_doc\SwaggerUI.png)
+![alt text](images_doc\Redoc.png)
+
+
 [*Back to top*](#)
 
 ## Technologies Used
@@ -220,21 +225,27 @@ python manage.py runserver
 ## Usage and Screenshots
 
 
-![alt text](image-3.png) ![alt text](image-2.png)
+![alt text](images_doc\image-3.png) ![alt text](images_doc\image-2.png)
 
 **Image List View (Public)
 
 
 
-## Database schema
+## Entity Relationship Diagram (EDR)
 
-The Entity Relationship Diagram (EDR) for the full project database shcema was produced using the
+The EDR for the full project database shcema was produced using the
 [Graph models extention](https://shorturl.at/psHzX) and visualized using the online [GraphViz generator](https://shorturl.at/AAuhy). 
-
-### ER Diagram
 
 ![alt text](images_doc/ERD.png)
 <p align="center"><strong>EDR project database diagram</strong></p>
+
+The database models in more detail are presented below:
+
+<p align="center"><img src="images_doc/ProfileDB.png" alt="ProfileDB"></p>
+<p align="center"><img src="images_doc/TripDB.png" alt="TripDB"></p>
+<p align="center"><img src="images_doc/ImageDB.png" alt="ImageDB"></p>
+<p align="center"><img src="images_doc/FollowerDB.png" alt="FollowerDB"></p>
+<p align="center"><img src="images_doc/LikeDB.png" alt="LikeDB"></p>
 
 ## Online Validators
 
@@ -260,19 +271,6 @@ The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 ---
-
-### **Lighthouse**
-The Lighthouse validator showed very good results, with an warning related to a Leaflet internal issue.
-
-
-![Main menu](static/docs/Lighthouse_navtest.webp#center)
-
-*<font color="red">LovinEscapades</font>: Lighthouse navigation test*.<br>
-
-
-![Main menu](static/docs/Lighthouse_snapshot_test.webp#center)
-
-*<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
 
 
 ## Unit testing
@@ -312,44 +310,27 @@ To run the tests, use the following command:
 ```bash
 python manage.py test
 ```
-This command will execute the test suite and display the results in the terminal. The tests cover various scenarios to ensure the correctness and robustness of the API endpoints.
+This command will execute the test suite and display the results in the terminal.
 
-### Test Cases
-
-Here are some sample test cases from the test suite:
-1. **TripListViewTests**:
-    * Test to verify that the `TripListView` can list trips.
-    * Test to verify that the `TripListView` can handle trips that are not shared.
-2. **PostDetailViewTests**:
-    * Test to verify that the `TripDetailView` can retrieve a trip using a valid ID.
-    * Test to verify that the `TripDetailView` can handle retrieval of a trip using an invalid ID.
-3. **TripImageListViewTests**:
-    * Test to verify that the `ImageListView` can list images.
-    * Test to verify that the `ImageListView` can handle images that are not shared.
-4. **TripImageDetailViewTests**:
-    * Test to verify that the `ImageDetailView` can retrieve an image using a valid ID.
-    * Test to verify that the `ImageDetailView` can handle retrieval of an image using an invalid ID.
-These test cases cover a range of scenarios to ensure that the API endpoints function correctly and handle various edge cases. The tests help maintain the quality and reliability of the application by verifying the expected behavior of the endpoints.
-
-
-[*Back to top*](#)
+The tests cover various scenarios to ensure the correctness and robustness of the API endpoints.
 
 <p align="center"><strong>Table: Overview of Test Classes and Methods for the Trip and Image API Endpoints</strong></p>
 
-| Type    | Name                                         | Description                                                                                                    | Expected Result                     |
-|---------|----------------------------------------------|----------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| Class   | `TripListViewTests`                          | Test suite for the TripListView. Checks listing of trips including shared and non-shared.                       | -                                   |
-| Method  | `test_can_list_trips`                        | Verifies that trips can be listed through the TripListView endpoint.                                           | Status code: 200 OK                 |
-| Method  | `test_can_handle_list_trips_not_shared`      | Verifies handling of trips that are not shared.                                                                | Status code: 200 OK                 |
-| Class   | `PostDetailViewTests`                        | Test suite for the TripDetailView. Tests retrieving trips using valid and invalid IDs.                          | -                                   |
-| Method  | `test_can_retrieve_post_using_valid_id`      | Ensures a trip can be retrieved by a valid ID.                                                                 | Status code: 200 OK                 |
-| Method  | `test_can_retrieve_post_using_invalid_id`    | Ensures appropriate handling of requests with an invalid trip ID.                                              | Status code: 404 Not Found          |
-| Class   | `TripImageListViewTests`                     | Test suite for the ImageListView. Checks listing of images including shared and non-shared.                     | -                                   |
-| Method  | `test_can_list_trip_images`                  | Verifies that images can be listed through the ImageListView endpoint.                                         | Status code: 200 OK                 |
-| Method  | `test_can_handle_list_trip_images_not_shared`| Verifies handling of images that are not shared.                                                               | Status code: 200 OK                 |
-| Class   | `TripImageDetailViewTests`                   | Test suite for the ImageDetailView. Tests retrieving images using valid and invalid IDs.                        | -                                   |
-| Method  | `test_can_retrieve_trip_image_using_valid_id`| Ensures an image can be retrieved by a valid ID.                                                               | Status code: 200 OK                 |
-| Method  | `test_can_retrieve_trip_image_using_invalid_id`| Ensures appropriate handling of requests with an invalid image ID.                                            | Status code: 404 Not Found          |
+| Type    | Name                                         | Description                                                                                                    | Expected Status |Result                     |
+|---------|----------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|--------------------------|
+| Class   | `TripListViewTests`                          | Test suite for the TripListView. Checks listing of trips including shared and non-shared.          | -            |
+| Method  | `test_can_list_trips`                        | Verifies that trips can be listed through the TripListView endpoint.                  | Status code: 200 OK       |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_handle_list_trips_not_shared`      | Verifies handling of trips that are not shared.                                       | Status code: 200 OK       |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Class   | `PostDetailViewTests`                        | Test suite for the TripDetailView. Tests retrieving trips using valid and invalid IDs.| -                         |
+| Method  | `test_can_retrieve_post_using_valid_id`      | Ensures a trip can be retrieved by a valid ID.                                        | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_retrieve_post_using_invalid_id`    | Ensures appropriate handling of requests with an invalid trip ID.                     | Status code: 404 Not Found |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Class   | `TripImageListViewTests`                     | Test suite for the ImageListView. Checks listing of images including shared and non-shared. | -                    |
+| Method  | `test_can_list_trip_images`                  | Verifies that images can be listed through the ImageListView endpoint.                | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_handle_list_trip_images_not_shared`| Verifies handling of images that are not shared.                                      | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Class   | `TripImageDetailViewTests`                   | Test suite for the ImageDetailView. Tests retrieving images using valid and invalid IDs.| -                        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_retrieve_trip_image_using_valid_id`| Ensures an image can be retrieved by a valid ID.                                        | Status code: 200 OK      |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_retrieve_trip_image_using_invalid_id`| Ensures appropriate handling of requests with an invalid image ID.   | Status code: 404 Not Found |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
 
 [*Back to top*](#)
 
@@ -421,32 +402,26 @@ These test cases cover a range of scenarios to ensure that the API endpoints fun
 | &nbsp;&nbsp;- *Filter success* | The filter retrieves the correct trips | The right trips are mapped | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | &nbsp;&nbsp;- *Error messages* | User receives an error messasge if no match is found | Use different entries for place, country, category and trip status | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 
-
 ---
 
 Despite these measures, certain errors might still occur, such as:
 * Selecting inappropriate trip dates that don't align with the trip status, like planning a trip with past dates.
 * Overlapping dates when creating a new trip that conflict with previously created trips.
 
+[*Back to top*](#)
+
 
 ## Heroku Deployment
 This project uses Cloudinary for image storage, which allows for efficient and scalable management of images.
-To configure Cloudinary, you need to set up an account on Cloudinary's website and obtain your cloud name, API key, and API secret.
-These credentials should be added to your project's environment variables.
-
-Additionally, the project uses CodeInstitute's PostgreSQL database, accessed via the `DATABASE_URL` environment variable.
+To configure Cloudinary,  obtain your cloud name, API key, and API secret. Cloudinary credentials were accessed via
+the `CLOUDINARY_URL` environmental variable. Additionally, the project uses CodeInstitute's PostgreSQL database,
+accessed via the `DATABASE_URL` environment variable.
 
 ### React Client
 A React client has been configured to consume the API endpoints provided by the LovinEscapades-API.
 This client is also deployed on Heroku, ensuring seamless integration and interaction with the backend API.
 The React client handles the frontend functionalities, providing users with an intuitive and responsive interface
 to interact with the trip tracking tool.
-
-[*Back to top*](#)
-
-
-[*Back to top*](#)
-
 
 [*Back to top*](#)
 
