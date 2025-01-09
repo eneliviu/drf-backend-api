@@ -48,7 +48,7 @@ else:
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'LovinEscapades API',
-    'DESCRIPTION': 'Your project description',
+    'DESCRIPTION': 'Trip sharing platform API for LovinEscapades',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
@@ -180,17 +180,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# DATABASE_URL = os.environ.get('DATABASE_URL')
+# DATABASES = {
+#     "default": dj_database_url.config(default=DATABASE_URL)
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

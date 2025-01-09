@@ -150,7 +150,7 @@ class TripList(generics.ListCreateAPIView):
     """
 
     serializer_class = TripSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def get_queryset(self):
         user = self.request.user
@@ -245,7 +245,7 @@ class ImageList(generics.ListCreateAPIView):
     """
 
     serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['uploaded_at']
 

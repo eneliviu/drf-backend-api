@@ -1,5 +1,5 @@
 
-# ***<center><font color="red"> LovinEscapades</font>***: The Ultimate Trip Tracking Tool!</center>
+# ***<center><font color="red"> LovinEscapades-API</font>***: The Ultimate Trip Tracking Tool!</center>
 ## <center> A Django web app </center>
 
 ### **Table of content:**
@@ -94,9 +94,10 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 
 ## Main Features
 
-### **Robust User Authentication:**
-* Securely authenticate users using industry-standard JSON Web Tokens (JWT).
-* Provide endpoints for obtaining and refreshing access tokens.
+### **Robust User Registration and Authentication:**
+* Utilizes JSON Web Tokens (JWT) for secure and stateless user authentication.
+* Eliminates the need for server-side session management, improving security and scalability.
+* The API provides token refresh endpoints for maintaining continuous user sessions without requiring frequent re-authentication.
 * Implement robust user registration, login, logout, and password management functionalities.
 
 ### **Comprehensive Trip Management:**
@@ -104,25 +105,16 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 * Facilitate the upload, storage, and association of images with specific trips.
 * Allow users to filter and search for trips based on various criteria, such as destination, travel dates, and user preferences.
 
-### **Interactive Map:**
-* Show trip locations on a Leaflet map with markers.
-* Connect map markers to trip details and photo galleries.
+### **Support for Location Mapping:**
+* Provide trip locations as coordinates (Lat, Lon) for potentially mapping the trip itineraries
 
 ### **Engaging Social Features:**
 * Empower users to connect with other travelers by following other users.
 * Enable users to express their interest in trips by liking posts.
-* Potentially facilitate user-to-user communication and collaboration within the context of shared trips.
-
-### **Interactive Map:**
-* Show trip locations on a Leaflet map with markers.
-* Connect map markers to trip details and photo galleries.
-
-### **User Testimonials:**
-* Submit testimonials on site experiences, pending admin approval.
 
 ### **Well-Defined API:**
 * The API adheres to RESTful principles and provides clear and concise documentation for developers.
-* Includes comprehensive API documentation generated using tools like Swagger or OpenAPI.
+* Includes comprehensive API documentation generated using tools like Swagger-UI and Redoc
 * Provides a smooth user experience by handling errors gracefully and delivering helpful messages.
 
 More details about the API are provided in the [Usage and Screenshots](#usage-and-screenshots) section.
@@ -131,7 +123,7 @@ More details about the API are provided in the [Usage and Screenshots](#usage-an
 
 ## Project structure
 
-### ***Lovingescapades*** project consists of four apps:
+### ***Lovingescapades-API*** project consists of four apps:
 
 ### 1. `profiles`
 The user profile app offers two primary sections:
@@ -153,15 +145,45 @@ This app provides essential functionality for site visitors to send inquiries to
 - Users can publish photos even if they choose not to make the associated trip information public.
 - Each photo in the gallery includes a like icon and basic trip details, though the feature for sending and receiving likes has not been implemented yet.
 
-
 [*Back to top*](#)
 
+## API Endpoints
+The following table provides an overview of the available API endpoints for the LovinEscapades-API:
 
-## API endpoints
+| Endpoint | Method | Description | Permission |
+|---|---|---|---|
+| `/dj-rest-auth/registration/` | POST | Register a new user | Public |
+| `/dj-rest-auth/user/` | GET | Retrieve user data | IsAuthenticated |
+| `/api-auth/login/` | POST | Login a user and obtain a JWT token | Public |
+| `/api-auth/logout/` | POST | Logout a user and invalidate the JWT token | IsAuthenticated |
+| `/api-auth/token/refresh/` | POST | Refresh the JWT token | IsAuthenticated |
+| `/profiles/` | GET | Retrieve the list of user profiles | IsAuthenticatedOrReadOnly |
+| `/profiles/<id>/` | GET | Retrieve a specific user profile | IsAuthenticated (IsOwner for updating own profile) |
+| `/profiles/<id>/` | PUT | Update a specific user profile | IsAuthenticated (IsOwner) |
+| `/profiles/<id>/` | DELETE | Delete a specific user profile | IsAuthenticated (IsOwner) |
+| `/trips/` | GET | List all shared trips | IsAuthenticatedOrReadOnly |
+| `/trips/` | POST | Create a new trip | IsAuthenticated |
+| `/trips/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
+| `/trips/<id>/` | PUT | Update a specific trip | IsAuthenticated (IsOwner) |
+| `/trips/<id>/` | DELETE | Delete a specific trip | IsAuthenticated (IsOwner) |
+| `/trips/<id>/images/` | GET | List all images for a specific trip | IsAuthenticatedOrReadOnly |
+| `/trips/<id>/images/` | POST | Upload a new image | IsAuthenticated (IsOwner of the trip) |
+| `/trips/<trip_id>/images/<image_id>` | GET | Retrieve a specific image for a specific trip | IsAuthenticatedOrReadOnly |
+| `/trips/<trip_id>/images/<image_id>` | PUT | Update a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
+| `/trips/<trip_id>/images/<image_id>` | DELETE | Delete a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
+| `/images/` | GET | Retrieve all shared images | IsAuthenticatedOrReadOnly |
+| `/images/<id>/` | GET | Retrieve a specific image | IsAuthenticatedOrReadOnly |
+| `/followers/` | GET | List all followers or follow a new user | IsAuthenticated |
+| `/followers/<id>/` | GET | Retrieve a specific user | IsAuthenticatedOrReadOnly |
+| `/followers/<id>/` | DELETE | Unfollow a specific user | IsAuthenticated |
+| `/likes/` | GET | List all likes or like a new trip | IsAuthenticated |
+| `/likes/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
+| `/likes/<id>/` | DELETE | Unlike a specific trip | IsAuthenticated |
 
 
-TODO
+A comprehensive overview of the API endpoints, including detailed documentation, is available through [Swagger-UI](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/swagger-ui/), [Redoc](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/redoc/) or directly in [yaml](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/) format.
 
+[*Back to top*](#)
 
 ## Technologies Used
 
@@ -206,6 +228,9 @@ python manage.py runserver
 
 
 ## Usage and Screenshots
+
+TODO
+
 
 ### User Registration
 
@@ -528,31 +553,25 @@ The Entity Relationship Diagram (EDR) for the full project database shcema was p
 
 ### **PEP8**
 The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
-
 | App            | File         | CI Linter Result           |  Status |
 | --- | --- | --- | --- |
-
 | `trips`        | `models.py`  |All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `utils.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-
-| `profiles`      | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `profiles`     | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-
 | `followers`    | `models.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-
 | `likes` | `models.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-
 ---
 
 ### **Lighthouse**
@@ -569,19 +588,85 @@ The Lighthouse validator showed very good results, with an warning related to a 
 *<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
 
 
+# Unit testing
+The project includes a comprehensive test suite for the Trip and Image API endpoints.
+The tests are located in the `trips/tests.py` file and cover the following views:
+- **TripListView**: Tests for listing trips, including handling shared and non-shared trips.
+- **TripDetailView**: Tests for retrieving a specific trip using valid and invalid IDs.
+- **ImageListView**: Tests for listing images associated with trips, including handling shared and non-shared images.
+- **ImageDetailView**: Tests for retrieving a specific image associated with a trip using valid and invalid IDs.
+
+The test suite includes setup methods to initialize test data and individual test methods to verify the functionality of the respective endpoints.
+
+## Test Classes
+1. **TripListViewTests**:
+    * Verifies the functionality of listing trips through the `TripListView` endpoint.
+    * Tests include:
+        * Listing trips that are shared.
+        * Handling trips that are not shared.
+2. **PostDetailViewTests**:
+    * Verifies the functionality of retrieving a trip through the `TripDetailView` endpoint.
+    * Tests include:
+        * Retrieving a trip using a valid ID.
+        * Handling retrieval of a trip using an invalid ID.
+3. **TripImageListViewTests**:
+    * Verifies the functionality of listing images through the `ImageListView` endpoint.
+    * Tests include:
+        * Listing images that are shared.
+        * Handling images that are not shared.
+4. **TripImageDetailViewTests**:
+    * Verifies the functionality of retrieving an image through the `ImageDetailView` endpoint.
+    * Tests include:
+        * Retrieving an image using a valid ID.
+        * Handling retrieval of an image using an invalid ID.
+
+## Running Tests
+To run the tests, use the following command:
+```bash
+python manage.py test
+```
+This command will execute the test suite and display the results in the terminal. The tests cover various scenarios to ensure the correctness and robustness of the API endpoints.
+
+## Test Cases
+
+Here are some sample test cases from the test suite:
+1. **TripListViewTests**:
+    * Test to verify that the `TripListView` can list trips.
+    * Test to verify that the `TripListView` can handle trips that are not shared.
+2. **PostDetailViewTests**:
+    * Test to verify that the `TripDetailView` can retrieve a trip using a valid ID.
+    * Test to verify that the `TripDetailView` can handle retrieval of a trip using an invalid ID.
+3. **TripImageListViewTests**:
+    * Test to verify that the `ImageListView` can list images.
+    * Test to verify that the `ImageListView` can handle images that are not shared.
+4. **TripImageDetailViewTests**:
+    * Test to verify that the `ImageDetailView` can retrieve an image using a valid ID.
+    * Test to verify that the `ImageDetailView` can handle retrieval of an image using an invalid ID.
+These test cases cover a range of scenarios to ensure that the API endpoints function correctly and handle various edge cases. The tests help maintain the quality and reliability of the application by verifying the expected behavior of the endpoints.
+
+
+[*Back to top*](#)
+
+<p align="center"><strong>Table: Overview of Test Classes and Methods for the Trip and Image API Endpoints</strong></p>
+
+| Type    | Name                                         | Description                                                                                                    | Expected Result                     |
+|---------|----------------------------------------------|----------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| Class   | `TripListViewTests`                          | Test suite for the TripListView. Checks listing of trips including shared and non-shared.                       | -                                   |
+| Method  | `test_can_list_trips`                        | Verifies that trips can be listed through the TripListView endpoint.                                           | Status code: 200 OK                 |
+| Method  | `test_can_handle_list_trips_not_shared`      | Verifies handling of trips that are not shared.                                                                | Status code: 200 OK                 |
+| Class   | `PostDetailViewTests`                        | Test suite for the TripDetailView. Tests retrieving trips using valid and invalid IDs.                          | -                                   |
+| Method  | `test_can_retrieve_post_using_valid_id`      | Ensures a trip can be retrieved by a valid ID.                                                                 | Status code: 200 OK                 |
+| Method  | `test_can_retrieve_post_using_invalid_id`    | Ensures appropriate handling of requests with an invalid trip ID.                                              | Status code: 404 Not Found          |
+| Class   | `TripImageListViewTests`                     | Test suite for the ImageListView. Checks listing of images including shared and non-shared.                     | -                                   |
+| Method  | `test_can_list_trip_images`                  | Verifies that images can be listed through the ImageListView endpoint.                                         | Status code: 200 OK                 |
+| Method  | `test_can_handle_list_trip_images_not_shared`| Verifies handling of images that are not shared.                                                               | Status code: 200 OK                 |
+| Class   | `TripImageDetailViewTests`                   | Test suite for the ImageDetailView. Tests retrieving images using valid and invalid IDs.                        | -                                   |
+| Method  | `test_can_retrieve_trip_image_using_valid_id`| Ensures an image can be retrieved by a valid ID.                                                               | Status code: 200 OK                 |
+| Method  | `test_can_retrieve_trip_image_using_invalid_id`| Ensures appropriate handling of requests with an invalid image ID.                                            | Status code: 404 Not Found          |
+
+[*Back to top*](#)
+
 ## Manual Testing
-
-- Manual testing primarily concentrated on interacting with the forms to ensure users received appropriate feedback after submission.
-- The default `clean()` and `save()` methods of the model form class were overridden as necessary to implement specific validations.
-
-- Emphasis was placed on real-time user feedback during form completion.
-- Fields were designed to provide immediate alerts for incorrect inputs.
-- Some form fields were configured with predefined choices to minimize input errors.
-
-- Despite these measures, certain errors might still occur, such as:
-    - Selecting inappropriate trip dates that don't align with the trip status, like planning a trip with past dates.
-    - Overlapping dates when creating a new trip that conflict with previously created trips.
-
 
 | Feature | Expected behaviour | Test | Status |
 | --- | --- | --- | --- |
@@ -652,56 +737,33 @@ The Lighthouse validator showed very good results, with an warning related to a 
 
 ---
 
-### Unit Testing
-
-I  run automatic testing for the simplest case - i.e. the ContactForm `contact` app with the command
-
-```
-python3 manage.py test contact
-```
-
-and I got the following error:
-`django.db.utils.OperationalError: near "None": syntax error`
-
-The error occured when running unit testing with all apps, and I have tried to redo the database migrations, but it didn't work. 
-For the time being, I am open for suggestions.
+Despite these measures, certain errors might still occur, such as:
+* Selecting inappropriate trip dates that don't align with the trip status, like planning a trip with past dates.
+* Overlapping dates when creating a new trip that conflict with previously created trips.
 
 
-### Additional testing
+## Heroku Deployment
+This project uses Cloudinary for image storage, which allows for efficient and scalable management of images.
+To configure Cloudinary, you need to set up an account on Cloudinary's website and obtain your cloud name, API key, and API secret.
+These credentials should be added to your project's environment variables.
 
-#### Devices and browsers
-Additional testing was performed by calling the application from my private devices operating on Windows 11 (desktop and laptop), as well as
-on my smartphone (Samsung Galaxy S21) operating on Android OS, using the following web browsers:
-- Google Chrome: Version 129.0.6668.100 (Official Build) (64-bit)
-- Brave: version 1.70.126 Chromium: 125.0.6422.112 (Official Build) (64-bit)
-- Microsoft Edge: Version 129.0.2792.89 (Official build) (64-bit)
+Additionally, the project uses CodeInstitute's PostgreSQL database, accessed via the `DATABASE_URL` environment variable.
 
+### React Client
+A React client has been configured to consume the API endpoints provided by the LovinEscapades-API.
+This client is also deployed on Heroku, ensuring seamless integration and interaction with the backend API.
+The React client handles the frontend functionalities, providing users with an intuitive and responsive interface
+to interact with the trip tracking tool.
 
 [*Back to top*](#)
-
-## <font color="red">Known bugs and issues</font>
-- There is a **Javascript error** that occurs when creating trips with the `Ongoing` status. I don't know if it is a logical error or a coding error, but I suspect that the inclusion of the javascript tags onto the Django templates may not be quite right.
-- Mapping remote, exotic or uncharted locations can fail sometimes due to the limitations of the gelocation services
-- The geolocator cannot deal with places having similar names, so a more sophisticated logic must be implemented for selecting the right one.
-
-If you encounter other bugs, please create an issue by clicking [here](https://github.com/eneliviu/LovePlanningCLI/issues).
 
 
 [*Back to top*](#)
 
 
-## Further improvements
-- Refactor the delete functions since there is quite a bit of overlap between them.
-- Functionality to reply to user inquiries send through the form on the Contact Us page
-- Filter and sort options to organize and view the trips and photos according to more detailed criteria.
-    - Add a day-time picker to improve the map filter
-    - Add separate filter for the image gallery page
-    - Add separate filter for dashboard page
-- Reminders
-    - Set due dates with automatic reminder to receive timely notifications for upcoming trips and deadlines.
-- Social Sharing:
-    - Share trip experiences and images with other users and visitors.
-    - Comment and interact on shared trip entries.
+[*Back to top*](#)
+
+## API documentation
 
 
 [*Back to top*](#)
@@ -709,7 +771,7 @@ If you encounter other bugs, please create an issue by clicking [here](https://g
 
 ## Contributing
 
-### To contribute to the ***LovinPlans*** project:
+### To contribute to the ***LovinEscapades-API*** project:
 - Fork the repository on GitHub to create your own copy.
 - Clone the forked repository to your local machine.
 - To fork the project:
@@ -725,19 +787,15 @@ If you encounter other bugs, please create an issue by clicking [here](https://g
 
 ## License
 ### Open Source
-As an open-source project, ***LovinEscapades*** promotes transparency and community involvement. The code is accessible on GitHub, allowing developers to view, fork, and contribute to the project as they desire.
+As an open-source project, ***LovinEscapades-API*** promotes transparency and community involvement.
+The code is accessible on GitHub, allowing developers to view, fork, and contribute to the project as they desire.
 
 
 [*Back to top*](#)
 
 
 ## Acknowledgements
-- Further details on the usage of Leaflet JS were obtained from https://leafletjs.com/
 - [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and great short examples of using extensions
-- [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=E2bhoCOMlsA&t=44s) for the Django - Leaflet integration idea  
-- [Pagination with Django](https://djangocentral.com/adding-pagination-with-django/#adding-pagination-using-function-based-views)
-- [On handling multiple forms on the same template](https://stackoverflow.com/questions/1395807/proper-way-to-handle-multiple-forms-on-one-page-in-django)
-- [Codemy Youtube channel](https://www.youtube.com/watch?v=H8MmNqDyra8&list=PLCC34OHNcOtoQCR6K4RgBWNi3-7yGgg7b&index=3) for automatically creating profile pages
 - `ChatGPT` was utilized to generate sensible input for text content, assist in crafting the README file, and perform language proof-checking.
 
 
