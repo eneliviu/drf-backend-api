@@ -4,27 +4,25 @@
 
 ### **Table of content:**
 - [Overview](#overview)
-- [2. Application Development](#application-development)
-- [3. Main Features](#main-features)
-- [4. Project Structure](#project-structure)
-- [5. API Endponts](#api-endpoints)
-- [6. Technologies Used](#technologies-used)
-- [7. Accessibility and Design](#accessibility-and-design)
+- [Application Development](#application-development)
+- [Main Features](#main-features)
+- [Project Structure](#project-structure)
+- [API Endponts](#api-endpoints)
+- [Technologies Used](#technologies-used)
+- [Accessibility and Design](#accessibility-and-design)
 - [Usage and Screenshots](#usage-and-screenshots)
-- [9. Database Schema](#database-schema)
-- [10. Online Validators](#online-validators)
-- [11. Unit Testing](#unit-testing)
-- [12. Manual Testing](#manual-testing)
-- [13. Heroku Deployment](#heroku-deployment)
-- [14. Contributing](#contributing)
-- [15. License](#license)
-- [16. Acknowledgements](#acknowledgements)
-- [17. Documentation version](#documentation-version)
-
+- [Database Schema](#database-schema)
+- [Online Validators](#online-validators)
+- [Unit Testing](#unit-testing)
+- [Manual Testing](#manual-testing)
+- [Heroku Deployment](#heroku-deployment)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [Documentation version](#documentation-version)
 
 ## Overview
 ![alt text](image.png)
-
 
 ### **Project Description**
 LovinEscapades-API is a backend solution designed to facilitate seamless trip management and social interaction for travel enthusiasts. Built with Django Rest Framework, this API provides robust user authentication, trip creation and management, image handling, and social features like following users and liking trips. It supports full CRUD (Create, Read, Update, Delete) operations for trips and images, allowing users to manage their travel experiences efficiently. The API is well-documented and adheres to RESTful principles, ensuring ease of use for developers. Future enhancements include a React frontend for an interactive user experience and potential integration with mapping libraries for enhanced trip visualization.
@@ -46,7 +44,7 @@ This API serves as a backend foundation for a potential application.
 The envisioned features and functionalities are subject to change and refinement based on further development and user feedback.
 
 
-## 2. Application development
+## Application development
 This application was developed using an iterative approach, following Agile principles.
 
 **User Stories & Epics**
@@ -83,7 +81,7 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 [*Back to top*](#)
 
 
-## 3. Main Features
+## Main Features
 
 ### **Robust User Registration and Authentication:**
 * Utilizes JSON Web Tokens (JWT) for secure and stateless user authentication.
@@ -112,7 +110,7 @@ More details about the API are provided in the [Usage and Screenshots](#usage-an
 
 [*Back to top*](#)
 
-## 4. Project structure
+## Project structure
 
 ### ***Lovingescapades-API*** project consists of four apps:
 
@@ -136,9 +134,10 @@ This app provides essential functionality for site visitors to send inquiries to
 - Users can publish photos even if they choose not to make the associated trip information public.
 - Each photo in the gallery includes a like icon and basic trip details, though the feature for sending and receiving likes has not been implemented yet.
 
+
 [*Back to top*](#)
 
-## 5. API Endpoints
+## API Endpoints
 The following table provides an overview of the available API endpoints for the LovinEscapades-API:
 
 | Endpoint | Method | Description | Permission |
@@ -176,7 +175,7 @@ A comprehensive overview of the API endpoints, including detailed documentation,
 
 [*Back to top*](#)
 
-## 6. Technologies Used
+## Technologies Used
 
 ### **Django Rest Framework:**
 - A web framework made with Python that helps build web apps quickly and efficiently. It's great for managing databases and organizing code, making it easier to create complex features.
@@ -227,19 +226,17 @@ python manage.py runserver
 
 
 
-## 8. Database schema
+## Database schema
 
 The Entity Relationship Diagram (EDR) for the full project database shcema was produced using the
 [Graph models extention](https://shorturl.at/psHzX) and visualized using the online [GraphViz generator](https://shorturl.at/AAuhy). 
 
+### ER Diagram
 
+![alt text](images_doc/ERD.png)
+<p align="center"><strong>EDR project database diagram</strong></p>
 
-![Main menu](static/docs/graphviz_all_models.webp#center)
-
-*<font color="red">LovinEscapades</font>: EDR project database diagram*.<br>
-
-
-## 9. Online Validators
+## Online Validators
 
 ### **PEP8**
 The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
@@ -278,7 +275,7 @@ The Lighthouse validator showed very good results, with an warning related to a 
 *<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
 
 
-## 10. Unit testing
+## Unit testing
 The project includes a comprehensive test suite for the Trip and Image API endpoints.
 The tests are located in the `trips/tests.py` file and cover the following views:
 - **TripListView**: Tests for listing trips, including handling shared and non-shared trips.
@@ -356,7 +353,7 @@ These test cases cover a range of scenarios to ensure that the API endpoints fun
 
 [*Back to top*](#)
 
-## 11. Manual Testing
+## Manual Testing
 
 | Feature | Expected behaviour | Test | Status |
 | --- | --- | --- | --- |
@@ -432,7 +429,7 @@ Despite these measures, certain errors might still occur, such as:
 * Overlapping dates when creating a new trip that conflict with previously created trips.
 
 
-## 12. Heroku Deployment
+## Heroku Deployment
 This project uses Cloudinary for image storage, which allows for efficient and scalable management of images.
 To configure Cloudinary, you need to set up an account on Cloudinary's website and obtain your cloud name, API key, and API secret.
 These credentials should be added to your project's environment variables.
@@ -453,13 +450,13 @@ to interact with the trip tracking tool.
 
 [*Back to top*](#)
 
-## 13. API documentation
+## API documentation
 
 
 [*Back to top*](#)
 
 
-## 14. Contributing
+## Contributing
 
 ### To contribute to the ***LovinEscapades-API*** project:
 - Fork the repository on GitHub to create your own copy.
@@ -475,14 +472,14 @@ to interact with the trip tracking tool.
 
 [*Back to top*](#)
 
-## 15. License
+## License
 ### Open Source
 As an open-source project, ***LovinEscapades-API*** promotes transparency and community involvement.
 The code is accessible on GitHub, allowing developers to view, fork, and contribute to the project as they desire.
 
 [*Back to top*](#)
 
-## 16. Acknowledgements
+## Acknowledgements
 * [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and great short examples of using extensions
 * `ChatGPT` was utilized to generate sensible input for text content, assist in crafting the README file, and perform language proof-checking.
 
@@ -495,8 +492,7 @@ They were utilized to assist in:
 
 [*Back to top*](#)
 
-
-## 17. Documentation version
+## Documentation version
 
 Last updated: Jan 9, 2025
 

@@ -120,7 +120,8 @@ INSTALLED_APPS = [
     'likes',
     'followers',
 
-    'drf_spectacular'
+    'drf_spectacular',
+    'django_extensions',
 ]
 
 SITE_ID = 1
@@ -137,6 +138,11 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+  'app_labels': ["profiles", "trips", "likes", "followers"],
+}
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
