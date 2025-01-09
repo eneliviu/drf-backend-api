@@ -9,7 +9,7 @@ if os.path.exists('env.py'):
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False
+DEBUG = True
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
