@@ -4,58 +4,49 @@
 
 ### **Table of content:**
 - [Overview](#overview)
-- [Application Development](#application-development)
-- [Main Features](#main-features)
-- [Application Structure](#project-structure)
-- [Technologies Used](#technologies-used)
-- [Accessibility and Design](#accessibility-and-design)
+- [2. Application Development](#application-development)
+- [3. Main Features](#main-features)
+- [4. Project Structure](#project-structure)
+- [5. API Endponts](#api-endpoints)
+- [6. Technologies Used](#technologies-used)
+- [7. Accessibility and Design](#accessibility-and-design)
 - [Usage and Screenshots](#usage-and-screenshots)
-- [Online Validators](#online-validators)
-- [Manual Testing](#manual-testing)
-- [Unit Testing](#unit-testing)
-- [Known bugs and issues](#known-bugs-and-issues)
-- [Further improvements](#further-improvements)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-- [Documentation version](#documentation-version)
+- [9. Database Schema](#database-schema)
+- [10. Online Validators](#online-validators)
+- [11. Unit Testing](#unit-testing)
+- [12. Manual Testing](#manual-testing)
+- [13. Heroku Deployment](#heroku-deployment)
+- [14. Contributing](#contributing)
+- [15. License](#license)
+- [16. Acknowledgements](#acknowledgements)
+- [17. Documentation version](#documentation-version)
 
 
 ## Overview
+![alt text](image.png)
 
-**Project Inspiration**
+
+### **Project Description**
+LovinEscapades-API is a backend solution designed to facilitate seamless trip management and social interaction for travel enthusiasts. Built with Django Rest Framework, this API provides robust user authentication, trip creation and management, image handling, and social features like following users and liking trips. It supports full CRUD (Create, Read, Update, Delete) operations for trips and images, allowing users to manage their travel experiences efficiently. The API is well-documented and adheres to RESTful principles, ensuring ease of use for developers. Future enhancements include a React frontend for an interactive user experience and potential integration with mapping libraries for enhanced trip visualization.
+
+### **Project Inspiration**
 This backend API project builds upon the knowledge and skills acquired during the development of "LovinEscapades" Django web application completed as part of Milestone Project 4 at Code Institute ([more here](https://github.com/eneliviu/LovinEscapades.git)).
 
-The application envisioned utilizes a full-stack development approach, leveraging:
-
-* Backend: Python with the Django framework
-* Frontend: Technologies like Javascript and CSS (specific libraries to be determined)
-
-LovinEscapades aims to empower users to manage their travel experiences through features like:
-
-* User Authentication: Secure login and user management.
-* Trip Management: Create, update, and manage trip details.
-* Image Management: Upload, store, and associate images with trips.
-* Trip Sharing: Share trip information and images with others (public or private).
-* Social Features: Potential future functionalities like user interaction and testimonials.
-
-**Public Access**:
-
+### **Public Access**:
 * Trip Exploration: Unregistered users might be able to view public trip locations on a map.
 * Content Discovery: Access to shared trip details and images (depending on privacy settings).
 
-**Future Considerations**:
-
-* User-friendly interface for a seamless user experience.
-* Integration with mapping libraries for interactive trip visualization.
+### **Future Considerations**:
+* User-friendly frontent React app for a interactive user experience.
+* Integration with mapping libraries.
 * Potential social features for user interaction and community building.
 
-**Disclaimer**:
+### **Disclaimer**:
+This API serves as a backend foundation for a potential application.
+The envisioned features and functionalities are subject to change and refinement based on further development and user feedback.
 
-This API serves as a backend foundation for a potential application. The envisioned features and functionalities are subject to change and refinement based on further development and user feedback.
 
-
-## Application development
+## 2. Application development
 This application was developed using an iterative approach, following Agile principles.
 
 **User Stories & Epics**
@@ -92,7 +83,7 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 [*Back to top*](#)
 
 
-## Main Features
+## 3. Main Features
 
 ### **Robust User Registration and Authentication:**
 * Utilizes JSON Web Tokens (JWT) for secure and stateless user authentication.
@@ -121,7 +112,7 @@ More details about the API are provided in the [Usage and Screenshots](#usage-an
 
 [*Back to top*](#)
 
-## Project structure
+## 4. Project structure
 
 ### ***Lovingescapades-API*** project consists of four apps:
 
@@ -147,7 +138,7 @@ This app provides essential functionality for site visitors to send inquiries to
 
 [*Back to top*](#)
 
-## API Endpoints
+## 5. API Endpoints
 The following table provides an overview of the available API endpoints for the LovinEscapades-API:
 
 | Endpoint | Method | Description | Permission |
@@ -185,7 +176,7 @@ A comprehensive overview of the API endpoints, including detailed documentation,
 
 [*Back to top*](#)
 
-## Technologies Used
+## 6. Technologies Used
 
 ### **Django Rest Framework:**
 - A web framework made with Python that helps build web apps quickly and efficiently. It's great for managing databases and organizing code, making it easier to create complex features.
@@ -229,315 +220,14 @@ python manage.py runserver
 
 ## Usage and Screenshots
 
-TODO
 
+![alt text](image-3.png) ![alt text](image-2.png)
 
-### User Registration
+**Image List View (Public)
 
-- The site visitor must fill in a standard registration form:
 
-![Main menu](static/clips/User_registration_form.webp#center)
-*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
 
-- The user instroduces username, email and a strong password
-![Main menu](static/clips/User_registration_form_fill.webp#center)
-*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
-
-- If the registration is successful, the user is redirect to the home page and a success message is posted.
-- For logged-in users, the Registration navbar menu is not visible anymore, and the 'My profile'- page with a user icon appears on the right side of the navbar.
-- Authenticated users can navigate to the Dashboard page
-
-![Main menu](static/clips/User_registration_logged.webp#center)
-*<font color="red">LovinEscapades</font>: Responsive design: tablet and mobile phone*.<br>
-
-
-### User Dashboard
-- The Dashboard offers CRUD fuctionality for managing trips and images
-
-![Main menu](static/clips/Dashboard_clean.webp#center)
-*<font color="red">LovinEscapades</font>: Dashboard page*.<br>
-
-#### **Create new trip**
-- On the Dashboard, the stats are null and the user can create a new trip record by clicking on the 'Add new trip' button to open an empty form in a Bootstrap modal.
-- By design, all form fields are required
-
-![Main menu](static/clips/Add_new_trip_start.webp#center)
-*<font color="red">LovinEscapades</font>:Add new trip form*.<br>
-
-- Using Javascript, the date picker entries are corroborated in real-time to the Trip status category (Completed, On-going and Planned) to avoid erroneous choices and to increase the UX. The eventual error are shown in browser alerrs, and the user can chose other entries accordingly. 
-- On the backend, the date entries are checked against those form other planned trips to eliminate possible collusions. There errors are hadled by Python logic in `trip.views.py`, and a Django error message is sent if necessary.
-
-
-
-![Main menu](static/clips/Add_trip_Completed_error.webp#center)
-
-*<font color="red">LovinEscapades</font>: Add new trip form: date choice missmatch for COMPLETED trips*.<br>
-
-
-
-![Main menu](static/clips/Add_trip_Planned_error.webp#center)
-
-*<font color="red">LovinEscapades</font>: Add new trip form: date choice missmatch for PLANNED trips*.<br>
-
-- After a new trip is created and posted as a trip card containg basic trip info  
-- Django success message is sent to the user.
-- The Dasboard is paginated such that it can handle a large number of trip instances 
-
-
-
-![Main menu](static/clips/Add_new_trip_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Add new trip form: correct date choice for ON-GOING trips*.<br>
-
-- The created trip, if the shared choice is `YES`, it will be sent to the Leaflet map on the landing page. By clicking on the marker, trip information and a redirecting link appear in a tooltip while the map zooms in at the marker location
-- The coordinates are calculated using the `geopy` Python module that uses the trip destination (Place and Country) to localize and retrieve the Longitude and the Latitude for mapping the location.
-- Although the form does not show the coordinates fields when creating a new trip, these fields exist and are populated when the coordinates are saved.  
-- If the location cannot be geolocated, a Django error message is sent to the user.  
-
-
-![Main menu](static/clips/Add_new_trip_on_map.webp#center)
-
-*<font color="red">LovinEscapades</font>: Add new trip form: correct date choice for ON-GOING trips*.</center><br>
-
-
-![Main menu](static/clips/Add_new_trip_on_map_tooltip.webp#center)
-
-*<font color="red">LovinEscapades</font>: Add new trip form: correct date choice for ON-GOING trips*.<br>
-
-#### **Managing trips**
-- After a  new trip is created, the dashboard stats are updated accordigly
-
-
-
-![Main menu](static/clips/Dashboard_update_stats.webp#center)
-
-*<font color="red">LovinEscapades</font>: Trip card with CRUD functionalitys*.<br>
-
-- The trip cards have CRUD functionality for editing trip data and uploading photos.
-
-
-![Main menu](static/clips/Trip_card.webp#center)
-
-*<font color="red">LovinEscapades</font>: Trip card with CRUD functionalitys*.<br>
-
-- By clicking on the `Update` button, the user is directed to a page containing two choices: 
-    - `Update trip` for changing the trip info.
-    - `Upload photo` for uploading trip photos.
-
-
-
-![Main menu](static/clips/Update_trip_page.webp#center)
-
-*<font color="red">LovinEscapades</font>: Trip card with CRUD functionalitys*.<br>
-
-- Selecting `Update trip` opens the create trip form with all fields filled in, such that the user can modify and save the new trip information.
-
-
-![Main menu](static/clips/Edit_trip_form.webp#center)
-
-*<font color="red">LovinEscapades</font>: Edit trip page*.<br>
-
-- Selecting `Update photo` option opens a form for loading photos.
-- All form fields are mandatory and must be non-empty.
-- Constraints on min and max text length are in place using Django Validators.
-- After upload, a success message is sent to the user.
-- If the user chooses to share it, then the photo is also sent to the `Gallery`-page.
-
-
-
-![Main menu](static/clips/Upload_photos_form.webp#center)
-
-*<font color="red">LovinEscapades</font>: Upload photo form*.<br>
-
-
-
-![Main menu](static/clips/Upload_photo_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Upload photo success*.<br>
-
-- After image upload, the stats on the dashboard are updated accordingly
-
-
-![Main menu](static/clips/Dasboard_stats_1_photo_1_trip.webp#center)
-
-*<font color="red">LovinEscapades</font>: Updated dashboard with trip and photo added*.<br>
-
-- The user can access the uploaded photo using the `Photos` button on the trip card to navigate to a `details<image_id>` URL that opens a masonry gallery of image cards. 
-
-
-
-![Main menu](static/clips/User_trip_photo.webp#center)
-
-*<font color="red">LovinEscapades</font>: Gallery page with shared photo*.<br>
-
-- Shared photos can be seen by any site visitor on the `Gallery`-page.
-
-
-![Main menu](static/clips/Gallery_shared_photo.webp#center)
-
-*<font color="red">LovinEscapades</font>: Gallery page with shared photo*.<br>
-
-- Each photo can be individually deleted form the  `details<image_id>`
-
-
-
-![Main menu](static/clips/Delete_photo.webp#center)
-
-*<font color="red">LovinEscapades</font>: Delete photo modal confirmation*.<br>
-
-- After the photo is being deleted, the user is redirected to Dashboard and a Django success message is sent to the user.
-- The stats on the Dashboard are updated accordingly
-
-
-
-![Main menu](static/clips/Delete_photo_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Delete photo success message and updated dashboard stats*.<br>
-
-### Manage the user profile
-- Initially, the user profile contains only the username and email address that are required 
-    by the registration process, but the fields for first and last name are empty.
-
-
-![Main menu](static/clips/User_profile_clean.webp#center)
-
-*<font color="red">LovinEscapades</font>: User profile page*.<br>
-
-- The `Update` button opens a form for updating the user information
-
-
-
-![Main menu](static/clips/Update_user_profile.webp#center)
-
-*<font color="red">LovinEscapades</font>: Update user profile form*.<br>
-
-- After submitting the form, the user is redirected back to `My Profile`-page where the personalia has been updated
-
-
-
-![Main menu](static/clips/Update_user_profile_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Update user profile form*.<br>
-
-- The user can post testimonials to the landing page using the 'New testimonial' button
-
-
-
- ![Main menu](static/clips/Testimonials_form.webp#center)
-
-*<font color="red">LovinEscapades</font>: Post testimonial form*.<br>
-
-- After submitting the testimonial, the user is redirected to `My Profile`-page where the post is loaded and pending approval. 
-
-
-
- ![Main menu](static/clips/Testimonials_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Posted testimonial*.<br>
-
-
-
- ![Main menu](static/clips/Testimonial_admin.webp#center)
-
-*<font color="red">LovinEscapades</font>: Testimonial pending approval on admin page*.<br>
-
-
-
- ![Main menu](static/clips/Testimonial_approved.webp#center)
-
-*<font color="red">LovinEscapades</font>: Approved testimonial on admin page*.<br>
-
-
-
- ![Main menu](static/clips/Testimonial_approved_user_profile.webp#center)
-
-*<font color="red">LovinEscapades</font>: Approved testimonial on admin page*.<br>
-
-- The `Dashboard`-page has also been udated with a new testimonial post
-
-
- ![Main menu](static/clips/Dashboard_trip_testimonial_approved.webp#center)
-
-*<font color="red">LovinEscapades</font>: Updated dashboard page with trip and approved testimonial*.<br>
-
-- After approval, the testimonial is posted on the landing page
-
-
- ![Main menu](static/clips/Landing_page_with_testimonial.webp#center)
-
-*<font color="red">LovinEscapades</font>: Updated dashboard page with trip and approved testimonial*.<br>
-
-
-
-- Deleteing a trip will remove all the linked trip photos as well
-- The dasboard stats and the landing page map are also updated
-
- ![Main menu](static/clips/Example_two_trips_two_photos.webp#center)
-
-*<font color="red">LovinEscapades</font>: Updated dashboard page with trip and approved testimonial*.<br>
-
- ![Main menu](static/clips/Map_two_trips.webp#center)
-
-*<font color="red">LovinEscapades</font>: Updated map with new trip marker added*.<br>
-
- ![Main menu](static/clips/Delete_trip.webp#center)
-
-*<font color="red">LovinEscapades</font>: Delete trip and associated photo*.<br>
-
-
- ![Main menu](static/clips/Delete_trip_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Delete trip and associated photo*.<br>
-
- ![Main menu](static/clips/Map_one_trip_after_delete.webp#center)
-
-*<font color="red">LovinEscapades</font>: Delete trip marker from map after trip deletion*.<br>
-
-
-[*Back to top*](#)
-
-
-#### **Managing site admin inquiries**
-
- ![Main menu](static/clips/Contact_us_form.webp#center)
-
-*<font color="red">LovinEscapades</font>: Form for sending inquiries to site admin*.<br>
-
-
- ![Main menu](static/clips/Contact_success.webp#center)
-
-*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
-
-
- ![Main menu](static/clips/Inquiry_to_site_admin.webp#center)
-
-*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
-
-
- ![Main menu](static/clips/Inquiry_to_site_admin_read.webp#center)
-
-*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
-
-
-[*Back to top*](#)
-
-#### **Managing photo gallery page**
-
-- The `Gallery`-page contains all the photos sahred by the user.
-- A user can choose to share a photo, but not to make the entire trip public.
-- Deleting a trip will delete also the associated photos from the `Gallery`-page
-
-
-
- ![Main menu](static/clips/Shared_gallery.webp#center)
-
-*<font color="red">LovinEscapades</font>: Inquiry successfully sent to site admin*.<br>
-
-
-[*Back to top*](#)
-
-
-## Database schema
+## 8. Database schema
 
 The Entity Relationship Diagram (EDR) for the full project database shcema was produced using the
 [Graph models extention](https://shorturl.at/psHzX) and visualized using the online [GraphViz generator](https://shorturl.at/AAuhy). 
@@ -549,7 +239,7 @@ The Entity Relationship Diagram (EDR) for the full project database shcema was p
 *<font color="red">LovinEscapades</font>: EDR project database diagram*.<br>
 
 
-## Online Validators
+## 9. Online Validators
 
 ### **PEP8**
 The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
@@ -588,7 +278,7 @@ The Lighthouse validator showed very good results, with an warning related to a 
 *<font color="red">LovinEscapades</font>: Lighthouse snapshot test*.<br>
 
 
-# Unit testing
+## 10. Unit testing
 The project includes a comprehensive test suite for the Trip and Image API endpoints.
 The tests are located in the `trips/tests.py` file and cover the following views:
 - **TripListView**: Tests for listing trips, including handling shared and non-shared trips.
@@ -598,7 +288,7 @@ The tests are located in the `trips/tests.py` file and cover the following views
 
 The test suite includes setup methods to initialize test data and individual test methods to verify the functionality of the respective endpoints.
 
-## Test Classes
+### Test Classes
 1. **TripListViewTests**:
     * Verifies the functionality of listing trips through the `TripListView` endpoint.
     * Tests include:
@@ -620,14 +310,14 @@ The test suite includes setup methods to initialize test data and individual tes
         * Retrieving an image using a valid ID.
         * Handling retrieval of an image using an invalid ID.
 
-## Running Tests
+### Running Tests
 To run the tests, use the following command:
 ```bash
 python manage.py test
 ```
 This command will execute the test suite and display the results in the terminal. The tests cover various scenarios to ensure the correctness and robustness of the API endpoints.
 
-## Test Cases
+### Test Cases
 
 Here are some sample test cases from the test suite:
 1. **TripListViewTests**:
@@ -666,7 +356,7 @@ These test cases cover a range of scenarios to ensure that the API endpoints fun
 
 [*Back to top*](#)
 
-## Manual Testing
+## 11. Manual Testing
 
 | Feature | Expected behaviour | Test | Status |
 | --- | --- | --- | --- |
@@ -742,7 +432,7 @@ Despite these measures, certain errors might still occur, such as:
 * Overlapping dates when creating a new trip that conflict with previously created trips.
 
 
-## Heroku Deployment
+## 12. Heroku Deployment
 This project uses Cloudinary for image storage, which allows for efficient and scalable management of images.
 To configure Cloudinary, you need to set up an account on Cloudinary's website and obtain your cloud name, API key, and API secret.
 These credentials should be added to your project's environment variables.
@@ -763,13 +453,13 @@ to interact with the trip tracking tool.
 
 [*Back to top*](#)
 
-## API documentation
+## 13. API documentation
 
 
 [*Back to top*](#)
 
 
-## Contributing
+## 14. Contributing
 
 ### To contribute to the ***LovinEscapades-API*** project:
 - Fork the repository on GitHub to create your own copy.
@@ -785,24 +475,28 @@ to interact with the trip tracking tool.
 
 [*Back to top*](#)
 
-## License
+## 15. License
 ### Open Source
 As an open-source project, ***LovinEscapades-API*** promotes transparency and community involvement.
 The code is accessible on GitHub, allowing developers to view, fork, and contribute to the project as they desire.
 
+[*Back to top*](#)
+
+## 16. Acknowledgements
+* [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and great short examples of using extensions
+* `ChatGPT` was utilized to generate sensible input for text content, assist in crafting the README file, and perform language proof-checking.
+
+### Use of GenAI
+Generative AI tools, such as ChatGPT, were leveraged in various aspects of this project.
+They were utilized to assist in:
+* Generating initial drafts of documentation and code comments.
+* Ensuring the accuracy and clarity of technical descriptions.
+* Identifying and upgrading deprecated libraries within the walkthrough CodeInstitute projects.
 
 [*Back to top*](#)
 
 
-## Acknowledgements
-- [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and great short examples of using extensions
-- `ChatGPT` was utilized to generate sensible input for text content, assist in crafting the README file, and perform language proof-checking.
-
-
-[*Back to top*](#)
-
-
-## Documentation version
+## 17. Documentation version
 
 Last updated: Jan 9, 2025
 
