@@ -18,6 +18,7 @@ class ImageSerializer(serializers.ModelSerializer):
         The fields that are included in the serialized output.
     """
     image = serializers.ImageField()
+    owner_name = serializers.ReadOnlyField(source='owner.username')
 
     def validate_image(self, value):
         # value is the uploaded image
@@ -43,7 +44,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = [
-            'id',  'owner', 'trip_id', 'image_title',
+            'id',  'owner', 'owner_name', 'trip_id', 'image_title',
             'image', 'description', 'shared', 'uploaded_at'
         ]
 

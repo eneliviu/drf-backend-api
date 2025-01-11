@@ -9,7 +9,7 @@ if os.path.exists('env.py'):
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False
+DEBUG = True
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
@@ -88,6 +88,7 @@ LOGIN_REDIRECT_URL = '/'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     '127.0.0.1:8000',
+    '127.0.0.1:3000',
     'localhost',
     'drf-backend-api-70211104c0c7.herokuapp.com'
 ]
@@ -186,17 +187,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# DATABASE_URL = os.environ.get('DATABASE_URL')
+# DATABASES = {
+#     "default": dj_database_url.config(default=DATABASE_URL)
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

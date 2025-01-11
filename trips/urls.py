@@ -2,32 +2,32 @@ from django.urls import path
 from . import views as views
 
 urlpatterns = [
-    path(
+    path( # List of all shared trips
         'trips/',
         views.TripList.as_view(),
         name='trip_list'
     ),
-    path(
+    path( # Detail view of a shared trip
         'trips/<int:pk>/',
         views.TripDetail.as_view(),
         name='trip-detail'
     ),
-    path(
+    path( # List of all shared images in a trip detail
         'trips/<int:trip_id>/images/',
         views.ImageList.as_view(),
         name='image-list-trip'
     ),
-    path(
+    path( # Detaile view of a shared image in a trip detail
         'trips/<int:trip_id>/images/<int:pk>/',
         views.ImageDetail.as_view(),
         name='image-detail'
     ),
-    path(
+    path( # List of all shared images
         'images/',
         views.ImageListGallery.as_view(),
         name='image-gallery'
     ),
-    path(
+    path( # Detaile view of a shared image
         'images/<int:pk>/',
         views.ImageListGalleryDetail.as_view(),
         name='detail-gallery'

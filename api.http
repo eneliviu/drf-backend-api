@@ -29,7 +29,7 @@ GET http://127.0.0.1:8000/profiles/1/ HTTP/1.1
 GET http://127.0.0.1:8000/trips/
 
 ###
-GET http://127.0.0.1:8000/trips/1/
+GET http://127.0.0.1:8000/trips/4/
 
 ###
 GET http://127.0.0.1:8000/trips/1/images/

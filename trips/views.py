@@ -247,7 +247,7 @@ class ImageList(generics.ListCreateAPIView):
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['uploaded_at']
+    ordering_fields = ['uploaded_at', 'likes_count', 'owner__username']
 
     def get_queryset(self):
         trip_id = self.kwargs.get('trip_id')

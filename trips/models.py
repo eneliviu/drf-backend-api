@@ -123,7 +123,10 @@ class Trip(models.Model):
         super(Trip, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.trip_category} trip to {self.place}, {self.country}'
+        return (f'{self.trip_category} trip to {self.place}, '
+                f'{self.country}, '
+                f'by {self.owner.username}, '
+                f'from {self.start_date} to {self.end_date}')
 
     class Meta:
         ordering = ["-created_at", 'country', 'start_date']
@@ -173,8 +176,31 @@ class Image(models.Model):
         return (
             f'From {self.trip.place}, '
             f'{self.trip.country}, '
-            f'uploaded at {formatted_uploaded_at}'
+            f'uploaded at {formatted_uploaded_at}, '
+            f'by {self.owner.username}'
         )
 
     class Meta:
-        ordering = ["-uploaded_at"]
+        ordering = ["-uploaded_at", "owner"]
+
+    def save(self, *args, **kwargs):
+        """
+        Overrides the save method to include image validation.
+        If the instance already exists (has a primary key), it validates
+            the new image only if it has changed.
+        If the instance is new (does not have a primary key),
+            it validates the image.
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        Raises:
+            ValidationError: If the image does not pass validation.
+        """
+
+        if self.pk:
+            old_image = Image.objects.get(pk=self.pk).image
+            if old_image != self.image:
+                validate_image(self.image)
+        else:
+            validate_image(self.image)
+        super(Image, self).save(*args, **kwargs)

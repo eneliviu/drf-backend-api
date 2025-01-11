@@ -2,7 +2,7 @@ import os
 from django.core.exceptions import ValidationError
 from geopy import geocoders
 from geopy.exc import GeocoderTimedOut
-
+from cloudinary import CloudinaryResource
 
 def get_coordinates(location, attempt=1, max_attempts=5):
     '''
@@ -53,6 +53,7 @@ def validate_image(image):
         ValidationError: If the file extension is not supported.
     """
 
-    file_extension = os.path.splitext(image.name)[1].lower()
-    if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
-        raise ValidationError("Unsupported file extension.")
+    if not isinstance(image, CloudinaryResource):
+        file_extension = os.path.splitext(image.name)[1].lower()
+        if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
+            raise ValidationError("Unsupported file extension.")
