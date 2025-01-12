@@ -1,6 +1,7 @@
 import os
 from rest_framework import serializers
 from .models import Trip, Image
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -142,20 +143,29 @@ Methods:
 
     def validate(self, data):
         """
-        Validate that the start date is before the end date.
+        Validate the start and end dates of a trip and ensure they are
+        in the correct order.
         Args:
-            data (dict): The data dictionary containing 'start_date' and 'end_date'.
+            data (dict): A dictionary containing the trip data to be validated.
         Raises:
-            serializers.ValidationError: If 'start_date' is after 'end_date'.
+            serializers.ValidationError: If the start date is > the end date
+                                            or any other validation errors.
         Returns:
-            dict: The validated data dictionary.
+            dict: The validated data.
         """
+
         start_date = data.get('start_date')
         end_date = data.get('end_date')
         if start_date and end_date and start_date > end_date:
             raise serializers.ValidationError({
                 'non_field_errors': ["Start date must be before end date."]
             })
+        try:
+            instance = Trip(**data)
+            instance.clean()
+        except DjangoValidationError as e:
+            raise serializers.ValidationError(e.message_dict)
+
         return data
 
     class Meta:
