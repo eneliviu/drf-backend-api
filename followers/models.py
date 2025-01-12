@@ -36,17 +36,9 @@ class Follower(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def clean(self):
-        if self.owner == self.followed:
-            raise ValidationError("A user cannot follow themselves.")
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-
     class Meta:
         ordering = ['-created_at']
-        unique_together = ['owner', 'followed']
+        unique_together = ('owner', 'followed')
 
     def __str__(self):
         return f"{self.owner} follows {self.followed}"

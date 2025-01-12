@@ -54,27 +54,28 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.owner}'s profile"
 
-    def save(self, *args, **kwargs):
-        """
-        Overrides the save method to include image validation.
-        If the instance already exists (has a primary key), it validates
-            the new image only if it has changed.
-        If the instance is new (does not have a primary key),
-            it validates the image.
-        Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
-        Raises:
-            ValidationError: If the image does not pass validation.
-        """
+    # def save(self, *args, **kwargs):
+    #     """
+    #     Overrides the save method to include image validation.
+    #     If the instance already exists (has a primary key), it validates
+    #         the new image only if it has changed.
+    #     If the instance is new (does not have a primary key),
+    #         it validates the image.
+    #     Args:
+    #         *args: Variable length argument list.
+    #         **kwargs: Arbitrary keyword arguments.
+    #     Raises:
+    #         ValidationError: If the image does not pass validation.
+    #     """
 
-        if self.pk:
-            old_image = Profile.objects.get(pk=self.pk).image
-            if old_image != self.image:
-                validate_image(self.image)
-        else:
-            validate_image(self.image)
-        super(Profile, self).save(*args, **kwargs)
+    #     if self.pk:
+    #         old_profile = Profile.objects.get(pk=self.pk)
+    #         old_image = old_profile.image if old_profile.image else None
+    #         if old_image != self.image:
+    #             validate_image(self.image)
+    #     else:
+    #         validate_image(self.image)
+    #     super(Profile, self).save(*args, **kwargs)
 
 
 @receiver(post_save, sender=User)
