@@ -5,17 +5,30 @@ from .models import Trip, Image
 
 class ImageSerializer(serializers.ModelSerializer):
     """
-    Serializer for handling image uploads and validations.
+    Serializer for the Image model.
+    Fields:
+        image (ImageField): The uploaded image file.
+        owner_name (ReadOnlyField): The username of the image owner, read-only.
     Methods:
-    --------
-    validate_image(value):
-        Validates the uploaded image for size, dimensions, and file extension.
+        validate_image(value):
+            Validates the uploaded image file.
+            - Ensures the image size is not larger than 2MB.
+            - Ensures the image width is not larger than 4096 pixels.
+            - Ensures the image height is not larger than 4096 pixels.
+            - Ensures the file extension is one of the supported formats
+                        (.jpg, .jpeg, .png, .gif, .webp).
     Meta:
-    -----
-    model: Image
-        The model that this serializer is associated with.
-    fields: list
-        The fields that are included in the serialized output.
+        model (Image): The model that is being serialized.
+        fields (list): The list of fields to include in the serialized output.
+            - 'id': The ID of the image.
+            - 'owner': The owner of the image.
+            - 'owner_name': The username of the image owner.
+            - 'trip_id': The ID of the associated trip.
+            - 'image_title': The title of the image.
+            - 'image': The uploaded image file.
+            - 'description': The description of the image.
+            - 'shared': Whether the image is shared or not.
+            - 'uploaded_at': The timestamp when the image was uploaded.
     """
     image = serializers.ImageField()
     owner_name = serializers.ReadOnlyField(source='owner.username')
@@ -50,34 +63,31 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class TripSerializer(serializers.ModelSerializer):
-    """
+    '''
     Serializer for the Trip model.
-    Handles the serialization and deserialization of Trip instances,
-    including related fields and custom methods for additional data.
-    Fields:
-        owner (ReadOnlyField): The username of the trip owner.
-        is_owner (SerializerMethodField): Indicates if the current user is
-                                            the owner of the trip.
-        profile_id (ReadOnlyField): The profile ID of the trip owner.
-        profile_image (ReadOnlyField): The profile image URL of the trip owner.
-        images_count (SerializerMethodField): The count of images associated
-                                                with the trip.
-        likes_count (SerializerMethodField): The count of likes associated
-                                                with the trip.
-        images (SerializerMethodField): The images associated with the trip,
-                                            filtered by sharing permissions.
-    Methods:
-        get_images(self, obj): Retrieves the images associated with the trip,
-                                filtered by sharing permissions.
-        get_is_owner(self, obj): Checks if the current user is the trip owner.
-        get_images_count(self, obj): Retrieves the count of images associated
-                                        with the trip.
-        get_likes_count(self, obj): Retrieves the count of likes associated
-                                        with the trip.
-        to_representation(self, instance): Customizes the representation of
-                                            the trip instance, adding the
-                                            images count.
-    """
+This serializer handles the serialization and deserialization of
+    Trip instances, including custom fields and validation logic.
+Attributes:
+    owner (serializers.ReadOnlyField): The username of the trip owner.
+    is_owner (serializers.SerializerMethodField): Indicates if the request
+                                                user is the owner of the trip.
+    profile_id (serializers.ReadOnlyField): The profile ID of the trip owner.
+    profile_image (serializers.ReadOnlyField): The profile image URL of
+                                                the trip owner.
+    images_count (serializers.SerializerMethodField): The count of images
+                                                    associated with the trip.
+    likes_count (serializers.SerializerMethodField): The count of likes
+                                                    associated with the trip.
+    images (serializers.SerializerMethodField): The images associated
+                                                    with the trip.
+Methods:
+    get_images(obj): Retrieve images associated with the given object.
+    get_is_owner(obj): Check if the request user is the owner of the trip.
+    get_images_count(obj): Get the count of images associated with the trip.
+    get_likes_count(obj): Get the count of likes associated with the trip.
+    to_representation(instance): Customize the representation of the instance.
+    validate(data): Validate that the start date is before the end date.
+    '''
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
@@ -129,6 +139,24 @@ class TripSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['images_count'] = self.get_images_count(instance)
         return representation
+
+    def validate(self, data):
+        """
+        Validate that the start date is before the end date.
+        Args:
+            data (dict): The data dictionary containing 'start_date' and 'end_date'.
+        Raises:
+            serializers.ValidationError: If 'start_date' is after 'end_date'.
+        Returns:
+            dict: The validated data dictionary.
+        """
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        if start_date and end_date and start_date > end_date:
+            raise serializers.ValidationError({
+                'non_field_errors': ["Start date must be before end date."]
+            })
+        return data
 
     class Meta:
         model = Trip

@@ -5,6 +5,7 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from cloudinary.models import CloudinaryField
 from .utils import get_coordinates, validate_image
 
+
 class Trip(models.Model):
     """
     Model representing a trip.
@@ -79,9 +80,6 @@ class Trip(models.Model):
     )
     shared = models.BooleanField(default=True)
 
-    # Raise Validation Error In Model Save Method:
-    # https://ilovedjango.com/django/models-and-databases/tips/sub/raise-validation-error-in-model-save-method/
-
     is_cleaned = False
 
     def clean(self):
@@ -104,7 +102,7 @@ class Trip(models.Model):
         if self.start_date > self.end_date:
             raise ValidationError("Start date must be before end date.")
 
-        super(Trip, self).clean()
+        super().clean()
 
     def save(self, *args, **kwargs):
         """
