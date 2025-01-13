@@ -1,5 +1,6 @@
 import os
 from rest_framework import serializers
+from django.db.models import Count
 from .models import Trip, Image
 from django.core.exceptions import ValidationError as DjangoValidationError
 
@@ -32,7 +33,12 @@ class ImageSerializer(serializers.ModelSerializer):
             - 'uploaded_at': The timestamp when the image was uploaded.
     """
     image = serializers.ImageField()
+    likes_count = serializers.SerializerMethodField(read_only=True)
+    # likes_count = serializers.IntegerField(read_only=True)
     owner_name = serializers.ReadOnlyField(source='owner.username')
+
+    def get_likes_count(self, obj):
+        return getattr(obj, 'likes_count', 0)
 
     def validate_image(self, value):
         # value is the uploaded image
@@ -59,9 +65,9 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = [
             'id',  'owner', 'owner_name', 'trip_id', 'image_title',
-            'image', 'description', 'shared', 'uploaded_at'
+            'image', 'description', 'shared', 'uploaded_at', 'likes_count'
         ]
-        read_only_fields = ['owner']
+        read_only_fields = ['owner', 'trip_id', 'uploaded_at', 'id']
 
 
 class TripSerializer(serializers.ModelSerializer):
@@ -95,7 +101,7 @@ Methods:
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     images_count = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
+    total_likes_count = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
 
     def get_images(self, obj):
@@ -111,11 +117,14 @@ Methods:
         """
         request = self.context.get('request')
         if (
-            request.user.is_authenticated
-                and (obj.owner == request.user or obj.shared)):
-            images = obj.images.all()
+            request.user.is_authenticated and
+                (obj.owner == request.user or obj.shared)):
+            images = obj.images.all().annotate(
+                    likes_count=Count('likes')).order_by('-uploaded_at')
         else:
-            images = obj.images.filter(shared=True)
+            images = obj.images.filter(shared=True).annotate(
+                   likes_count=Count('likes')).order_by('-uploaded_at')
+
         return ImageSerializer(images, many=True, context=self.context).data
 
     def get_is_owner(self, obj):
@@ -125,8 +134,8 @@ Methods:
     def get_images_count(self, obj):
         return getattr(obj, 'images_count', 0)
 
-    def get_likes_count(self, obj):
-        return getattr(obj, 'likes_count', 0)
+    def get_total_likes_count(self, obj):
+        return getattr(obj, 'total_likes_count', 0)
 
     def to_representation(self, instance):
         """
@@ -175,5 +184,6 @@ Methods:
             "id", "owner", 'is_owner',  'profile_id', "profile_image",
             "place", "country", "trip_category", "start_date", "end_date",
             "created_at", "updated_at", "trip_status", "shared",
-            "images_count", "likes_count", "lat", "lon", 'images'
+            "images_count", "total_likes_count", "lat", "lon", 'images',
+            'content'
         ]

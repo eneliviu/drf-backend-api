@@ -1,6 +1,8 @@
-from django.db.models import Count
+from django.db.models import Count, Subquery, OuterRef, Sum, Q
+from django.db.models.functions import Coalesce
 from django_filters import (
-    FilterSet, DateFilter, CharFilter, MultipleChoiceFilter, BooleanFilter
+    FilterSet, DateFilter, CharFilter, MultipleChoiceFilter, BooleanFilter,
+    DateFromToRangeFilter
 )
 from rest_framework import generics, filters
 from rest_framework.permissions import (
@@ -11,7 +13,6 @@ from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 
 
 class TripFilter(FilterSet):
@@ -128,6 +129,67 @@ class TripFilter(FilterSet):
         ]
 
 
+class ImageFilter(FilterSet):
+    owner__username = CharFilter(
+        field_name='owner__username',
+        lookup_expr='iexact'
+    )
+    image_title = CharFilter(
+        field_name='image_title',
+        method='filter_image_title',
+        lookup_expr='icontains'
+    )
+    description = CharFilter(
+        field_name='description',
+        method='filter_description',
+        lookup_expr='icontains'
+    )
+    shared = BooleanFilter(
+        field_name='shared',
+        method='filter_shared'
+    )
+    uploaded_at = DateFromToRangeFilter(
+        field_name='uploaded_at',
+        method='filter_uploaded_at'
+    )
+
+    def filter_owner__username(self, queryset, name, value):
+        if value and self.request.user.is_authenticated:
+            return queryset.filter(owner__username=value)
+
+    def filter_image_title(self, queryset, name, value):
+        if value and self.request.user.is_authenticated:
+            return queryset.filter(image_title__icontains=value)
+
+    def filter_description(self, queryset, name, value):
+        if value and self.request.user.is_authenticated:
+            return queryset.filter(description__icontains=value)
+
+    def filter_shared(self, queryset, name, value):
+        if value and self.request.user.is_authenticated:
+            return queryset.filter(shared=value)
+
+    def filter_uploaded_at(self, queryset, name, value):
+        if value and self.request.user.is_authenticated:
+            return queryset.filter(uploaded_at__range=value)
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     if not self.data.get('owner__username') and 'request' in kwargs:
+    #         self.data = self.data.copy()
+    #         self.data['owner__username'] = kwargs['request'].user.username
+
+    class Meta:
+        model = Image
+        fields = [
+            'owner__username',
+            'image_title',
+            'description',
+            'shared',
+            'uploaded_at'
+        ]
+
+
 class TripList(generics.ListCreateAPIView):
     """
     API view to retrieve list of trips or create a new trip.
@@ -139,7 +201,7 @@ class TripList(generics.ListCreateAPIView):
                                 ordered by creation date.
         filter_backends (list): List of filter backends used for filtering and
                                     searching the queryset.
-        filterset_class (TripFilter): The filter class for the queryset.
+        filterset_class (CustomFilter): The filter class for the queryset.
         search_fields (list): List of fields that can be searched.
         ordering_fields (list): List of fields for ordering the queryset.
     Methods:
@@ -153,20 +215,41 @@ class TripList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def get_queryset(self):
+        # Subquery to calculate likes for images related to each trip
+        image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
+            likes_count=Count('likes')
+        ).values('likes_count')
+
         user = self.request.user
 
-        if user.is_authenticated:
-            return Trip.objects.filter(
-                Q(owner=user) | Q(shared=True)
-                ).annotate(
-                likes_count=Count('images__likes', distinct=True),
-                images_count=Count('images', distinct=True),
-            ).order_by('-created_at')
-
-        return Trip.objects.filter(shared=True).annotate(
-                likes_count=Count('images__likes', distinct=True),
-                images_count=Count('images', distinct=True),
+        queryset = Trip.objects.annotate(
+            images_count=Count('images', distinct=True),
+            total_likes_count=Coalesce(Sum(Subquery(image_likes_count)), 0)
         ).order_by('-created_at')
+
+        if user.is_authenticated:
+            # No additional filter since the operation logic applies to all trips
+            # that meet the shared condition or owned by the user
+            queryset = queryset.filter(Q(shared=True) | Q(owner=user))
+        else:
+            queryset = queryset.filter(shared=True)
+
+        return queryset
+    # def get_queryset(self):
+    #     user = self.request.user
+
+    #     if user.is_authenticated:
+    #         return Trip.objects.filter(
+    #              Q(shared=True)  # | Q(owner=user)
+    #             ).annotate(
+    #             images_count=Count('images', distinct=True),
+    #             total_likes_count=Sum('images__likes', distinct=True),
+    #         ).order_by('-created_at')
+
+    #     return Trip.objects.filter(shared=True).annotate(
+    #             images_count=Count('images', distinct=True),
+    #             total_likes_count=Sum('images__likes', distinct=True),
+    #     ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
@@ -178,8 +261,8 @@ class TripList(generics.ListCreateAPIView):
 
     search_fields = [
         'owner__username',
-        'place',
-        'country',
+        'trip_place',
+        'trip_country',
         'trip_category',
         'trip_status',
         'liked_by_user',
@@ -245,9 +328,24 @@ class ImageList(generics.ListCreateAPIView):
     """
 
     serializer_class = ImageSerializer
-    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]  #
-    filter_backends = [filters.OrderingFilter]
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
+    filterset_class = ImageFilter
     ordering_fields = ['uploaded_at', 'likes_count', 'owner__username']
+    search_fields = [
+        'owner__username',
+        'image_title',
+        'description',
+        # 'trip__trip_category',
+        # 'trip__trip_status',
+        # 'trip__shared',
+        # 'liked_by_user',
+    ]
+
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+    ]
 
     def get_queryset(self):
         trip_id = self.kwargs.get('trip_id')
@@ -257,9 +355,10 @@ class ImageList(generics.ListCreateAPIView):
         if user.is_authenticated:
             queryset = Image.objects.filter(
                  Q(trip=trip) & (Q(shared=True) | Q(trip__owner=user))
-            )
+            ).annotate(likes_count=Count('likes'))
         else:
-            queryset = Image.objects.filter(trip=trip, shared=True)
+            queryset = Image.objects.filter(
+                trip=trip, shared=True).annotate(likes_count=Count('likes'))
 
         return queryset.distinct().order_by('-uploaded_at')
 
@@ -311,8 +410,30 @@ class ImageListGallery(generics.ListCreateAPIView):
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['uploaded_at']
-    queryset = Image.objects.all().filter(shared=True).order_by('-uploaded_at')
+    filterset_class = ImageFilter
+    ordering_fields = ['uploaded_at', 'likes_count', 'owner__username']
+    search_fields = [
+        'owner__username',
+        'image_title',
+        'description',
+        'shared',
+        'uploaded_at'
+        # 'trip__trip_category',
+        # 'trip__trip_status',
+        # 'trip__shared',
+        # 'liked_by_user',
+    ]
+
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+    ]
+
+    def get_queryset(self):
+        return Image.objects.filter(shared=True)\
+            .annotate(likes_count=Count('likes'))\
+            .order_by('-uploaded_at')
 
 
 class ImageListGalleryDetail(generics.ListCreateAPIView):

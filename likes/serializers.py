@@ -31,6 +31,7 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'created_at', 'owner', 'image'
         ]
+        read_only_fields = ['owner', 'created_at']
 
     def create(self, validated_data):
         image = validated_data.get('image')

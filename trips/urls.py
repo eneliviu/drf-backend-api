@@ -23,12 +23,12 @@ urlpatterns = [
         name='image-detail'
     ),
     path(  # List of all shared images
-        'images/',
+        'gallery/',
         views.ImageListGallery.as_view(),
         name='image-gallery'
     ),
     path( # Detaile view of a shared image
-        'images/<int:pk>/',
+        'gallery/<int:pk>/',
         views.ImageListGalleryDetail.as_view(),
         name='detail-gallery'
     ),

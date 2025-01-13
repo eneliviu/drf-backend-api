@@ -9,7 +9,7 @@ urlpatterns = [
     ),
     path(
         'likes/<int:pk>/',
-         views.LikeDetail.as_view(),
-         name='likes-detail'
+        views.LikeDetail.as_view(),
+        name='likes-detail'
     ),
 ]

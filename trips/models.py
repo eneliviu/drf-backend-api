@@ -61,6 +61,14 @@ class Trip(models.Model):
             MaxLengthValidator(56)
             ]
         )
+    content=models.TextField(
+        blank=True,
+        null=True,
+        validators=[
+            MinLengthValidator(2),
+            MaxLengthValidator(500)
+            ]
+        )
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
     trip_category = models.CharField(
