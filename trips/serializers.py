@@ -61,6 +61,7 @@ class ImageSerializer(serializers.ModelSerializer):
             'id',  'owner', 'owner_name', 'trip_id', 'image_title',
             'image', 'description', 'shared', 'uploaded_at'
         ]
+        read_only_fields = ['owner']
 
 
 class TripSerializer(serializers.ModelSerializer):

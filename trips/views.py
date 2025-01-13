@@ -245,7 +245,7 @@ class ImageList(generics.ListCreateAPIView):
     """
 
     serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]  #
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['uploaded_at', 'likes_count', 'owner__username']
 
@@ -269,7 +269,10 @@ class ImageList(generics.ListCreateAPIView):
             id=self.kwargs['trip_id'],
             owner=self.request.user
         )
-        serializer.save(trip=trip)
+        serializer.save(
+            trip=trip,
+            owner=self.request.user
+        )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
