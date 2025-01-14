@@ -65,7 +65,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = [
             'id',  'owner', 'owner_name', 'trip_id', 'image_title',
-            'image', 'description', 'shared', 'uploaded_at', 'likes_count'
+            'image', 'description', 'shared', 'uploaded_at', 'likes_count',
         ]
         read_only_fields = ['owner', 'trip_id', 'uploaded_at', 'id']
 

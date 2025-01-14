@@ -215,7 +215,22 @@ class TripList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        # Subquery to calculate likes for images related to each trip
+        """
+        Returns a queryset of Trip objects with additional annotations
+        and filters. The queryset is annotated with:
+        - images_count: The count of associated images, distinct by trip.
+        - total_likes_count: The total count of likes for all images
+            associated with the trip.
+        The queryset is ordered by the creation date of the trips
+            in descending order.
+        If the user is authenticated, the queryset includes trips that are
+            either shared or owned by the user.
+        If the user is not authenticated, the queryset includes only
+            shared trips.
+        Returns:
+            QuerySet: A queryset of Trip objects with the applied annotations
+                and filters.
+        """
         image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
             likes_count=Count('likes')
         ).values('likes_count')
@@ -228,28 +243,29 @@ class TripList(generics.ListCreateAPIView):
         ).order_by('-created_at')
 
         if user.is_authenticated:
-            # No additional filter since the operation logic applies to all trips
-            # that meet the shared condition or owned by the user
             queryset = queryset.filter(Q(shared=True) | Q(owner=user))
-        else:
-            queryset = queryset.filter(shared=True)
+        # else:
+        #     queryset = queryset.filter(shared=True)
 
         return queryset
-    # def get_queryset(self):
-    #     user = self.request.user
 
-    #     if user.is_authenticated:
-    #         return Trip.objects.filter(
-    #              Q(shared=True)  # | Q(owner=user)
-    #             ).annotate(
-    #             images_count=Count('images', distinct=True),
-    #             total_likes_count=Sum('images__likes', distinct=True),
-    #         ).order_by('-created_at')
+    def get_queryset_test(self):
+        '''
+        This method is used for testing purposes only.
+        '''
+        user = self.request.user
+        if user.is_authenticated:
+            return Trip.objects.filter(
+                 Q(shared=True)  # | Q(owner=user)
+                ).annotate(
+                images_count=Count('images', distinct=True),
+                total_likes_count=Sum('images__likes', distinct=True),
+            ).order_by('-created_at')
 
-    #     return Trip.objects.filter(shared=True).annotate(
-    #             images_count=Count('images', distinct=True),
-    #             total_likes_count=Sum('images__likes', distinct=True),
-    #     ).order_by('-created_at')
+        return Trip.objects.filter(shared=True).annotate(
+                images_count=Count('images', distinct=True),
+                total_likes_count=Sum('images__likes', distinct=True),
+        ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
@@ -276,6 +292,85 @@ class TripList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+
+class TripListPublic(generics.ListCreateAPIView):
+    """
+    API view to retrieve list of trips or create a new trip.
+    Attributes:
+        serializer_class (TripSerializer): Serializer class used for the view.
+        permission_classes (list): Permission classes for access to the view.
+        queryset (QuerySet): The base queryset for retrieving trips,
+                                annotated with likes and images count, and
+                                ordered by creation date.
+        filter_backends (list): List of filter backends used for filtering and
+                                    searching the queryset.
+        filterset_class (CustomFilter): The filter class for the queryset.
+        search_fields (list): List of fields that can be searched.
+        ordering_fields (list): List of fields for ordering the queryset.
+    Methods:
+        perform_create(serializer):
+            Saves the new trip instance with the owner set to the current user.
+        get_serializer_context():
+            Adds the current user to the serializer context.
+    """
+
+    serializer_class = TripSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        """
+        Returns a queryset of Trip objects with additional annotations
+        and filters. The queryset is annotated with:
+        - images_count: The count of associated images, distinct by trip.
+        - total_likes_count: The total count of likes for all images
+            associated with the trip.
+        The queryset is ordered by the creation date of the trips
+            in descending order.
+        If the user is authenticated, the queryset includes trips that are
+            either shared or owned by the user.
+        If the user is not authenticated, the queryset includes only
+            shared trips.
+        Returns:
+            QuerySet: A queryset of Trip objects with the applied annotations
+                and filters.
+        """
+        image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
+            likes_count=Count('likes')
+        ).values('likes_count')
+        queryset = Trip.objects.annotate(
+            images_count=Count('images', distinct=True),
+            total_likes_count=Coalesce(Sum(Subquery(image_likes_count)), 0)
+        ).order_by('-created_at')
+        return queryset.filter(shared=True)
+
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+
+    filterset_class = TripFilter
+
+    search_fields = [
+        'owner__username',
+        'trip_place',
+        'trip_country',
+        'trip_category',
+        'trip_status',
+        'liked_by_user',
+    ]
+    ordering_fields = [
+        'owner__username',
+        'created_at',
+        'updated_at',
+        'likes_count',
+    ]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

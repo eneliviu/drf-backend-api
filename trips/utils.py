@@ -61,10 +61,7 @@ def validate_image(image):
     else:
         raise ValidationError("Invalid image object.")
 
-    if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
-        raise ValidationError("Unsupported file extension.")
-
-    # if not isinstance(image, CloudinaryResource):
-    #     file_extension = os.path.splitext(image.name)[1].lower()
-    #     if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
-    #         raise ValidationError("Unsupported file extension.")
+    if not isinstance(image, CloudinaryResource):
+        file_extension = os.path.splitext(image.name)[1].lower()
+        if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
+            raise ValidationError("Unsupported file extension.")
