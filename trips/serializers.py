@@ -73,9 +73,9 @@ class ImageSerializer(serializers.ModelSerializer):
 class TripSerializer(serializers.ModelSerializer):
     '''
     Serializer for the Trip model.
-This serializer handles the serialization and deserialization of
+    This serializer handles the serialization and deserialization of
     Trip instances, including custom fields and validation logic.
-Attributes:
+    Attributes:
     owner (serializers.ReadOnlyField): The username of the trip owner.
     is_owner (serializers.SerializerMethodField): Indicates if the request
                                                 user is the owner of the trip.
@@ -88,7 +88,7 @@ Attributes:
                                                     associated with the trip.
     images (serializers.SerializerMethodField): The images associated
                                                     with the trip.
-Methods:
+    Methods:
     get_images(obj): Retrieve images associated with the given object.
     get_is_owner(obj): Check if the request user is the owner of the trip.
     get_images_count(obj): Get the count of images associated with the trip.
@@ -116,9 +116,8 @@ Methods:
             A list of serialized image data.
         """
         request = self.context.get('request')
-        if (
-            request.user.is_authenticated and
-                (obj.owner == request.user or obj.shared)):
+        if (request.user.is_authenticated
+                and (obj.owner == request.user or obj.shared)):
             images = obj.images.all().annotate(
                     likes_count=Count('likes')).order_by('-uploaded_at')
         else:
@@ -174,7 +173,7 @@ Methods:
             instance = Trip(**data)
             instance.clean()
         except DjangoValidationError as e:
-            raise serializers.ValidationError(e.message_dict)
+            raise serializers.ValidationError(e)
 
         return data
 

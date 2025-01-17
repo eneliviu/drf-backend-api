@@ -3,9 +3,14 @@ from . import views as views
 
 urlpatterns = [
     path(  # List of all shared trips
+        'public/',
+        views.TripListPublic.as_view(),
+        name='trip_list_public'
+    ),
+    path(  # List of all shared trips
         'trips/',
         views.TripList.as_view(),
-        name='trip_list_public'
+        name='trip_list'
     ),
     path(  # List of all owner's trips
         'profiles/<int:profile_id>/trips/',
@@ -28,7 +33,7 @@ urlpatterns = [
         views.ImageDetail.as_view(),
         name='image-detail'
     ),
-    path(  # List of all shared images
+    path(  # Public List of all shared images
         'gallery/',
         views.ImageListGallery.as_view(),
         name='image-gallery'
