@@ -56,7 +56,7 @@ class ImageSerializer(serializers.ModelSerializer):
             )
 
         file_extension = os.path.splitext(value.name)[1].lower()
-        if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', 'webp']:
+        if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
             raise serializers.ValidationError("Unsupported file extension.")
 
         return value
@@ -184,5 +184,5 @@ class TripSerializer(serializers.ModelSerializer):
             "place", "country", "trip_category", "start_date", "end_date",
             "created_at", "updated_at", "trip_status", "shared",
             "images_count", "total_likes_count", "lat", "lon", 'images',
-            'content'
+            'content', "title"
         ]

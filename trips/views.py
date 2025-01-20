@@ -683,7 +683,7 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
     """
 
     serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Image.objects.all()
 
     def get_serializer_context(self):

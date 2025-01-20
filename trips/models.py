@@ -48,6 +48,12 @@ class Trip(models.Model):
         related_name='trips'
     )
 
+    title = models.CharField(
+        max_length=100,
+        blank=False,
+        validators=[MinLengthValidator(2)]
+        )
+
     place = models.CharField(
         max_length=100,
         blank=False,
@@ -61,7 +67,7 @@ class Trip(models.Model):
             MaxLengthValidator(56)
             ]
         )
-    content=models.TextField(
+    content = models.TextField(
         blank=True,
         null=True,
         validators=[
