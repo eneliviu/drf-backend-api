@@ -5,9 +5,7 @@ from django_filters import (
     DateFromToRangeFilter
 )
 from rest_framework import generics, filters
-from rest_framework.permissions import (
-    IsAuthenticated, IsAuthenticatedOrReadOnly
-)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
@@ -39,191 +37,6 @@ class UserFilteredMixin:
         if value and user.is_authenticated:
             return queryset.filter(owner__followed__owner=user)
         return queryset
-
-
-# class TripFilter(FilterSet):
-#     """
-#     A filter set for filtering Trip objects based on various criteria.
-#     Attributes:
-#         owner__username (CharFilter): Filter trips by the owner's username.
-#         country (CharFilter): Filter trips by country.
-#         place (CharFilter): Filter trips by place.
-#         liked_by_user (BooleanFilter): Filter trips liked by the current user.
-#         user_trips (BooleanFilter): Filter trips by the user's profile.
-#         current_user_trips (BooleanFilter): Filter trips owned by the user.
-#         followed_users (BooleanFilter): Filter trips by users followed by
-#                                             the current user.
-#         trip_category (MultipleChoiceFilter): Filter trips by category.
-#         trip_status (MultipleChoiceFilter): Filter trips by status.
-#         trip_shared (MultipleChoiceFilter): Filter trips by shared status.
-#         start_date (DateFilter): Filter trips starting from a specific date.
-#         end_date (DateFilter): Filter trips ending by a specific date.
-#     Methods:
-#         filter_current_user_trips(queryset, name, value):
-#             Filters trips to include only those owned by the current user if
-#                 the user is authenticated.
-#         filter_liked_by_user(queryset, name, value):
-#             Filters trips to include only those liked by the current user if
-#                 the user is authenticated.
-#         filter_post_by_profile(queryset, name, value):
-#             Filters trips by the owner's profile.
-#         filter_followed_users(queryset, name, value):
-#             Filters trips to include only those owned by users followed by the
-#                 current user if the user is authenticated.
-#         __init__(*args, **kwargs):
-#             Initializes the filter set and sets the owner's username to the
-#                 current user's username if not provided.
-#     """
-
-#     owner__username = CharFilter(field_name='owner__username')
-#     country = CharFilter(field_name='country')
-#     place = CharFilter(field_name='place')
-
-#     liked_by_user = BooleanFilter(
-#         method='filter_liked_by_user',
-#         field_name='liked'
-#     )
-#     user_trips = BooleanFilter(
-#         method='filter_trip_by_profile',
-#         field_name='user_trips'
-#     )
-#     current_user_trips = BooleanFilter(
-#         method='filter_current_user_trips',
-#         field_name='current_user_trips'
-#     )
-#     followed_users = BooleanFilter(
-#         method='filter_followed_users',
-#         field_name='followed_users'
-#     )
-
-#     trip_category = MultipleChoiceFilter(
-#         field_name='trip_category',
-#         choices=Trip.TRIP_CATEGORY)
-#     trip_status = MultipleChoiceFilter(
-#         field_name='trip_status',
-#         choices=Trip.TRIP_STATUS)
-#     trip_shared = BooleanFilter(
-#         field_name='shared')
-#     start_date = DateFilter(
-#         field_name='start_date',
-#         lookup_expr='gte'
-#     )
-#     end_date = DateFilter(
-#         field_name='end_date',
-#         lookup_expr='lte'
-#     )
-
-#     def filter_current_user_trips(self, queryset, name, value):
-#         user = self.request.user
-#         if value and user.is_authenticated:
-#             return queryset.filter(owner=user)
-#         return queryset
-
-#     def filter_liked_by_user(self, queryset, name, value):
-#         user = self.request.user
-#         if value and user.is_authenticated:
-#             return queryset.filter(likes__owner=user)
-#         return queryset
-
-#     def filter_trip_by_profile(self, queryset, name, value):
-#         return queryset.filter(owner__profile=value)
-
-#     def filter_followed_users(self, queryset, name, value):
-#         user = self.request.user
-#         if value and user.is_authenticated:
-#             return queryset.filter(owner__followed__owner=user)
-#         return queryset
-
-#     class Meta:
-#         model = Trip
-#         fields = [
-#             'start_date',
-#             'end_date',
-#             'owner__username',
-#             'place',
-#             'country',
-#             'trip_category',
-#             'trip_status',
-#             'liked_by_user',
-#         ]
-
-
-# class ImageFilter(FilterSet):
-#     owner__username = CharFilter(
-#         field_name='owner__username',
-#         lookup_expr='iexact'
-#     )
-#     image_title = CharFilter(
-#         field_name='image_title',
-#         method='filter_image_title',
-#         lookup_expr='icontains'
-#     )
-#     description = CharFilter(
-#         field_name='description',
-#         method='filter_description',
-#         lookup_expr='icontains'
-#     )
-#     shared = BooleanFilter(
-#         field_name='shared',
-#         method='filter_shared'
-#     )
-#     uploaded_at = DateFromToRangeFilter(
-#         field_name='uploaded_at',
-#         method='filter_uploaded_at'
-#     )
-
-#     followed_users = BooleanFilter(
-#         method='filter_followed_users',
-#         field_name='followed_users'
-#     )
-
-#     liked_by_user = BooleanFilter(
-#         method='filter_liked_by_user',
-#         field_name='liked_by_user'
-#     )
-
-#     def filter_liked_by_user(self, queryset, name, value):
-#         user = self.request.user
-#         if value and user.is_authenticated:
-#             return queryset.filter(likes__owner=user)
-#         return queryset
-
-#     def filter_owner__username(self, queryset, name, value):
-#         if value and self.request.user.is_authenticated:
-#             return queryset.filter(owner__username=value)
-
-#     def filter_image_title(self, queryset, name, value):
-#         if value and self.request.user.is_authenticated:
-#             return queryset.filter(image_title__icontains=value)
-
-#     def filter_description(self, queryset, name, value):
-#         if value and self.request.user.is_authenticated:
-#             return queryset.filter(description__icontains=value)
-
-#     def filter_shared(self, queryset, name, value):
-#         if value and self.request.user.is_authenticated:
-#             return queryset.filter(shared=value)
-
-#     def filter_uploaded_at(self, queryset, name, value):
-#         if value and self.request.user.is_authenticated:
-#             return queryset.filter(uploaded_at__range=value)
-
-#     def filter_followed_users(self, queryset, name, value):
-#         user = self.request.user
-#         if value and user.is_authenticated:
-#             return queryset.filter(owner__followed__owner=user)
-#         return queryset
-
-#     class Meta:
-#         model = Image
-#         fields = [
-#             'owner__username',
-#             'image_title',
-#             'description',
-#             'shared',
-#             'uploaded_at',
-#             'liked_by_user',
-#         ]
 
 
 class TripFilter(UserFilteredMixin, FilterSet):
@@ -295,6 +108,7 @@ class TripFilter(UserFilteredMixin, FilterSet):
         fields = [
             'start_date', 'end_date', 'owner__username', 'place', 'country',
             'trip_category', 'trip_status', 'liked_by_user', 'trip_shared',
+            'start_date', 'end_date'
         ]
 
 
@@ -349,6 +163,11 @@ class ImageFilter(UserFilteredMixin, FilterSet):
         field_name='liked_by_user'
     )
 
+    like_id = BooleanFilter(
+        method='filter_like_id',
+        field_name='like_id'
+    )
+
     def filter_image_title(self, queryset, name, value):
         if value:
             return queryset.filter(image_title__icontains=value)
@@ -367,11 +186,18 @@ class ImageFilter(UserFilteredMixin, FilterSet):
             return queryset.filter(uploaded_at__range=value)
         return queryset
 
+    def filter_like_id(self, queryset, name, value):
+        user = self.request.user
+        if value and user.is_authenticated:
+            return queryset.filter(likes__owner=user)
+        return queryset
+    
+
     class Meta:
         model = Image
         fields = [
             'owner__username', 'image_title', 'description', 'shared',
-            'uploaded_at', 'liked_by_user',
+            'uploaded_at', 'like_id', 'liked_by_user'
         ]
 
 
@@ -397,7 +223,7 @@ class TripList(generics.ListCreateAPIView):
     """
 
     serializer_class = TripSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         """
@@ -462,11 +288,12 @@ class TripList(generics.ListCreateAPIView):
 
     search_fields = [
         'owner__username',
-        'trip_place',
-        'trip_country',
+        'place',
+        'country',
         'trip_category',
         'trip_status',
-        'liked_by_user',
+        'start_date',
+        'end_date'
     ]
     ordering_fields = [
         'owner__username',
@@ -554,7 +381,8 @@ class TripListPublic(generics.ListCreateAPIView):
         'trip_country',
         'trip_category',
         'trip_status',
-        'liked_by_user',
+        'start_date',
+        'end_date'
     ]
     ordering_fields = [
         'owner__username',
@@ -729,7 +557,8 @@ class ImageListGallery(generics.ListCreateAPIView):
         'trip__trip_category',
         'trip__trip_status',
         'trip__shared',
-        'liked_by_user',
+        'like_id'
+        # 'liked_by_user',
     ]
 
     filter_backends = [

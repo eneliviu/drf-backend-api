@@ -30,7 +30,7 @@ class LikeList(generics.ListCreateAPIView):
         # id = self.request.data.get('id')
         # image = get_object_or_404(Image, image_id=image)
         # print(image_id)
-        serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user) 
 
 
 class LikeDetail(generics.RetrieveDestroyAPIView):

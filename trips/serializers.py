@@ -34,7 +34,6 @@ class ImageSerializer(serializers.ModelSerializer):
     """
     image = serializers.ImageField()
     likes_count = serializers.SerializerMethodField(read_only=True)
-    # likes_count = serializers.IntegerField(read_only=True)
     owner_name = serializers.ReadOnlyField(source='owner.username')
 
     def get_likes_count(self, obj):
@@ -66,6 +65,7 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = [
             'id',  'owner', 'owner_name', 'trip_id', 'image_title',
             'image', 'description', 'shared', 'uploaded_at', 'likes_count',
+            'likes'
         ]
         read_only_fields = ['owner', 'trip_id', 'uploaded_at', 'id']
 
