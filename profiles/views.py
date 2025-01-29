@@ -87,38 +87,112 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     ).order_by('-created_at')
 
 
+# class CustomTokenObtainPairView(TokenViewBase):
+#     """
+#     Custom view for obtaining a pair of JWT tokens (access and refresh) using username and password.
+#     This view extends the TokenViewBase and uses the TokenObtainPairSerializer to validate and generate tokens.
+#     It overrides the post method to add custom validation for username and password fields.
+#     Methods:
+#         post(request, *args, **kwargs):
+#             Handles POST requests to obtain JWT tokens. Validates the username and password, and returns
+#             appropriate error messages if validation fails. If validation is successful, returns the generated tokens.
+#     """
+#     serializer_class = TokenObtainPairSerializer
+
+#     def post(self, request, *args, **kwargs):
+#         username = request.data.get('username', '').strip()
+#         password = request.data.get('password', '').strip()
+
+#         errors = {}
+#         if not username:
+#             errors['username'] = ["This field may not be blank."]
+
+#         if not password:
+#             errors['password'] = ["This field may not be blank."]
+
+#         if errors:
+#             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+#         if not User.objects.filter(username=username).exists():
+#             return Response({"username": ["This username does not exist."]},
+#                             status=status.HTTP_400_BAD_REQUEST)
+
+#         user = authenticate(username=username, password=password)
+#         if user is None:
+#             return Response({"password": ["The password is incorrect."]},
+#                             status=status.HTTP_400_BAD_REQUEST)
+
+#         serializer = self.get_serializer(data=request.data)
+#         try:
+#             serializer.is_valid(raise_exception=True)
+#         except Exception as e:
+#             return Response(e.detail,
+#                             status=status.HTTP_400_BAD_REQUEST)
+#             # return Response(serializer.errors,
+#             #                 status=status.HTTP_400_BAD_REQUEST)
+
+#         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
 class CustomTokenObtainPairView(TokenViewBase):
+    """
+    Custom view for obtaining a pair of JWT tokens (access and refresh)
+    using username and password.
+    This view extends the TokenViewBase and uses the TokenObtainPairSerializer
+    for token generation.
+    It includes additional validation for username and password before
+    attempting to generate tokens.
+
+    Methods
+    -------
+    post(request, *args, **kwargs)
+        Handles POST requests to obtain JWT tokens. Validates username and password before generating tokens.
+    validate_username(username)
+        Validates the provided username. Checks if the username is not blank and exists in the database.
+    validate_password(username, password)
+        Validates the provided password. Checks if the password is not blank and matches the username.
+    """
+    
     serializer_class = TokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username', '').strip()
         password = request.data.get('password', '').strip()
 
+        # Encapsulation: Use helper methods for validation and handle multiple errors
         errors = {}
-        if not username:
-            errors['username'] = ["This field may not be blank."]
-
-        if not password:
-            errors['password'] = ["This field may not be blank."]
+        errors.update(self.validate_username(username))
+        errors.update(self.validate_password(username, password))
 
         if errors:
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if not User.objects.filter(username=username).exists():
-            return Response({"username": ["This username does not exist."]},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        user = authenticate(username=username, password=password)
-        if user is None:
-            return Response({"password": ["The password is incorrect."]},
-                            status=status.HTTP_400_BAD_REQUEST)
-
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
-        except Exception as e:  
-            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
-            # return Response(serializer.errors,
-            #                 status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+    def validate_username(self, username):
+        errors = {}
+        if not username:
+            errors['username'] = ["This field may not be blank."]
+        elif not User.objects.filter(username=username).exists():
+            errors['username'] = ["This username does not exist."]
+        return errors
+
+    def validate_password(self, username, password):
+        errors = {}
+        if not password:
+            errors['password'] = ["This field may not be blank."]
+        elif not username:
+            # Avoid attempting authentication when username is already invalid
+            pass
+        else:
+            user = authenticate(username=username, password=password)
+            if user is None:
+                errors['password'] = ["The password is incorrect."]
+        return errors
