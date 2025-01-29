@@ -7,13 +7,8 @@ urlpatterns = [
         views.TripListPublic.as_view(),
         name='trip_list_public'
     ),
-    path(  # List of all shared trips
+    path(  # List of all trips
         'trips/',
-        views.TripList.as_view(),
-        name='trip_list'
-    ),
-    path(  # List of all owner's trips
-        'profiles/<int:profile_id>/trips/',
         views.TripList.as_view(),
         name='trip_list'
     ),

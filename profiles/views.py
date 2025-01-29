@@ -5,6 +5,13 @@ from api.permissions import IsOwnerOrReadOnly
 from .models import Profile
 from .serializers import ProfileSerializer
 
+from rest_framework_simplejwt.views import TokenViewBase
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+
 
 class ProfileList(generics.ListAPIView):
     """
@@ -78,3 +85,40 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True)
     ).order_by('-created_at')
+
+
+class CustomTokenObtainPairView(TokenViewBase):
+    serializer_class = TokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username', '').strip()
+        password = request.data.get('password', '').strip()
+
+        errors = {}
+        if not username:
+            errors['username'] = ["This field may not be blank."]
+
+        if not password:
+            errors['password'] = ["This field may not be blank."]
+
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+        if not User.objects.filter(username=username).exists():
+            return Response({"username": ["This username does not exist."]},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user = authenticate(username=username, password=password)
+        if user is None:
+            return Response({"password": ["The password is incorrect."]},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:  
+            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+            # return Response(serializer.errors,
+            #                 status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)

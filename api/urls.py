@@ -11,16 +11,23 @@ from drf_spectacular.views import (
 )
 from .views import root_route
 
+# from profiles.views import CustomAuthToken
+from profiles.views import CustomTokenObtainPairView
+
 urlpatterns = [
     path('', root_route),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
 
-    path(
-        'api-auth/token/',
-        TokenObtainPairView.as_view(),
-        name='token_obtain_pair'
-    ),
+    # path(
+    #     'api-auth/token/',
+    #     TokenObtainPairView.as_view(),
+    #     name='token_obtain_pair'
+    # ),
+
+    # path('api-auth/token/', CustomAuthToken.as_view(), name='custom_token_obtain_pair'),
+    path('api-auth/token/', CustomTokenObtainPairView.as_view(), name='custom_token_obtain_pair'),
+
     path(
         'api-auth/token/refresh/',
         TokenRefreshView.as_view(),

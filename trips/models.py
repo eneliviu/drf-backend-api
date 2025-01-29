@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from cloudinary.models import CloudinaryField
 from .utils import get_coordinates, validate_image
-
+from profiles.models import Profile
 
 class Trip(models.Model):
     """
@@ -41,6 +41,7 @@ class Trip(models.Model):
                    ("Planned", 'PLANNED'))
     SHARE_CHOICES = (("Yes", "YES"),
                      ("NO", 'No'))
+
 
     owner = models.ForeignKey(
         User,

@@ -1,16 +1,16 @@
+from django.shortcuts import get_object_or_404
 from django.db.models import Count, Subquery, OuterRef, Sum, Q
 from django.db.models.functions import Coalesce
+from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import (
-    FilterSet, DateFilter, CharFilter, MultipleChoiceFilter, BooleanFilter,
-    DateFromToRangeFilter
+    FilterSet, DateFilter, CharFilter, MultipleChoiceFilter,
+    BooleanFilter,
 )
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer
-from django.shortcuts import get_object_or_404
 
 
 class UserFilteredMixin:
@@ -67,21 +67,24 @@ class TripFilter(UserFilteredMixin, FilterSet):
     owner__username = CharFilter(field_name='owner__username')
     country = CharFilter(field_name='country')
     place = CharFilter(field_name='place')
+    trip_shared = BooleanFilter(field_name='shared')
+    start_date = DateFilter(field_name='start_date', lookup_expr='gte')
+    end_date = DateFilter(field_name='end_date', lookup_expr='lte')
+
+    profile_id = CharFilter(field_name='owner__profile__id')
 
     liked_by_user = BooleanFilter(
         method='filter_liked_by_user',
         field_name='liked'
     )
-    user_trips = BooleanFilter(
-        method='filter_trip_by_profile',
-        field_name='user_trips'
-    )
+
     current_user_trips = BooleanFilter(
         method='filter_current_user_trips',
         field_name='current_user_trips'
     )
+
     followed_users = BooleanFilter(
-        method='filter_followed_users',  # Inherited from the mixin
+        method='filter_followed_users',
         field_name='followed_users'
     )
 
@@ -89,13 +92,11 @@ class TripFilter(UserFilteredMixin, FilterSet):
         field_name='trip_category',
         choices=Trip.TRIP_CATEGORY
     )
+
     trip_status = MultipleChoiceFilter(
         field_name='trip_status',
         choices=Trip.TRIP_STATUS
     )
-    trip_shared = BooleanFilter(field_name='shared')
-    start_date = DateFilter(field_name='start_date', lookup_expr='gte')
-    end_date = DateFilter(field_name='end_date', lookup_expr='lte')
 
     def filter_current_user_trips(self, queryset, name, value):
         user = self.request.user
@@ -108,7 +109,8 @@ class TripFilter(UserFilteredMixin, FilterSet):
         fields = [
             'start_date', 'end_date', 'owner__username', 'place', 'country',
             'trip_category', 'trip_status', 'liked_by_user', 'trip_shared',
-            'start_date', 'end_date'
+            'start_date', 'end_date',
+            'profile_id'
         ]
 
 
@@ -191,7 +193,6 @@ class ImageFilter(UserFilteredMixin, FilterSet):
         if value and user.is_authenticated:
             return queryset.filter(likes__owner=user)
         return queryset
-    
 
     class Meta:
         model = Image
@@ -448,11 +449,7 @@ class ImageList(generics.ListCreateAPIView):
     search_fields = [
         'owner__username',
         'image_title',
-        'description',
-        # 'trip__trip_category',
-        # 'trip__trip_status',
-        # 'trip__shared',
-        # 'liked_by_user',
+        'description'
     ]
 
     filter_backends = [
@@ -557,8 +554,7 @@ class ImageListGallery(generics.ListCreateAPIView):
         'trip__trip_category',
         'trip__trip_status',
         'trip__shared',
-        'like_id'
-        # 'liked_by_user',
+        # 'like_id'
     ]
 
     filter_backends = [
