@@ -12,7 +12,7 @@ from drf_spectacular.views import (
 from .views import root_route
 
 # from profiles.views import CustomAuthToken
-from profiles.views import CustomTokenObtainPairView
+from profiles.views import ExtendedTokenObtainPairView
 
 urlpatterns = [
     path('', root_route),
@@ -20,7 +20,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 
     path('api-auth/token/',
-         CustomTokenObtainPairView.as_view(),
+         ExtendedTokenObtainPairView.as_view(),
          name='token_obtain_pair'),
 
     path(
