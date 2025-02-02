@@ -48,6 +48,10 @@ class Profile(models.Model):
         validators=[validate_image]
     )
 
+    def delete(self, *args, **kwargs):
+        self.owner.delete()
+        super(Profile, self).delete(*args, **kwargs)
+
     class Meta:
         ordering = ['-created_at']
 
