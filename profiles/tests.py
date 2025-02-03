@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
-from .models import Trip
+from trips.models import Trip
 from rest_framework import status
-from rest_framework.test import APITestCase 
+from rest_framework.test import APITestCase
 
 
 # Create your tests here.
@@ -13,8 +13,17 @@ class PostListViewTests(APITestCase):
     # Test if users can list posts present in the database.
     def test_can_list_posts(self):
         admin = User.objects.get(username='admin')
-        Trip.objects.create(owner=admin, title='title')
-        # make a  get request to ‘/trips to list all the trips.
+        Trip.objects.create(
+            title='New York',
+            owner=admin,
+            place='New York',
+            country='USA',
+            trip_category='Adventure',
+            start_date='2025-03-01',
+            end_date='2025-03-10',
+            trip_status='Planned',
+            shared=True
+        )
         response = self.client.get('/trips/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         print(response.data)
@@ -29,7 +38,7 @@ class PostListViewTests(APITestCase):
     #     self.assertEqual(count, 1)
     #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    # # Test a logget out user cannot create a post
+    # # Test a logged out user cannot create a post
     # def test_user_not_logged_in_cant_reate_post(self):
     #     response = self.client.post('/trips/', {'title': 'a title'})
     #     # Firts, make the test fail: status.HTTP_200_OK

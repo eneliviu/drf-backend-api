@@ -42,7 +42,6 @@ class Trip(models.Model):
     SHARE_CHOICES = (("Yes", "YES"),
                      ("NO", 'No'))
 
-
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -216,4 +215,4 @@ class Image(models.Model):
                 validate_image(self.image)
         else:
             validate_image(self.image)
-        super(Image, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)

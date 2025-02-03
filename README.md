@@ -25,24 +25,24 @@
 ![alt text](image.png)
 
 ### **Project Description**
-LovinEscapades-API is a backend solution designed to facilitate seamless trip management and social interaction for travel enthusiasts. Built with Django Rest Framework, this API provides robust user authentication, trip creation and management, image handling, and social features like following users and liking trips. It supports full CRUD (Create, Read, Update, Delete) operations for trips and images, allowing users to manage their travel experiences efficiently. The API is well-documented and adheres to RESTful principles, ensuring ease of use for developers. Future enhancements include a React frontend for an interactive user experience and potential integration with mapping libraries for enhanced trip visualization.
+LovinEscapades-API is a powerful API developed using Django and Django REST Framework, crafted to facilitate user interaction and content management with a strong focus on social connectivity and media sharing. 
+
+The API encompasses four interconnected modules: Profile, Trips, Likes, and Followers, each offering targeted functionality. It allows full CRUD operations for trips and images, empowering users to efficiently manage their travel experiences. Built with adherence to RESTful principles, the API is well-documented to ensure ease of adoption for developers. Looking forward, the integration of a React frontend is planned to deliver an enhanced user experience, along with the potential use of mapping libraries for improved trip visualization.
 
 ### **Project Inspiration**
 This backend API project builds upon the knowledge and skills acquired during the development of "LovinEscapades" Django web application completed as part of Milestone Project 4 at Code Institute ([more here](https://github.com/eneliviu/LovinEscapades.git)).
 
-### **Public Access**:
-* Trip Exploration: Unregistered users might be able to view public trip locations on a map.
-* Content Discovery: Access to shared trip details and images (depending on privacy settings).
+### **Public Access:**
+* **Trip Exploration:** Unregistered users may have the ability to view public trip locations displayed on a map.
+* **Content Discovery:** Access to shared trip details and images is available, subject to privacy settings.
 
-### **Future Considerations**:
-* User-friendly frontent React app for a interactive user experience.
-* Integration with mapping libraries.
-* Potential social features for user interaction and community building.
+### **Future Considerations:**
+* Development of a user-friendly frontend React app to enhance the interactive user experience.
+* Integration with mapping libraries for more dynamic trip visualization.
+* Exploration of potential social features to facilitate user interaction and community building.
 
-### **Disclaimer**:
-This API serves as a backend foundation for a potential application.
-The envisioned features and functionalities are subject to change and refinement based on further development and user feedback.
-
+### **Disclaimer:**
+This API acts as a foundational backend for a potential application. The outlined features and functionalities may evolve or change based on ongoing development and user feedback.
 
 ## Application development
 This application was developed using an iterative approach, following Agile principles.
@@ -114,26 +114,79 @@ More details about the API are provided in the [Usage and Screenshots](#usage-an
 
 ### ***Lovingescapades-API*** project consists of four apps:
 
-### 1. `profiles`
+### 1. Profile App - Overview
+The Profile app is designed to manage user profiles within the system. It provides functionalities such as creating, updating, and retrieving user profiles, and extends JWT capabilities for authentication.
 The user profile app offers two primary sections:
-- Profile update section for editing basic user information such as username, first and last name, and email address.
-- Functionality for posting and deleting testimonials, which are subject to admin approval before appearing on the landing page.
+- **Profile Update Section:** Empowers users to modify their essential details, such as username, first and last name, passwords and to remove their profiles.
+- **Content Management:** Allows users to manage their posted trips and images, including functionalities for editing and organizing their content.
 
-### 2. `trips`
-This app features the `Dashboard` page, allowing users to:
-- View updated counts of trips, uploaded photos, and testimonials awaiting approval.
-- Decide if new trip information will be shared publicly or kept private. Public trips are mapped on the landing page, while private trips are visible only to the authenticated user.
-- Quickly access trip details through trip card elements, which provide basic trip information (destination, start and end dates, creation date) along with options to edit/delete trips and upload/delete photos.
-- Display approved user testimonials on the landing page and map the locations of shared trips.
+#### Models
+- **Profile:** This model associates with the default Django `User` model via a one-to-one relationship. It stores information like the user's name, alias, content, and an optional profile image saved on Cloudinary. It tracks the creation and update timestamps and ensures that deleting a profile also deletes the associated user.
 
-### 3. `likes`
-This app provides essential functionality for site visitors to send inquiries to the site admin via a dedicated form.
+#### Serializers
+- **ProfileSerializer:** Manages the serialization and deserialization of Profile instances. It includes various computed fields such as the number of trips, images, likes, followers, and followings related to a profile. It incorporates logic to check if the current user is the profile owner and allows image uploads.
 
-### 4. `followers`
-- Hosts the photo gallery where all publicly shared photos by registered users can be viewed by any visitor.
-- Users can publish photos even if they choose not to make the associated trip information public.
-- Each photo in the gallery includes a like icon and basic trip details, though the feature for sending and receiving likes has not been implemented yet.
+#### Views
+- **ProfileList:** A read-only API view that returns a list of all profiles with annotated counts for trips, images, followers, and following. It supports filtering and ordering based on various fields.
+- **ProfileDetail:** An API view that allows retrieving, updating, or deleting a specific profile. Access to update or delete is restricted to the profile owner.
+- **ExtendedTokenObtainPairView:** Extends JWT's `TokenViewBase` to support extra validations on username and password before token issuance. This custom endpoint helps enhance security during the authentication process.
 
+The Profile app employs Django signals for automated Profile creation on User creation, Cloudinary for image management, and JWT for secure authentication.
+
+
+### 2. Trips App - Overview
+The Trips app offers a comprehensive suite of features for managing user trips and their associated images. It supports the following functionalities:
+
+- **Creation, Filtering, and Viewing:** Users can create, filter, and view trips and related images with ease, while ensuring user permissions are respected.
+- **Real-Time Counts:** The app provides updated statistics on trips, uploaded photos, and testimonials awaiting approval, enhancing user awareness.
+- **Privacy Controls:** Users have the flexibility to choose whether their trip information is public or private. Public trips are displayed on the landing page map, while private trips remain visible only to the authenticated user.
+- **Trip Card Access:** Users can quickly access essential trip details through trip card elements, which include vital information like destination and travel dates. These cards also offer convenient options to edit or delete trips and manage photos.
+
+#### Models
+- **Trip:** Represents a user's travel experience, storing detailed information such as location, date range, category, and status. It includes functionalities for geolocation and validation to ensure data integrity. The model enhances user interaction by tracking trip ownership and sharing status.
+- **Image:** Stores images related to trips, allowing users to upload photos with titles and descriptions. Image validation ensures proper format and size before saving.
+
+#### Serializers
+- **TripSerializer:** Manages serialization and deserialization processes for Trip instances, incorporating fields like owner, category, date range, and associated images. It includes methods for computing counts of images and likes, ensuring data consistency and user-friendly representation.
+- **ImageSerializer:** Handles image validation and serialization, enforcing file size and format restrictions while providing detailed output, including the number of likes and uploader information.
+
+#### Views
+- **TripList:** An API view for listing and creating trips. It integrates extensive filtering and searching capabilities, allowing users to find trips based on various criteria and create new ones linked to their account.
+- **TripDetail:** Allows authenticated users to retrieve, update, or delete specific trips. The view leverages query annotations to provide additional context, such as images and likes count.
+- **ImageList:** Manages the retrieval and creation of trip-related images, with filtering options for attributes like shared status and upload date. It emphasizes user permissions to ensure that only authorized users can modify the images they own.
+- **ImageDetail:** Facilitates retrieving, updating, or deleting a specific image related to a trip. This view enforces strict ownership checks to maintain data security.
+- **ImageListGallery & ImageListGalleryDetail:** Focus on providing and managing a gallery of shared images, appealing to authenticated users for secure content creation while allowing public access for viewing.
+
+
+### 3. Likes App - Overview
+The Likes app manages user interactions by allowing users to like images within the system.
+It provides functionality to create and track likes, enhancing user engagement with content.
+
+#### Models
+- **Like:** Represents a user's "like" on an image. It includes references to the user and the associated image, with a timestamp of when the like was made. Each user can only like a specific image once, enforced by a unique constraint.
+
+#### Serializers
+- **LikeSerializer:** Handles the serialization and deserialization of Like instances. It includes fields for the like ID, creation timestamp, owner, and associated image. The serializer ensures that a user cannot like the same image more than once, raising a validation error for duplicates.
+
+#### Views
+- **LikeList:** Provides API endpoints to list all likes or create a new like. It requires user authentication for creating likes, assigning the current user as the like's owner.
+- **LikeDetail:** Offers functionality to retrieve or delete a specific like, with permissions ensuring that only the owner can delete it. This maintains user control over their own interactions.
+
+
+### 4. Followers App - Overview
+The Followers app facilitates user connections within the system by managing follower relationships, allowing users to follow one another. This promotes community building and interaction. Additional features include:
+- **Photo Publication Flexibility:** Users have the option to share photos publicly even if the associated trip information remains private.
+- **Photo Details and Interaction:** Each photo in the gallery displays a like icon and basic trip details
+
+#### Models
+- **Follower:** Represents a follower relationship between two users. It records which user is following another. The model ensures data integrity by preventing users from following themselves and avoiding duplicate follow records.
+
+#### Serializers
+- **FollowerSerializer:** Handles the conversion of Follower model instances to and from JSON. It includes read-only fields for displaying the usernames of both the follower and the followed user. The serializer also checks for duplicate follow attempts, raising a validation error if necessary.
+
+#### Views
+- **FollowerList:** An API view for listing all followers or creating a new follower relationship. Authenticated users can follow others, with the requester being set as the follower (owner).
+- **FollowerDetail:** Allows users to retrieve or delete a specific follower relationship. The view enforces strict permissions so only the follower (owner) can delete the relationship, maintaining user control over their follow connections.
 
 [*Back to top*](#)
 
@@ -222,14 +275,26 @@ python manage.py runserver
 [*Back to top*](#)
 
 
-## Usage and Screenshots
+## Screenshots API endpoints
 
+Below are screenshots showcasing our API endpoints, providing a visual guide to the functionality and responses available through the system.
 
-![alt text](images_doc\image-3.png) ![alt text](images_doc\image-2.png)
+<p align="center"><img src="images_doc/welcome.png" alt="welcome_api"></p>
 
-**Image List View (Public)
+### The main API endpoints
 
+#### Profile list and details
 
+<p align="center"><img src="images_doc/profile_list.png" alt="profile_list_api"></p>
+<p align="center"><img src="images_doc/profile_detail.png" alt="profile_detail_api"></p>
+
+#### Trips list and details with nested images
+<p align="center"><img src="images_doc/trip_list.png" alt="trip_list"></p>
+<p align="center"><img src="images_doc/trip_details_with_nested_images.png" alt="trip_details_with_nested_images_api"></p>
+
+#### Likes
+<p align="center"><img src="images_doc/likes.png" alt="likes_api"></p>
+<p align="center"><img src="images_doc/followers.png" alt="followers_api"></p>
 
 ## Entity Relationship Diagram (EDR)
 
@@ -280,6 +345,8 @@ The tests are located in the `trips/tests.py` file and cover the following views
 - **TripDetailView**: Tests for retrieving a specific trip using valid and invalid IDs.
 - **ImageListView**: Tests for listing images associated with trips, including handling shared and non-shared images.
 - **ImageDetailView**: Tests for retrieving a specific image associated with a trip using valid and invalid IDs.
+- **ImageModel**:  Test suite for the Image model, including creating and updating images with valid and invalid data.
+- **ImageModelValidation**:  Test suite for validating the Image model's save method to ensure that it correctly validates new and updated images, particularly focusing on the validation of the image file extension.
 
 The test suite includes setup methods to initialize test data and individual test methods to verify the functionality of the respective endpoints.
 
@@ -304,6 +371,19 @@ The test suite includes setup methods to initialize test data and individual tes
     * Tests include:
         * Retrieving an image using a valid ID.
         * Handling retrieval of an image using an invalid ID.
+5. **ImageModelTests**:
+    * Verifies the functionality of the Image model, including creating and     updating images with valid and invalid data.
+    * Tests include:
+        * Creating an Image instance with valid data.
+        * Creating an Image instance with an invalid image file extension.
+        * Updating an Image instance with a new valid image.
+        * Updating an Image instance with an invalid image file extension.
+        * Testing the `__str__` method of the Image model.
+6. **ImageModelValidationTests**:
+    * Verifies the validation logic of the Image model's save method.
+    * Tests include:
+        * Validating a new image with an invalid extension.
+        * Validating an updated image with an invalid extension.
 
 ### Running Tests
 To run the tests, use the following command:
@@ -330,83 +410,28 @@ The tests cover various scenarios to ensure the correctness and robustness of th
 | Class   | `TripImageDetailViewTests`                   | Test suite for the ImageDetailView. Tests retrieving images using valid and invalid IDs.| -                        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_can_retrieve_trip_image_using_valid_id`| Ensures an image can be retrieved by a valid ID.                                        | Status code: 200 OK      |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_can_retrieve_trip_image_using_invalid_id`| Ensures appropriate handling of requests with an invalid image ID.   | Status code: 404 Not Found |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Class   | `ImageModelTests` | Test suite for the Image model. Tests creating and updating images with valid and invalid data.| -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_create_image_with_valid_data`|Verifies that an Image instance can be created with valid data. | - |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_create_image_with_invalid_image_extension`|Verifies that an Image instance cannot be created with an invalid image file extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_update_image_with_valid_image`|Verifies that an Image instance cannot be created with an invalid image file extension. | - |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_update_image_with_invalid_image_extension`|Verifies that an Image instance cannot be updated with an invalid image file extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_image_str_method`|Verifies the `__str__` method of the Image model. | - |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Class   | `ImageModelValidationTests`  | Test suite for the Image model. Tests creating and updating images with valid and invalid data.| -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_save_method_validates_new_image`|Verifies that the save method raises a ValidationError for a new image with an invalid extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_save_method_validates_updated_image`|Verifies that the save method raises a ValidationError for an updated image with an invalid extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 
-
-[*Back to top*](#)
 
 ## Manual Testing
+The manual testing section aims to validate the functionality, security, and integration of the backend API beyond automated tests.
+This testing strategy ensures that the API operates correctly under various conditions, including functional interactions, user authentication, edge cases like large data inputs, and data consistency. Additionally, it verifies successful integration with services like Cloudinary for image handling.
 
-| Feature | Expected behaviour | Test | Status |
-| --- | --- | --- | --- |
-| `User registration` | **New user can register**
-| &nbsp;&nbsp;- *Username validation* | Accept a valid username | Non-empty string | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Username validation* | Accept a valid password | Strong password |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Redirect to dashboard* | Innloged user redirected to user dashboard | Successful navigation (200 status code) |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success message* | Returns Django messsage for successful login | Green message box on screen |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `User login` | **User information retrieved, user can login**
-| &nbsp;&nbsp;- *Username validation* | Valid username | Can login with corrent user name | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Password validation* | Valid password | Can login with correct password | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Redirect to home address* | Redirect | User redirected to home after registration |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success message* | Returns messsage for successful login/registration | Green message box on screen |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Welcome message* | Dispalys username and welcome message | Green message box on screen |![warning](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Create new trip` | **Authenticated users can create a new trip**
-| &nbsp;&nbsp;- *Select time intervals* | Start date less or equal to end date | Type wrong dates combinations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Select time intervals* | Completed trips cannot be in the future | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Select time intervals* | Planned trips cannot be in the past | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Select time intervals* | Ongoing trips must contain the current date | Type wrong dates combintations | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
-| &nbsp;&nbsp;- *Success messages* | Create/delete trips must return a message to the user | Create and delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Edit trip` | **Modify an existing trip**
-| &nbsp;&nbsp;- *Select time intervals* | Start date less or equal to end date | Type wrong dates combinations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Select time intervals* | Completed trips cannot be in the future | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Select time intervals* | Planned trips cannot be in the past | Type wrong dates combintations | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Select time intervals* | Ongoing trips must contain the current date | Type wrong dates combintations | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
-| &nbsp;&nbsp;- *Success messages* | Create/delete trips must return a message to the user | Create and delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Change title* |  Title non-empty, min 100 char | Enter title with different  lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Change place* | Place non-empty, min 2 char | Enter place names with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Change country* | Country non-empty, 2-56 chars | Enter country names with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success messages* | Edit trips must return a message to the user | Edit trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Map the shared trips * | Shared trips must be mapped | Create trips with/without sharing rights | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Delete trip` | **Modify an existing trip**
-| &nbsp;&nbsp;- *Remove trip and associated phots* | Deleting a trip must remove all associated photos | Create/delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Remove trip and map markers* | Deleting a trip must remove all associated map markers | Create/delete trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success messages* | Removing trips must return a message to the user | Remove trips | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Upload/Delete photos` | **An image can be uploaded to the site**
-| &nbsp;&nbsp;- *File type* | Only valid image files can be uploaded | Upload wrong file types | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Title length* | Title between 2-50 chars | Enter photo titles with different lengths  | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Description length* | Photo description 2-500 chars | Enter photos descriptions with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Upload shared photos ti gallery* | Shared photos must be uploaded to Gallery | Upload photos with/withoud sharing rights | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
-| &nbsp;&nbsp;- *Delete photo* | Upload/delete photos must return a message to the user | Uploade/delete photos | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success messages* | Upload/delete photos must return a message to the user | Uploade/delete photos | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Post testimonials` | **An authenticated user can be post a testimonial**
-| &nbsp;&nbsp;- *Create testimonial* | A post should contain vaild text 2-50 chars | Enter posts with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Testimonial on the landing page* | Approved testimonials should be posted on the lading page | Create and approve posts | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Delete testimonial* | Users can delete their own testimonials | Add and delete testimonials | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success messages* | Add/delete testimonials must return a message to the user | Uploade/delete testimonials | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Send inquiries` | **A site visitor can send an email to site admin**
-| &nbsp;&nbsp;- *Valid sender name* | Sender name of 2-100 chars | Enter sender names with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Valid message* | A message text of 50-500 chars | Enter messages with different lengths | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Admin can receive message* | The messages are visible on the admin page | Send inquiries | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Admin can approve message* | The admin can approve a message on admin page | Send inquiries | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success messages* | Sent inquries must return a message to the user | Send inquiries | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Create user profile` | **A profile table shoukd be created when a user registers to the site**
-| &nbsp;&nbsp;- *User Profile in the admin page* | Profile can be accessed by the admin | Create new users and check the admin page | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *User Profile can be deleted* | Deleting users removes the profile from admin | Delete User from the admin | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *A users can follow other users* | Can select one or mores users to follow from the admin page| Follow/unfollow users | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Edite user profile` | **A user can edit his profile data**
-| &nbsp;&nbsp;- *User can change/remove name* | User can chose what personal data to display | Add and remove user names | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *User can modify email address* | User can change email address, but a valid email is mandatory have | Edit email address | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Success messages* | User receives a meaasge after editing the profile | Edit profile items | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `Leaflet map` | **A user map shared trips and; the map has basic filtering options**
-| &nbsp;&nbsp;- *Shared trip location is mapped correctly* | User can find the correct trip destination on the map | Add many destinations | ![alert](https://via.placeholder.com/10/E54151?text=+) `alert`|
-| &nbsp;&nbsp;- *Filter trips* | User and site visitors can filter trips | Use different entries for place, country, category and trip status  | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Filter success* | The filter retrieves the correct trips | The right trips are mapped | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| &nbsp;&nbsp;- *Error messages* | User receives an error messasge if no match is found | Use different entries for place, country, category and trip status | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-
----
-
-Despite these measures, certain errors might still occur, such as:
-* Selecting inappropriate trip dates that don't align with the trip status, like planning a trip with past dates.
-* Overlapping dates when creating a new trip that conflict with previously created trips.
+| **Test Type**    | **Description and Steps**    | **Expected Result**  |  **Status** |
+|------------------|------------------------------|----------------------|----------------------|
+| **Functional Testing**               | 1. **List Trips:** Send a GET request to `/trips/`. Verify the response contains a correct list of trips. <br/>2. **Create Trip:** Send a POST request with valid trip data to `/trips/`. Verify that the trip is added correctly. | Successful responses with correct data format and content. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|                                                             |
+| **Authentication and Authorization Testing** | 1. Attempt to access a protected endpoint `/profiles/` without logging in. <br/> 2. Log in with valid credentials and try again. Verify access is granted. | Unauthorized returns 401/403 for unauthorized users. Authorized users can access and perform actions according to their roles. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| **Edge Case Testing (Large Images)** | Attempt to upload an >2MB image file <br/>  | System should handle the file gracefully by rejecting with a validation error. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| **Data Integrity Testing** | 1. Retrieve trip details using a GET request to `/trips/{id}/`. <br/> 2. Update the trip using a PATCH request with modified data. <br/> 3. Retrieve the updated trip to confirm changes are saved. | Data is consistently updated across requests, and changes persist correctly after updates. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| **Third-Party Service Testing (Cloudinary)** | 1. Upload an image using the API. <br/> 2. Verify image is stored in Cloudinary and the response contains the correct URL. <br/> 3. Delete the image using the API and check it's removed from Cloudinary. | Image is correctly uploaded and referenced in Cloudinary, and deletions are reflected both locally and in Cloudinary.    |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 
 [*Back to top*](#)
 
@@ -469,6 +494,6 @@ They were utilized to assist in:
 
 ## Documentation version
 
-Last updated: Jan 9, 2025
+Last updated: Feb 3, 2025
 
 [*Back to top*](#)

@@ -78,7 +78,7 @@ class Profile(models.Model):
     #         if old_image != self.image:
     #             validate_image(self.image)
     #     else:
-    #         validate_image(self.image)
+    #         validate_image(self.image)delete profile 
     #     super(Profile, self).save(*args, **kwargs)
 
 

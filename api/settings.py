@@ -1,8 +1,9 @@
 from pathlib import Path
 import os
-import re
-import dj_database_url
 from datetime import timedelta
+# import re
+# import dj_database_url
+
 
 if os.path.exists('env.py'):
     import env
@@ -41,7 +42,7 @@ if not DEBUG:
     ]
 else:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-        #'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.JSONRenderer',
     ]
 
@@ -201,16 +202,28 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+                    'django.contrib.auth.password_validation.'
+                    'UserAttributeSimilarityValidator'
+                ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': (
+                    'django.contrib.auth.password_validation.'
+                    'MinimumLengthValidator'
+                ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': (
+                    'django.contrib.auth.password_validation.'
+                    'CommonPasswordValidator'
+                ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': (
+                    'django.contrib.auth.password_validation.'
+                    'NumericPasswordValidator'
+                ),
     },
 ]
 
@@ -231,4 +244,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 MAX_UPLOAD_SIZE = 10485760
-
