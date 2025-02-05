@@ -108,6 +108,10 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 
 More details about the API are provided in the [Usage and Screenshots](#usage-and-screenshots) section.
 
+### Admin Panel
+The Django admin panel is available at `/admin` and is used for managing the database and application data. Access is restricted to superusers.
+
+
 [*Back to top*](#)
 
 ## Project structure
@@ -200,36 +204,35 @@ The following table provides an overview of the available API endpoints for the 
 | `/api-auth/login/` | POST | Login a user and obtain a JWT token | Public |
 | `/api-auth/logout/` | POST | Logout a user and invalidate the JWT token | IsAuthenticated |
 | `/api-auth/token/refresh/` | POST | Refresh the JWT token | IsAuthenticated |
-| `/profiles/` | GET | Retrieve the list of user profiles | IsAuthenticatedOrReadOnly |
+`/profiles/` | GET | Retrieve the list of user profiles | IsAuthenticatedOrReadOnly |
 | `/profiles/<id>/` | GET | Retrieve a specific user profile | IsAuthenticated (IsOwner for updating own profile) |
-| `/profiles/<id>/` | PUT | Update a specific user profile | IsAuthenticated (IsOwner) |
-| `/profiles/<id>/` | DELETE | Delete a specific user profile | IsAuthenticated (IsOwner) |
+| `/profiles/<id>/` | PUT/PATCH | Update a specific user profile | IsOwnerOrReadOnly (IsOwner) |
+| `/profiles/<id>/` | DELETE | Delete a specific user profile | IsOwnerOrReadOnly (IsOwner) |
 | `/trips/` | GET | List all shared trips | IsAuthenticatedOrReadOnly |
-| `/trips/` | POST | Create a new trip | IsAuthenticated |
+| `/trips/` | POST | Create a new trip | IsOwnerOrReadOnly |
 | `/trips/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
-| `/trips/<id>/` | PUT | Update a specific trip | IsAuthenticated (IsOwner) |
-| `/trips/<id>/` | DELETE | Delete a specific trip | IsAuthenticated (IsOwner) |
+| `/trips/<id>/` | PUT/PATCH | Update a specific trip | IsOwnerOrReadOnly (IsOwner) |
+| `/trips/<id>/` | DELETE | Delete a specific trip | IsOwnerOrReadOnly (IsOwner) |
 | `/trips/<id>/images/` | GET | List all images for a specific trip | IsAuthenticatedOrReadOnly |
-| `/trips/<id>/images/` | POST | Upload a new image | IsAuthenticated (IsOwner of the trip) |
+| `/trips/<id>/images/` | POST | Upload a new image | IsOwnerOrReadOnly (IsOwner of the trip) |
 | `/trips/<trip_id>/images/<image_id>` | GET | Retrieve a specific image for a specific trip | IsAuthenticatedOrReadOnly |
-| `/trips/<trip_id>/images/<image_id>` | PUT | Update a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
+| `/trips/<trip_id>/images/<image_id>` | PUT/PATCH | Update a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
 | `/trips/<trip_id>/images/<image_id>` | DELETE | Delete a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
 | `/images/` | GET | Retrieve all shared images | IsAuthenticatedOrReadOnly |
 | `/images/<id>/` | GET | Retrieve a specific image | IsAuthenticatedOrReadOnly |
-| `/followers/` | GET | List all followers or follow a new user | IsAuthenticated |
+| `/followers/` | GET | List all followers or follow a new user | IsOwnerOrReadOnly |
 | `/followers/<id>/` | GET | Retrieve a specific user | IsAuthenticatedOrReadOnly |
-| `/followers/<id>/` | DELETE | Unfollow a specific user | IsAuthenticated |
-| `/likes/` | GET | List all likes or like a new trip | IsAuthenticated |
+| `/followers/<id>/` | DELETE | Unfollow a specific user | IsOwnerOrReadOnly |
+| `/likes/` | GET | List all likes or like a new trip | IsOwnerOrReadOnly |
 | `/likes/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
-| `/likes/<id>/` | DELETE | Unlike a specific trip | IsAuthenticated |
+| `/likes/<id>/` | DELETE | Unlike a specific trip | IsOwnerOrReadOnly |
 
 
 A comprehensive overview of the API endpoints, including detailed documentation, is available through [Swagger-UI](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/swagger-ui/), [Redoc](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/redoc/) or directly in [yaml](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/) format.
 
 
-![alt text](images_doc\SwaggerUI.png)
-![alt text](images_doc\Redoc.png)
-
+<p align="center"><img src="images_doc/SwaggerUI.png" alt="Swagger schema"></p>
+<p align="center"><img src="images_doc/Redoc.png" alt="Redoc schema"></p>
 
 [*Back to top*](#)
 
@@ -384,16 +387,27 @@ The test suite includes setup methods to initialize test data and individual tes
     * Tests include:
         * Validating a new image with an invalid extension.
         * Validating an updated image with an invalid extension.
+7. **LikeViewTests**:
+    * Verifies that the API can retrieve a list of likes.
+    * Verifies that an authenticated user can create a new like for an image.
+
 
 ### Running Tests
-To run the tests, use the following command:
+* To run the all tests, use the following command:
 ```bash
 python manage.py test
+```
+* To run all the tests for the application, use the following command:
+```bash
+python manage.py test app-name
+```
+* To run a specific test class (e.g., TripListViewTests for the `trips` app), use the following command:
+```bash
+python manage.py test trips.tests.TripListViewTests
 ```
 This command will execute the test suite and display the results in the terminal.
 
 The tests cover various scenarios to ensure the correctness and robustness of the API endpoints.
-
 <p align="center"><strong>Table: Overview of Test Classes and Methods for the Trip and Image API Endpoints</strong></p>
 
 | Type    | Name                                         | Description                                                                                                    | Expected Status |Result                     |
@@ -419,7 +433,9 @@ The tests cover various scenarios to ensure the correctness and robustness of th
 | Class   | `ImageModelValidationTests`  | Test suite for the Image model. Tests creating and updating images with valid and invalid data.| -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_save_method_validates_new_image`|Verifies that the save method raises a ValidationError for a new image with an invalid extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_save_method_validates_updated_image`|Verifies that the save method raises a ValidationError for an updated image with an invalid extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-
+| Class   | `LikeViewTests` |  Verifies the listing and creating likes for images. | -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_list_likes`|Verifies that the API can retrieve a list of likes. | Status code: 200 OK |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_create_like`| Verifies that an authenticated user can create a new like for an image. | Status code: 201 Created |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 
 ## Manual Testing
 The manual testing section aims to validate the functionality, security, and integration of the backend API beyond automated tests.
@@ -432,6 +448,15 @@ This testing strategy ensures that the API operates correctly under various cond
 | **Edge Case Testing (Large Images)** | Attempt to upload an >2MB image file <br/>  | System should handle the file gracefully by rejecting with a validation error. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | **Data Integrity Testing** | 1. Retrieve trip details using a GET request to `/trips/{id}/`. <br/> 2. Update the trip using a PATCH request with modified data. <br/> 3. Retrieve the updated trip to confirm changes are saved. | Data is consistently updated across requests, and changes persist correctly after updates. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | **Third-Party Service Testing (Cloudinary)** | 1. Upload an image using the API. <br/> 2. Verify image is stored in Cloudinary and the response contains the correct URL. <br/> 3. Delete the image using the API and check it's removed from Cloudinary. | Image is correctly uploaded and referenced in Cloudinary, and deletions are reflected both locally and in Cloudinary.    |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+**Functional Testing**, as well as **Authentication and Authorization Testing**, were conducted locally using the [REST Client](https://tinyurl.com/mvz3w88e) extension for Visual Studio Code in depoyment mode (`DEBUG=False` in `settings.py`). For test examples, see the [`api.http`](api.http) file.
+
+
+<p align="left"><img src="images_doc/rest_client_GET.png" alt="LikeDB"></p>
+<p align="center"><img src="images_doc/rest_client_GET_Response.png" alt="LikeDB"></p>
+<p align="left"><img src="images_doc/rest_client_POST_auth.png" alt="LikeDB"></p>
+<p align="center"><img src="images_doc/rest_client_POST_auth_Response.png" alt="LikeDB"></p>
+
 
 [*Back to top*](#)
 
@@ -480,20 +505,18 @@ The code is accessible on GitHub, allowing developers to view, fork, and contrib
 [*Back to top*](#)
 
 ## Acknowledgements
-* [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and great short examples of using extensions
-* `ChatGPT` was utilized to generate sensible input for text content, assist in crafting the README file, and perform language proof-checking.
+* [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and practical examples of using django extensions
 
 ### Use of GenAI
-Generative AI tools, such as ChatGPT, were leveraged in various aspects of this project.
-They were utilized to assist in:
-* Generating initial drafts of documentation and code comments.
+Generative AI tools, including the OpenAI GPT-4o model, were utilized to support various tasks such as:
+* Debugging and upgrading deprecated libraries in the walkthrough CodeInstitute projects.
+* Creating initial drafts for documentation and writing code comments.
 * Ensuring the accuracy and clarity of technical descriptions.
-* Identifying and upgrading deprecated libraries within the walkthrough CodeInstitute projects.
 
 [*Back to top*](#)
 
 ## Documentation version
 
-Last updated: Feb 3, 2025
+Last updated: Feb 4, 2025
 
 [*Back to top*](#)

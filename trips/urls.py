@@ -14,7 +14,6 @@ urlpatterns = [
     ),
     path(  # Detail view of a shared trip
         'trips/<int:pk>/',
-        # 'profiles/<int:profile_id>/trips/<int:pk>/',
         views.TripDetail.as_view(),
         name='trip-detail'
     ),

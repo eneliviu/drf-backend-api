@@ -2,8 +2,6 @@ from rest_framework import generics, permissions
 from api.permissions import IsOwnerOrReadOnly
 from likes.models import Like
 from likes.serializers import LikeSerializer
-from django.shortcuts import get_object_or_404
-from trips.models import Image
 
 
 # Create your views here.
@@ -27,7 +25,7 @@ class LikeList(generics.ListCreateAPIView):
     queryset = Like.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user) 
+        serializer.save(owner=self.request.user)
 
 
 class LikeDetail(generics.RetrieveDestroyAPIView):

@@ -1,16 +1,15 @@
 from django.db.models import Count
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from rest_framework import generics, filters
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenViewBase
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsOwnerOrReadOnly
 from .models import Profile
 from .serializers import ProfileSerializer
-
-from rest_framework_simplejwt.views import TokenViewBase
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import status
-from rest_framework.response import Response
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
 
 
 class ProfileList(generics.ListAPIView):
@@ -32,6 +31,7 @@ class ProfileList(generics.ListAPIView):
                                     the queryset.
     """
     serializer_class = ProfileSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
     queryset = Profile.objects.annotate(
         trips_count=Count('owner__trips', distinct=True),
