@@ -164,7 +164,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost',
     "http://localhost:3000",
-    'https://react-frontend-api-b166a083b609.herokuapp.com/signup',
+    'https://react-frontend-api-b166a083b609.herokuapp.com',
     'https://drf-backend-api-70211104c0c7.herokuapp.com'
 ]
 
