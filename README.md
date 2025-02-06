@@ -205,10 +205,11 @@ The following table provides an overview of the available API endpoints for the 
 | `/api-auth/logout/` | POST | Logout a user and invalidate the JWT token | IsAuthenticated |
 | `/api-auth/token/refresh/` | POST | Refresh the JWT token | IsAuthenticated |
 `/profiles/` | GET | Retrieve the list of user profiles | IsAuthenticatedOrReadOnly |
-| `/profiles/<id>/` | GET | Retrieve a specific user profile | IsAuthenticated (IsOwner for updating own profile) |
+| `/profiles/<id>/` | GET | Retrieve a specific user profile | IsOwnerOrReadOnly (IsOwner for updating own profile) |
 | `/profiles/<id>/` | PUT/PATCH | Update a specific user profile | IsOwnerOrReadOnly (IsOwner) |
 | `/profiles/<id>/` | DELETE | Delete a specific user profile | IsOwnerOrReadOnly (IsOwner) |
-| `/trips/` | GET | List all shared trips | IsAuthenticatedOrReadOnly |
+  `/public/` | GET | List all shared trips | IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly |
+| `/trips/` | GET  | List all trips | IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly |
 | `/trips/` | POST | Create a new trip | IsOwnerOrReadOnly |
 | `/trips/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
 | `/trips/<id>/` | PUT/PATCH | Update a specific trip | IsOwnerOrReadOnly (IsOwner) |
@@ -218,13 +219,13 @@ The following table provides an overview of the available API endpoints for the 
 | `/trips/<trip_id>/images/<image_id>` | GET | Retrieve a specific image for a specific trip | IsAuthenticatedOrReadOnly |
 | `/trips/<trip_id>/images/<image_id>` | PUT/PATCH | Update a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
 | `/trips/<trip_id>/images/<image_id>` | DELETE | Delete a specific image for a specific trip | IsAuthenticated (IsOwner of the image) |
-| `/images/` | GET | Retrieve all shared images | IsAuthenticatedOrReadOnly |
+| `/images/` | GET | Retrieve all shared images | IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly |
 | `/images/<id>/` | GET | Retrieve a specific image | IsAuthenticatedOrReadOnly |
-| `/followers/` | GET | List all followers or follow a new user | IsOwnerOrReadOnly |
+| `/followers/` | GET | List all followers or follow a new user | IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly |
 | `/followers/<id>/` | GET | Retrieve a specific user | IsAuthenticatedOrReadOnly |
 | `/followers/<id>/` | DELETE | Unfollow a specific user | IsOwnerOrReadOnly |
 | `/likes/` | GET | List all likes or like a new trip | IsOwnerOrReadOnly |
-| `/likes/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
+| `/likes/<id>/` | GET | Retrieve a specific trip | IsOwnerOrReadOnly |
 | `/likes/<id>/` | DELETE | Unlike a specific trip | IsOwnerOrReadOnly |
 
 [*Back to top*](#)
@@ -332,15 +333,15 @@ The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `followers`    | `models.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `followers`    | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `likes` | `models.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `likes`        | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 |                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
----
+|
 
 
 ## Unit testing
