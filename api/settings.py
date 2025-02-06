@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from datetime import timedelta
 # import re
-# import dj_database_url
+import dj_database_url
 
 
 if os.path.exists('env.py'):
@@ -188,12 +188,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
+else:
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    DATABASES = {
+    "default": dj_database_url.config(default=DATABASE_URL)
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # DATABASE_URL = os.environ.get('DATABASE_URL')
 # DATABASES = {
