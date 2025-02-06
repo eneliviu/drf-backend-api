@@ -10,7 +10,7 @@ if os.path.exists('env.py'):
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
@@ -91,7 +91,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1:8000',
     '127.0.0.1:3000',
     'localhost',
-    # 'drf-backend-api-70211104c0c7.herokuapp.com'
     'dj-api-backend-8cf355e96add.herokuapp.com'
 ]
 
@@ -154,7 +153,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     'https://react-dj-restapi-eb6a7149ec97.herokuapp.com',
     'https://react-frontend-api-b166a083b609.herokuapp.com',
-    # 'https://drf-backend-api-70211104c0c7.herokuapp.com'
     'https://dj-api-backend-8cf355e96add.herokuapp.com'
 ]
 
@@ -167,7 +165,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
     "http://localhost:3000",
     'https://react-frontend-api-b166a083b609.herokuapp.com/signup',
-    'https://drf-backend-api-70211104c0c7.herokuapp.com/'
+    'https://drf-backend-api-70211104c0c7.herokuapp.com'
 ]
 
 ROOT_URLCONF = 'api.urls'
