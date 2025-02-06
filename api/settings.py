@@ -91,7 +91,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1:8000',
     '127.0.0.1:3000',
     'localhost',
-    'dj-api-backend-8cf355e96add.herokuapp.com'
+    'drf-backend-api-70211104c0c7.herokuapp.com'
 ]
 
 INSTALLED_APPS = [
@@ -153,7 +153,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     'https://react-dj-restapi-eb6a7149ec97.herokuapp.com',
     'https://react-frontend-api-b166a083b609.herokuapp.com',
-    'https://dj-api-backend-8cf355e96add.herokuapp.com'
+    'https://drf-backend-api-70211104c0c7.herokuapp.com'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -166,7 +166,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     'https://react-frontend-api-b166a083b609.herokuapp.com',
     'https://drf-backend-api-70211104c0c7.herokuapp.com'
-]
+    ]
 
 ROOT_URLCONF = 'api.urls'
 
