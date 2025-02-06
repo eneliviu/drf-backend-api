@@ -224,7 +224,7 @@ class TripList(generics.ListCreateAPIView):
     """
 
     serializer_class = TripSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         """
