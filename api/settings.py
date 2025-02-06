@@ -91,7 +91,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1:8000',
     '127.0.0.1:3000',
     'localhost',
-    'drf-backend-api-70211104c0c7.herokuapp.com'
+    # 'drf-backend-api-70211104c0c7.herokuapp.com'
+    'dj-api-backend-8cf355e96add.herokuapp.com/'
 ]
 
 INSTALLED_APPS = [
@@ -198,7 +199,7 @@ if DEBUG:
 else:
     DATABASE_URL = os.environ.get('DATABASE_URL')
     DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL)
+        "default": dj_database_url.config(default=DATABASE_URL)
 }
 
 # DATABASES = {
