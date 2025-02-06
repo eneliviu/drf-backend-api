@@ -7,7 +7,7 @@
 - [Application Development](#application-development)
 - [Main Features](#main-features)
 - [Project Structure](#project-structure)
-- [API Endponts](#api-endpoints)
+- [API Endpoints](#api-endpoints)
 - [Technologies Used](#technologies-used)
 - [Accessibility and Design](#accessibility-and-design)
 - [Usage and Screenshots](#usage-and-screenshots)
@@ -25,7 +25,7 @@
 ![alt text](image.png)
 
 ### **Project Description**
-LovinEscapades-API is a powerful API developed using Django and Django REST Framework, crafted to facilitate user interaction and content management with a strong focus on social connectivity and media sharing. 
+LovinEscapades-API is a powerful API developed using Django and Django REST Framework, crafted to facilitate user interaction and content management with a strong focus on social connectivity and media sharing.
 
 The API encompasses four interconnected modules: Profile, Trips, Likes, and Followers, each offering targeted functionality. It allows full CRUD operations for trips and images, empowering users to efficiently manage their travel experiences. Built with adherence to RESTful principles, the API is well-documented to ensure ease of adoption for developers. Looking forward, the integration of a React frontend is planned to deliver an enhanced user experience, along with the potential use of mapping libraries for improved trip visualization.
 
@@ -75,7 +75,7 @@ All critical user stories identified as "must-have" were successfully implemente
 ![Main menu](static/docs/Kanban_detail.webp#center)
 *<center><font color="red">LovinEscapades</font>: Custom template for User Stories*.</center><br>
 
-This project builds upon the "LovinEscapades" project from Milestone Project 4 at Code Institute. It provides an opportunity to apply API development concepts and enhance my understanding of backend development principles. During development, I focused on code quality and maintainability, adhering to the DRY principle and utilizing frequent Git commits for effective version control.
+This project builds upon the "LovinEscapades" project from Milestone Project 4 at CodeInstitute. It provides an opportunity to apply API development concepts and enhance my understanding of backend development principles. During development, I focused on code quality and maintainability, adhering to the DRY principle and utilizing frequent Git commits for effective version control.
 
 
 [*Back to top*](#)
@@ -227,9 +227,11 @@ The following table provides an overview of the available API endpoints for the 
 | `/likes/<id>/` | GET | Retrieve a specific trip | IsAuthenticatedOrReadOnly |
 | `/likes/<id>/` | DELETE | Unlike a specific trip | IsOwnerOrReadOnly |
 
+[*Back to top*](#)
+
+### API documentation
 
 A comprehensive overview of the API endpoints, including detailed documentation, is available through [Swagger-UI](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/swagger-ui/), [Redoc](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/redoc/) or directly in [yaml](https://drf-backend-api-70211104c0c7.herokuapp.com/schema/) format.
-
 
 <p align="center"><img src="images_doc/SwaggerUI.png" alt="Swagger schema"></p>
 <p align="center"><img src="images_doc/Redoc.png" alt="Redoc schema"></p>
@@ -466,6 +468,7 @@ This project uses Cloudinary for image storage, which allows for efficient and s
 To configure Cloudinary,  obtain your cloud name, API key, and API secret. Cloudinary credentials were accessed via
 the `CLOUDINARY_URL` environmental variable. Additionally, the project uses CodeInstitute's PostgreSQL database,
 accessed via the `DATABASE_URL` environment variable.
+Server instructions for Heroku deployment are included in the [`Procfile`](Procfile) file.
 
 ### React Client
 A React client has been configured to consume the API endpoints provided by the LovinEscapades-API.
@@ -474,12 +477,6 @@ The React client handles the frontend functionalities, providing users with an i
 to interact with the trip tracking tool.
 
 [*Back to top*](#)
-
-## API documentation
-
-
-[*Back to top*](#)
-
 
 ## Contributing
 
