@@ -345,16 +345,8 @@ The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
 
 
 ## Unit testing
-The project includes a comprehensive test suite for the Trip and Image API endpoints.
-The tests are located in the `trips/tests.py` file and cover the following views:
-- **TripListView**: Tests for listing trips, including handling shared and non-shared trips.
-- **TripDetailView**: Tests for retrieving a specific trip using valid and invalid IDs.
-- **ImageListView**: Tests for listing images associated with trips, including handling shared and non-shared images.
-- **ImageDetailView**: Tests for retrieving a specific image associated with a trip using valid and invalid IDs.
-- **ImageModel**:  Test suite for the Image model, including creating and updating images with valid and invalid data.
-- **ImageModelValidation**:  Test suite for validating the Image model's save method to ensure that it correctly validates new and updated images, particularly focusing on the validation of the image file extension.
-
-The test suite includes setup methods to initialize test data and individual test methods to verify the functionality of the respective endpoints.
+The project includes a comprehensive test suite that covers the majority of the API endpoints.
+Automated testing was performed in the local development environment, with the following test classes and methods specifically tested:
 
 ### Test Classes
 1. **TripListViewTests**:
@@ -362,7 +354,7 @@ The test suite includes setup methods to initialize test data and individual tes
     * Tests include:
         * Listing trips that are shared.
         * Handling trips that are not shared.
-2. **PostDetailViewTests**:
+2. **TripDetailViewTests**:
     * Verifies the functionality of retrieving a trip through the `TripDetailView` endpoint.
     * Tests include:
         * Retrieving a trip using a valid ID.
@@ -393,6 +385,8 @@ The test suite includes setup methods to initialize test data and individual tes
 7. **LikeViewTests**:
     * Verifies that the API can retrieve a list of likes.
     * Verifies that an authenticated user can create a new like for an image.
+8. **ProfilePageAccessTests**:
+    * Verifies if an authenticated user can access their profile page.
 
 
 ### Running Tests
@@ -418,7 +412,7 @@ The tests cover various scenarios to ensure the correctness and robustness of th
 | Class   | `TripListViewTests`                          | Test suite for the TripListView. Checks listing of trips including shared and non-shared.          | -            |
 | Method  | `test_can_list_trips`                        | Verifies that trips can be listed through the TripListView endpoint.                  | Status code: 200 OK       |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_can_handle_list_trips_not_shared`      | Verifies handling of trips that are not shared.                                       | Status code: 200 OK       |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `PostDetailViewTests`                        | Test suite for the TripDetailView. Tests retrieving trips using valid and invalid IDs.| -                         |
+| Class   | `TripDetailViewTests`                        | Test suite for the TripDetailView. Tests retrieving trips using valid and invalid IDs.| -                         |
 | Method  | `test_can_retrieve_post_using_valid_id`      | Ensures a trip can be retrieved by a valid ID.                                        | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_can_retrieve_post_using_invalid_id`    | Ensures appropriate handling of requests with an invalid trip ID.                     | Status code: 404 Not Found |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Class   | `TripImageListViewTests`                     | Test suite for the ImageListView. Checks listing of images including shared and non-shared. | -                    |
@@ -439,6 +433,10 @@ The tests cover various scenarios to ensure the correctness and robustness of th
 | Class   | `LikeViewTests` |  Verifies the listing and creating likes for images. | -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_can_list_likes`|Verifies that the API can retrieve a list of likes. | Status code: 200 OK |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
 | Method  | `test_can_create_like`| Verifies that an authenticated user can create a new like for an image. | Status code: 201 Created |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Class   | `ProfilePageAccessTests` |  Verifies if an authenticated user can access their profile page. | -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| Method  | `test_can_access_profile_page`|Verifies if an authenticated user can access their profile page. | Status code: 200 OK |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+
+
 
 ## Manual Testing
 The manual testing section aims to validate the functionality, security, and integration of the backend API beyond automated tests.
