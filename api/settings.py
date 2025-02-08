@@ -10,7 +10,7 @@ if os.path.exists('env.py'):
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False
+DEBUG = True
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
@@ -189,18 +189,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'api.wsgi.application'
 
 # if DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# else:
-    
-DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+# else:
+# DATABASE_URL = os.environ.get('DATABASE_URL')
+# DATABASES = {
+#     "default": dj_database_url.config(default=DATABASE_URL)
+# }
 
 # DATABASES = {
 #     'default': {
