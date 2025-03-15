@@ -58,10 +58,19 @@ def validate_image(image):
     ]
     file_extension = None
 
-    if isinstance(image, CloudinaryResource):
-        file_extension = os.path.splitext(image.public_id)[1].lower()
-    else:
-        file_extension = os.path.splitext(image)[1].lower()
+    try:
+        if isinstance(image, CloudinaryResource):
+            file_extension = os.path.splitext(image.public_id)[1].lower()
+        elif hasattr(image, 'name'):
+            # Handle UploadedFile objects
+            file_extension = os.path.splitext(image.name)[1].lower()
+        else:
+            # Last resort - treat as string
+            file_extension = os.path.splitext(str(image))[1].lower()
 
-    if file_extension not in valid_extensions:
-        raise ValidationError("Unsupported file extension.")
+        if file_extension not in valid_extensions:
+            raise ValidationError("Unsupported file extension.")
+    except Exception as e:
+        raise ValidationError(f"Error validating image: {str(e)}")
+
+    # return image

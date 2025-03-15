@@ -2,6 +2,7 @@ from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
+from rest_framework.test import APITransactionTestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import Trip, Image
@@ -114,7 +115,7 @@ class TripDetailViewTests(APITestCase):
             username='admin',
             password='pass'
         )
-        Trip.objects.create(
+        self.trip = Trip.objects.create(
             title='New York',
             owner=self.admin,
             place='New York',
@@ -128,12 +129,12 @@ class TripDetailViewTests(APITestCase):
 
     def test_can_retrieve_post_using_valid_id(self):
         self.client.login(username='admin', password='pass')
-        response = self.client.get('/trips/1/')  # retrieve post
+        response = self.client.get(f'/trips/{self.trip.id}/')  # retrieve post
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_can_retrieve_post_using_invalid_id(self):
         self.client.login(username='admin', password='pass')
-        response = self.client.get('/trips/999/')  # retrieve post
+        response = self.client.get('/trips/99999/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
@@ -160,14 +161,11 @@ class TripImageListViewTests(TestCase):
         Image.objects.create(
             owner=admin,
             trip=trip,
-            image='image.jpg',  # Ensure this is a valid image path or URL
+            image='image.jpg',
             image_title='image title'
         )
-
-        response = self.client.get('/trips/1/images/')
+        response = self.client.get(f'/trips/{trip.id}/images/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        print(response.data)
-        print(len(response.data))
 
     def test_can_handle_list_trip_images_not_shared(self):
         admin = User.objects.get(username='admin')
@@ -185,11 +183,11 @@ class TripImageListViewTests(TestCase):
         Image.objects.create(
             owner=admin,
             trip=trip,
-            image='image.jpg',  # Ensure this is a valid image path or URL
+            image='image.jpg',
             image_title='image title'
         )
 
-        response = self.client.get('/trips/1/images/')
+        response = self.client.get(f'/trips/{trip.id}/images/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         print(response.data)
         print(len(response.data))
@@ -211,7 +209,7 @@ class TripImageDetailViewTests(APITestCase):
             username='admin',
             password='pass'
         )
-        Trip.objects.create(
+        self.trip = Trip.objects.create(
             title='New York',
             owner=self.admin,
             place='New York',
@@ -222,20 +220,28 @@ class TripImageDetailViewTests(APITestCase):
             trip_status='Planned',
             shared=True
         )
-        trip = Trip.objects.first()
-        Image.objects.create(
+        self.image = Image.objects.create(
             owner=self.admin,
-            trip=trip,
+            trip=self.trip,
             image='image.jpg',
             image_title='image title'
         )
+
+    def tearDown(self):
+        '''
+        Clean up the database after each test.
+        '''
+        Trip.objects.all().delete()
+        Image.objects.all().delete()
 
     def test_can_retrieve_trip_image_using_valid_id(self):
         '''
         Test to verify that the ImageDetailView can retrieve an image.
         '''
         self.client.login(username='admin', password='pass')
-        response = self.client.get('/trips/1/images/1/')  # retrieve image
+        response = self.client.get(
+            f'/trips/{self.trip.id}/images/{self.image.id}/'
+            )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_can_retrieve_trip_image_using_invalid_id(self):
@@ -243,7 +249,9 @@ class TripImageDetailViewTests(APITestCase):
         Test to verify that the ImageDetailView can handle an invalid image id.
         '''
         self.client.login(username='admin', password='pass')
-        response = self.client.get('/trips/1/images/999/')  # retrieve image
+        response = self.client.get(
+            f'/trips/{self.trip.id}/images/99999/'
+            )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
@@ -309,7 +317,7 @@ class ImageModelTests(TestCase):
                 image='image.pdf',
                 description='An invalid image description.'
             )
-            image.full_clean()  # Trigger validation
+            image.full_clean()
 
     def test_update_image_with_valid_image(self):
         """
@@ -427,7 +435,7 @@ class ImageModelValidationTests(TransactionTestCase):
                 image='https://example.com/invalid.pdf',
                 description='An invalid image description.'
             )
-            image.save()  # Should raise ValidationError
+            image.save()
 
     def test_save_method_validates_updated_image(self):
         """

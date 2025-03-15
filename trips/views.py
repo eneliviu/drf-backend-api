@@ -6,8 +6,11 @@ from django_filters import (
     FilterSet, DateFilter, CharFilter, MultipleChoiceFilter,
     BooleanFilter,
 )
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework import generics, filters
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import status
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer
@@ -468,16 +471,33 @@ class ImageList(generics.ListCreateAPIView):
 
         return queryset.distinct().order_by('-uploaded_at')
 
+    # def perform_create(self, serializer):
+    #     trip = get_object_or_404(
+    #         Trip,
+    #         id=self.kwargs['trip_id'],
+    #         owner=self.request.user
+    #     )
+    #     serializer.save(
+    #         trip=trip,
+    #         owner=self.request.user
+    #     )
+
     def perform_create(self, serializer):
-        trip = get_object_or_404(
-            Trip,
-            id=self.kwargs['trip_id'],
-            owner=self.request.user
-        )
-        serializer.save(
-            trip=trip,
-            owner=self.request.user
-        )
+        trip = get_object_or_404(Trip, id=self.kwargs['trip_id'])
+        if trip.owner != self.request.user:
+            raise PermissionDenied(
+                "You do not have permission to upload images for this trip."
+                )
+        serializer.save(trip=trip, owner=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response(
+                e.detail,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

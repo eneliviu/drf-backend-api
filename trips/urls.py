@@ -32,7 +32,7 @@ urlpatterns = [
         views.ImageListGallery.as_view(),
         name='image-gallery'
     ),
-    path( # Detaile view of a shared image
+    path(  # Detaile view of a shared image
         'gallery/<int:pk>/',
         views.ImageListGalleryDetail.as_view(),
         name='detail-gallery'

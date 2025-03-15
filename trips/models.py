@@ -145,7 +145,6 @@ class Trip(models.Model):
 
 
 class Image(models.Model):
-
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE
@@ -164,8 +163,8 @@ class Image(models.Model):
 
     image = CloudinaryField(
         'image',
-        default='https://res.cloudinary.com/dchoskzxj/image/upload/'
-                'v1721990160/yg9qwd4v15r23bxwv5u4.jpg',
+        default='https://res.cloudinary.com/dchoskzxj/'
+                'image/upload/v1721990160/yg9qwd4v15r23bxwv5u4.jpg',
         blank=True,
         null=True,
         validators=[validate_image]
