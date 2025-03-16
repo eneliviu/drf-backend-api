@@ -1,8 +1,9 @@
-import os
+# import os
 from rest_framework import serializers
 from django.db.models import Count
-from .models import Trip, Image
 from django.core.exceptions import ValidationError as DjangoValidationError
+from .utils import validate_image as validate_image_file
+from .models import Trip, Image
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -37,27 +38,50 @@ class ImageSerializer(serializers.ModelSerializer):
     owner_name = serializers.ReadOnlyField(source='owner.username')
 
     def get_likes_count(self, obj):
+        '''
+        Validate the like counts
+        '''
         return getattr(obj, 'likes_count', 0)
 
     def validate_image(self, value):
-        # value is the uploaded image
-        if value.size > 1024 * 1024 * 2:  # 2MB size limit
-            raise serializers.ValidationError(
-                'Image size larger than 2MB!'
-            )
-        if value.image.width > 4096:  # max 4096 px width
-            raise serializers.ValidationError(
-                'Image width larger than 4096px!'
-            )
-        if value.image.height > 4096:
-            raise serializers.ValidationError(
-                'Image height larger than 4096px!'
-            )
+        """
+        Validate the image field.
+        """
+        if value:
+            try:
+                return validate_image_file(value)
+            except Exception as e:
+                raise serializers.ValidationError(e)
+        return value
 
-        file_extension = os.path.splitext(value.name)[1].lower()
-        if file_extension not in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
-            raise serializers.ValidationError("Unsupported file extension.")
+    def validate_image_title(self, value):
+        """
+        Validate the image_title field.
+        """
+        if len(value) < 2:
+            raise serializers.ValidationError(
+                "Image title must be at least 2 characters."
+            )
+        return value
 
+    def validate_description(self, value):
+        """
+        Validate the description field.
+        """
+        if len(value) < 2:
+            raise serializers.ValidationError(
+                "Description must be at least 2 characters."
+            )
+        return value
+
+    def validate_shared(self, value):
+        """
+        Validate the shared field.
+        """
+        if not isinstance(value, bool):
+            raise serializers.ValidationError(
+                "Shared must be a boolean value."
+            )
         return value
 
     class Meta:
@@ -115,14 +139,16 @@ class TripSerializer(serializers.ModelSerializer):
         Returns:
             A list of serialized image data.
         """
+
         request = self.context.get('request')
-        if (request.user.is_authenticated
-                and (obj.owner == request.user or obj.shared)):
+        if request.user.is_authenticated and obj.owner == request.user:
             images = obj.images.all().annotate(
-                    likes_count=Count('likes')).order_by('-uploaded_at')
+                likes_count=Count('likes')
+            ).order_by('-uploaded_at')
         else:
             images = obj.images.filter(shared=True).annotate(
-                   likes_count=Count('likes')).order_by('-uploaded_at')
+                likes_count=Count('likes')
+            ).order_by('-uploaded_at')
 
         return ImageSerializer(images, many=True, context=self.context).data
 

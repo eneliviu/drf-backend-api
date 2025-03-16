@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Subquery, OuterRef, Sum, Q
-from django.db.models.functions import Coalesce
+from django.db.models import Count, Q  # Subquery, OuterRef, Sum
+# from django.db.models.functions import Coalesce
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import (
     FilterSet, DateFilter, CharFilter, MultipleChoiceFilter,
@@ -205,7 +205,6 @@ class ImageFilter(UserFilteredMixin, FilterSet):
         ]
 
 
-# OK
 class TripList(generics.ListCreateAPIView):
     """
     API view to retrieve list of trips or create a new trip.
@@ -285,7 +284,6 @@ class TripList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-# FIx here: more than one row returned by a subquery used as an expression
 class TripListPublic(generics.ListCreateAPIView):
     """
     API view to retrieve list of trips or create a new trip.
@@ -309,38 +307,6 @@ class TripListPublic(generics.ListCreateAPIView):
 
     serializer_class = TripSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    # def get_queryset(self):
-    #     """
-    #     Returns a queryset of Trip objects with additional annotations
-    #     and filters. The queryset is annotated with:
-    #     - images_count: The count of associated images, distinct by trip.
-    #     - total_likes_count: The total count of likes for all images
-    #         associated with the trip.
-    #     The queryset is ordered by the creation date of the trips
-    #         in descending order.
-    #     If the user is authenticated, the queryset includes trips that are
-    #         either shared or owned by the user.
-    #     If the user is not authenticated, the queryset includes only
-    #         shared trips.
-    #     Returns:
-    #         QuerySet: A queryset of Trip objects with the applied annotations
-    #             and filters.
-    #     """
-    #     image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
-    #         likes_count=Count('likes')
-    #     ).values('likes_count')
-    #     queryset = Trip.objects.annotate(
-    #         images_count=Count('images', distinct=True),
-    #         total_likes_count=Coalesce(Sum(Subquery(image_likes_count)), 0)
-    #     )
-    #     user = self.request.user
-    #     if user.is_authenticated:
-    #         queryset = queryset.filter(Q(shared=True) | Q(owner=user))
-    #     else:
-    #         queryset = queryset.filter(shared=True)
-
-    #     return queryset.order_by('-created_at')
 
     def get_queryset(self):
         """
@@ -469,31 +435,32 @@ class ImageList(generics.ListCreateAPIView):
         if user.is_authenticated:
             queryset = Image.objects.filter(
                  Q(trip=trip) & (Q(shared=True) | Q(trip__owner=user))
-            ).annotate(likes_count=Count('likes'))
+            ).annotate(
+                likes_count=Count('likes')
+            )
         else:
             queryset = Image.objects.filter(
-                trip=trip, shared=True).annotate(likes_count=Count('likes'))
+                trip=trip,
+                shared=True
+            ).annotate(
+                likes_count=Count('likes')
+            )
 
         return queryset.distinct().order_by('-uploaded_at')
 
-    # def perform_create(self, serializer):
-    #     trip = get_object_or_404(
-    #         Trip,
-    #         id=self.kwargs['trip_id'],
-    #         owner=self.request.user
-    #     )
-    #     serializer.save(
-    #         trip=trip,
-    #         owner=self.request.user
-    #     )
-
     def perform_create(self, serializer):
-        trip = get_object_or_404(Trip, id=self.kwargs['trip_id'])
+        trip = get_object_or_404(
+            Trip,
+            id=self.kwargs['trip_id']
+        )
         if trip.owner != self.request.user:
             raise PermissionDenied(
                 "You do not have permission to upload images for this trip."
                 )
-        serializer.save(trip=trip, owner=self.request.user)
+        serializer.save(
+            trip=trip,
+            owner=self.request.user
+        )
 
     def create(self, request, *args, **kwargs):
         try:
@@ -573,8 +540,7 @@ class ImageListGallery(generics.ListCreateAPIView):
         'uploaded_at',
         'trip__trip_category',
         'trip__trip_status',
-        'trip__shared',
-        # 'like_id'
+        'trip__shared'
     ]
 
     filter_backends = [

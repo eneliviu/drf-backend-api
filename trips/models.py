@@ -176,9 +176,11 @@ class Image(models.Model):
             MinLengthValidator(2),
             MaxLengthValidator(500)
             ]
-        )
+    )
 
-    shared = models.BooleanField(default=True)
+    shared = models.BooleanField(
+        default=True
+    )
 
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -197,21 +199,14 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
         """
         Overrides the save method to include image validation.
-        If the instance already exists (has a primary key), it validates
-            the new image only if it has changed.
-        If the instance is new (does not have a primary key),
-            it validates the image.
         Args:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
-        Raises:
-            ValidationError: If the image does not pass validation.
         """
-
-        if self.pk:
-            old_image = Image.objects.get(pk=self.pk).image
-            if old_image != self.image:
-                validate_image(self.image)
-        else:
-            validate_image(self.image)
+        # if self.pk:
+        #     old_image = Image.objects.get(pk=self.pk).image
+        #     if old_image != self.image:
+        #         validate_image(self.image)
+        # else:
+        #     validate_image(self.image)
         super().save(*args, **kwargs)
