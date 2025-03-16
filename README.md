@@ -516,3 +516,29 @@ Generative AI tools, including the OpenAI GPT-4o model, were utilized to support
 Last updated: Feb 4, 2025
 
 [*Back to top*](#)
+
+
+# Promting
+I have an applications that calls a backend Django DRF API from a React client. The application allows registered and authenticated users to post info about their trip, such as location, dates, and images. A trip can have multiple images associated with itself, and a user can post multiple trips.
+Authenticated users (other than the image owner) can like the posted images.
+The image likes are counted by trip, as well as cummulated for all trips owned by a user. The overall likes count (that is, the total number of likes for all images and all trips) is posted on the owner's profile page.
+
+I noticed error in counting the likes. I think there are multiple or double counts, such that the number of likes is much higher than the real number of likes. 
+The API endoint listing the likes displays the correct information, but the displayed information is wrong. I suspect there might be an error in the way the likes are aggregated by some views. 
+I am planning to debug the application using yor support.
+
+Now I will provide you the models, serializers and views related to the count filtering and counting.
+I will start with the following files, but I can provide you more if necessary
+
+# likes/models.py
+# likes/serializers.py
+# likes/views.py
+
+# trips/models.py
+# trips/views.py
+# trips/serializers.py
+
+
+
+
+

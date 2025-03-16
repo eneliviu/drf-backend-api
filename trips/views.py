@@ -205,6 +205,7 @@ class ImageFilter(UserFilteredMixin, FilterSet):
         ]
 
 
+# OK
 class TripList(generics.ListCreateAPIView):
     """
     API view to retrieve list of trips or create a new trip.
@@ -230,57 +231,31 @@ class TripList(generics.ListCreateAPIView):
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        """
-        Returns a queryset of Trip objects with additional annotations
-        and filters. The queryset is annotated with:
-        - images_count: The count of associated images, distinct by trip.
-        - total_likes_count: The total count of likes for all images
-            associated with the trip.
-        The queryset is ordered by the creation date of the trips
-            in descending order.
-        If the user is authenticated, the queryset includes trips that are
-            either shared or owned by the user.
-        If the user is not authenticated, the queryset includes only
-            shared trips.
-        Returns:
-            QuerySet: A queryset of Trip objects with the applied annotations
-                and filters.
-        """
-        image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
-            likes_count=Count('likes')
-        ).values('likes_count')
-
+        '''
+        Returns a queryset of Trip objects with additional annotations and filters.
+        The queryset is annotated with:
+            - images_count: The count of associated images, distinct by trip.
+            - total_likes_count: The total count of likes for all images
+                associated with the trip, ensuring each like is counted only once.
+        The queryset is ordered by the creation date of the trips in descending order.
+        If the user is authenticated, the queryset includes trips that are shared.
+        If the user is not authenticated, the queryset includes only shared trips.
+        '''
         user = self.request.user
-
-        queryset = Trip.objects.annotate(
-            images_count=Count('images', distinct=True),
-            total_likes_count=Coalesce(Sum(Subquery(image_likes_count)), 0)
-        ).order_by('-created_at')
-
         if user.is_authenticated:
-            queryset = queryset.filter(Q(shared=True) | Q(owner=user))
+            queryset = Trip.objects.filter(
+                Q(shared=True) | Q(owner=user)
+            ).annotate(
+                images_count=Count('images', distinct=True),
+                total_likes_count=Count('images__likes', distinct=True),
+            ).order_by('-created_at')
         else:
-            queryset = queryset.filter(shared=True)
+            queryset = Trip.objects.filter(shared=True).annotate(
+                images_count=Count('images', distinct=True),
+                total_likes_count=Count('images__likes', distinct=True),
+            ).order_by('-created_at')
 
         return queryset
-
-    # def get_queryset_test(self):
-    #     '''
-    #     This method is used for testing purposes only.
-    #     '''
-    #     user = self.request.user
-    #     if user.is_authenticated:
-    #         return Trip.objects.filter(
-    #              Q(shared=True)  # | Q(owner=user)
-    #             ).annotate(
-    #             images_count=Count('images', distinct=True),
-    #             total_likes_count=Sum('images__likes', distinct=True),
-    #         ).order_by('-created_at')
-
-    #     return Trip.objects.filter(shared=True).annotate(
-    #             images_count=Count('images', distinct=True),
-    #             total_likes_count=Sum('images__likes', distinct=True),
-    #     ).order_by('-created_at')
 
     filter_backends = [
         filters.OrderingFilter,
@@ -310,6 +285,7 @@ class TripList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
+# FIx here: more than one row returned by a subquery used as an expression
 class TripListPublic(generics.ListCreateAPIView):
     """
     API view to retrieve list of trips or create a new trip.
@@ -334,13 +310,45 @@ class TripListPublic(generics.ListCreateAPIView):
     serializer_class = TripSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    # def get_queryset(self):
+    #     """
+    #     Returns a queryset of Trip objects with additional annotations
+    #     and filters. The queryset is annotated with:
+    #     - images_count: The count of associated images, distinct by trip.
+    #     - total_likes_count: The total count of likes for all images
+    #         associated with the trip.
+    #     The queryset is ordered by the creation date of the trips
+    #         in descending order.
+    #     If the user is authenticated, the queryset includes trips that are
+    #         either shared or owned by the user.
+    #     If the user is not authenticated, the queryset includes only
+    #         shared trips.
+    #     Returns:
+    #         QuerySet: A queryset of Trip objects with the applied annotations
+    #             and filters.
+    #     """
+    #     image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
+    #         likes_count=Count('likes')
+    #     ).values('likes_count')
+    #     queryset = Trip.objects.annotate(
+    #         images_count=Count('images', distinct=True),
+    #         total_likes_count=Coalesce(Sum(Subquery(image_likes_count)), 0)
+    #     )
+    #     user = self.request.user
+    #     if user.is_authenticated:
+    #         queryset = queryset.filter(Q(shared=True) | Q(owner=user))
+    #     else:
+    #         queryset = queryset.filter(shared=True)
+
+    #     return queryset.order_by('-created_at')
+
     def get_queryset(self):
         """
         Returns a queryset of Trip objects with additional annotations
         and filters. The queryset is annotated with:
-        - images_count: The count of associated images, distinct by trip.
-        - total_likes_count: The total count of likes for all images
-            associated with the trip.
+            - images_count: The count of associated images, distinct by trip.
+            - total_likes_count: The total count of likes for all images
+                associated with the trip.
         The queryset is ordered by the creation date of the trips
             in descending order.
         If the user is authenticated, the queryset includes trips that are
@@ -351,14 +359,11 @@ class TripListPublic(generics.ListCreateAPIView):
             QuerySet: A queryset of Trip objects with the applied annotations
                 and filters.
         """
-        image_likes_count = Image.objects.filter(trip=OuterRef('pk')).annotate(
-            likes_count=Count('likes')
-        ).values('likes_count')
-        user = self.request.user
         queryset = Trip.objects.annotate(
             images_count=Count('images', distinct=True),
-            total_likes_count=Coalesce(Sum(Subquery(image_likes_count)), 0)
+            total_likes_count=Count('images__likes', distinct=True)
         )
+        user = self.request.user
         if user.is_authenticated:
             queryset = queryset.filter(Q(shared=True) | Q(owner=user))
         else:
