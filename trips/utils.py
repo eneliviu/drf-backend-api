@@ -1,12 +1,8 @@
 import os
-import logging
 from django.core.exceptions import ValidationError
 from geopy import geocoders
 from geopy.exc import GeocoderTimedOut
 from cloudinary import CloudinaryResource
-
-
-logger = logging.getLogger(__name__)
 
 
 def get_coordinates(location, attempt=1, max_attempts=5):
@@ -28,15 +24,17 @@ def get_coordinates(location, attempt=1, max_attempts=5):
     '''
     geocoder = geocoders.Nominatim(user_agent='trip')
     try:
-        get_location = geocoder.geocode(location, exactly_one=True,
-                                        language='en')
+        get_location = geocoder.geocode(
+            location,
+            exactly_one=True,
+            language='en'
+        )
 
         if get_location:
             return get_location.latitude, get_location.longitude
-        raise ValueError("Could not geocode the location")
+        return 'location-error'
     except GeocoderTimedOut:
         if attempt < max_attempts:
-            print(f"Attempt {attempt} failed; retrying...")
             return get_coordinates(location,
                                    attempt=attempt+1,
                                    max_attempts=max_attempts)
@@ -70,8 +68,6 @@ def validate_image(image):
         else:
             file_extension = os.path.splitext(str(image))[1].lower()
 
-        logger.debug(f"Extracted file extension: {file_extension}")
-
         if file_extension not in valid_extensions:
             raise ValidationError("Unsupported file extension.")
 
@@ -86,7 +82,6 @@ def validate_image(image):
         if image.image.width > 4096 or image.image.height > 4096:
             raise ValidationError("Image dimensions larger than 4096px!")
     except Exception as e:
-        logger.error(f"Error validating image properties: {str(e)}")  # Debug logging
         raise ValidationError(
             f"Error validating image properties: {str(e)}"
             ) from e

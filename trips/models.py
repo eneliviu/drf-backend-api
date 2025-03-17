@@ -105,13 +105,17 @@ class Trip(models.Model):
             ValidationError: If the geocoding of the `place` attribute fails.
         """
         self.is_cleaned = True
-        coords = get_coordinates(self.place)
+        # coords = get_coordinates(self.place)
+        coords = get_coordinates(f"{self.place}, {self.country}")
 
         if coords == 'location-error':
-            raise ValidationError("Error: could not geocode the location")
-        else:
-            self.lat = coords[0]
-            self.lon = coords[1]
+            raise ValidationError(
+                "Error: could not geocode the location.\
+                Please check the destination inputs"
+            )
+
+        self.lat = coords[0]
+        self.lon = coords[1]
 
         if self.start_date > self.end_date:
             raise ValidationError("Start date must be before end date.")

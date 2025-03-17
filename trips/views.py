@@ -1,16 +1,15 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Q  # Subquery, OuterRef, Sum
-# from django.db.models.functions import Coalesce
+from django.db.models import Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import (
     FilterSet, DateFilter, CharFilter, MultipleChoiceFilter,
     BooleanFilter,
 )
+from rest_framework import status
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework import generics, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import status
 from api.permissions import IsOwnerOrReadOnly
 from .models import Trip, Image
 from .serializers import TripSerializer, ImageSerializer

@@ -199,8 +199,11 @@ class TripSerializer(serializers.ModelSerializer):
             instance = Trip(**data)
             instance.clean()
         except DjangoValidationError as e:
-            raise serializers.ValidationError(e)
-
+            raise serializers.ValidationError(
+                {
+                    'non_field_errors': [str(e)]
+                }
+            )
         return data
 
     class Meta:

@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from api.permissions import IsOwnerOrReadOnly
 from likes.models import Like
 from likes.serializers import LikeSerializer
@@ -20,7 +21,7 @@ class LikeList(generics.ListCreateAPIView):
             Sets the user creating the like as its owner.
     """
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
 
