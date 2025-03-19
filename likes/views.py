@@ -21,7 +21,7 @@ class LikeList(generics.ListCreateAPIView):
             Sets the user creating the like as its owner.
     """
 
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
 

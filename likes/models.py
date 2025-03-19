@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from trips.models import Image
 
 
-# Create your models here.
 class Like(models.Model):
     """
     Represents a 'Like' given by a user to an image.

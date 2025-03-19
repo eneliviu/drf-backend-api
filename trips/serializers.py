@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.core.exceptions import ValidationError as DjangoValidationError
 from .utils import validate_image as validate_image_file
 from .models import Trip, Image
+from likes.serializers import LikeSerializer
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -36,6 +37,7 @@ class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     likes_count = serializers.SerializerMethodField(read_only=True)
     owner_name = serializers.ReadOnlyField(source='owner.username')
+    likes = LikeSerializer(many=True, read_only=True)
 
     def get_likes_count(self, obj):
         '''
