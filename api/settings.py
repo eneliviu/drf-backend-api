@@ -17,7 +17,7 @@ CLOUDINARY_STORAGE = {
 }
 
 # MEDIA_URL = '/media/'
-# MEDIA_URL = os.environ.get('MEDIA_URL')
+MEDIA_URL = os.environ.get('MEDIA_URL')
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
