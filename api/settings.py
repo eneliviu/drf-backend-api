@@ -9,14 +9,13 @@ if os.path.exists('env.py'):
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': CLOUDINARY_URL
 }
 
-# MEDIA_URL = '/media/'
 MEDIA_URL = os.environ.get('MEDIA_URL')
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -197,19 +196,13 @@ if DEBUG:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print('SQLITE DB')
-# else:
-#     DATABASE_URL = os.environ.get('DATABASE_URL')
-#     DATABASES = {
-#         "default": dj_database_url.config(default=DATABASE_URL)
-#     }
-#     print('NEON DB')
+else:
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    DATABASES = {
+        "default": dj_database_url.config(default=DATABASE_URL)
+    }
+    print('NEON DB')
 
-
-# DATABASE_URL = os.environ.get('DATABASE_URL')
-# DATABASES = {
-#     "default": dj_database_url.config(default=DATABASE_URL)
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
