@@ -158,7 +158,7 @@ class ImageFilter(UserFilteredMixin, FilterSet):
     )
 
     followed_users = BooleanFilter(
-        method='filter_followed_users',  # Inherited from the mixin
+        method='filter_followed_users',
         field_name='followed_users'
     )
 
@@ -230,14 +230,15 @@ class TripList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         '''
-        Returns a queryset of Trip objects with additional annotations and filters.
-        The queryset is annotated with:
+        Returns a queryset of Trip objects with additional annotations
+        and filters. The queryset is annotated with:
             - images_count: The count of associated images, distinct by trip.
             - total_likes_count: The total count of likes for all images
-                associated with the trip, ensuring each like is counted only once.
-        The queryset is ordered by the creation date of the trips in descending order.
-        If the user is authenticated, the queryset includes trips that are shared.
-        If the user is not authenticated, the queryset includes only shared trips.
+                associated with the trip, ensuring each like is counted once.
+        The queryset is ordered by the creation date in descending order.
+        If the user is authenticated, the queryset includes all trips.
+        If the user is not authenticated, the queryset includes only the
+        trips are shared.
         '''
         user = self.request.user
         if user.is_authenticated:

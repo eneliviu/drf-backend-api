@@ -52,16 +52,7 @@ class LikeViewTests(TestCase):
             ),
             image_title='image title'
         )
-        # image = Image.objects.create(
-        #     owner=self.user,
-        #     trip=self.trip,
-        #     image_title='Valid Image',
-        #     image=(
-        #         'https://res.cloudinary.com/dchoskzxj/image/upload/'
-        #         'v1721990160/yg9qwd4v15r23bxwv5u4.jpg'
-        #     ),
-        #     description='A valid image description.'
-        # )
+
         Like.objects.create(
             owner=admin,
             image=Image.objects.first()
@@ -95,20 +86,15 @@ class LikeViewTests(TestCase):
             ),
             image_title='image title'
         )
-        
-        # Authenticate the client
         self.client.force_authenticate(user=admin)
-        
-        # Create the like with the image ID
+
         response = self.client.post(
             '/likes/',
             {
                 'owner': admin.id,
-                'image': image.id  # Use the image ID, not the image object
+                'image': image.id
             }
         )
-        
-        # Check the response status code
         self.assertEqual(
             response.status_code,
             status.HTTP_201_CREATED

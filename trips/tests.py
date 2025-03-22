@@ -2,40 +2,9 @@ from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
-from rest_framework.test import APITransactionTestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import Trip, Image
-
-"""
-Test suite for the Trip and Image API endpoints.
-This module contains test cases for the following views:
-- TripListView: Tests for listing trips, including handling shared and
-    non-shared trips.
-- TripDetailView: Tests for retrieving a specific trip using valid and
-    invalid IDs.
-- ImageListView: Tests for listing images associated with trips,
-    including handling shared and non-shared images.
-- ImageDetailView: Tests for retrieving a specific image associated with
-    a trip using valid and invalid IDs.
-- Image model: Tests for the Image model, including creating and updating
-    images with valid and invalid data.
-- Image model validation: Tests for validating the Image model's save method
-    to ensure that it correctly validates new and updated images, particularly
-    focusing on the validation of the image file extension.
-
-Classes:
-    TripListViewTests(TestCase): Test suite for the TripListView.
-    PostDetailViewTests(APITestCase): Test suite for the TripDetailView.
-    TripImageListViewTests(TestCase): Test suite for the ImageListView.
-    TripImageDetailViewTests(APITestCase): Test suite for the ImageDetailView.
-    ImageModelTests(TestCase): Test suite for the Image model.
-    ImageModelValidationTests(TransactionTestCase): Test case for validating
-        the Image model.
-
-Each test class contains setup methods to initialize test data and individual
-    test methods to verify the functionality of the respective endpoints.
-"""
 
 
 class TripListViewTests(TestCase):
@@ -129,7 +98,7 @@ class TripDetailViewTests(APITestCase):
 
     def test_can_retrieve_post_using_valid_id(self):
         self.client.login(username='admin', password='pass')
-        response = self.client.get(f'/trips/{self.trip.id}/')  # retrieve post
+        response = self.client.get(f'/trips/{self.trip.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_can_retrieve_post_using_invalid_id(self):

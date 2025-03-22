@@ -105,7 +105,6 @@ class Trip(models.Model):
             ValidationError: If the geocoding of the `place` attribute fails.
         """
         self.is_cleaned = True
-        # coords = get_coordinates(self.place)
         coords = get_coordinates(f"{self.place}, {self.country}")
 
         if coords == 'location-error':
@@ -207,10 +206,4 @@ class Image(models.Model):
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-        # if self.pk:
-        #     old_image = Image.objects.get(pk=self.pk).image
-        #     if old_image != self.image:
-        #         validate_image(self.image)
-        # else:
-        #     validate_image(self.image)
         super().save(*args, **kwargs)

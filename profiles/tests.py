@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from trips.models import Trip
 from rest_framework import status
 from rest_framework.test import APITestCase
 

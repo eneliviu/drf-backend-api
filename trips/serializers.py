@@ -1,4 +1,3 @@
-# import os
 from rest_framework import serializers
 from django.db.models import Count
 from django.core.exceptions import ValidationError as DjangoValidationError
