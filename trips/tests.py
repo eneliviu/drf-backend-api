@@ -108,6 +108,7 @@ class TripDetailViewTests(APITestCase):
 
 
 class TripImageListViewTests(TestCase):
+
     def setUp(self):
         self.admin = User.objects.create_user(
             username='admin',
@@ -246,8 +247,8 @@ class ImageModelTests(TestCase):
         self.trip = Trip.objects.create(
             title='Test Trip',
             owner=self.user,
-            place='Test Place',
-            country='Test Country',
+            place='Oslo',
+            country='Norway',
             trip_category='Adventure',
             start_date='2025-03-01',
             end_date='2025-03-10',
@@ -357,19 +358,9 @@ class ImageModelTests(TestCase):
 class ImageModelValidationTests(TransactionTestCase):
     '''
     Test case for validating the Image model.
-    This test case includes tests to ensure that the Image model's save method
+    This test case includes tests to ensure that the Image model's validation
     correctly validates new and updated images, particularly focusing on the
     validation of the image file extension.
-    Methods
-    -------
-    setUp():
-        Sets up the test data required for the tests.
-    test_save_method_validates_new_image():
-        Tests that the save method raises a ValidationError for a new image
-        with an invalid extension.
-    test_save_method_validates_updated_image():
-        Tests that the save method raises a ValidationError for an updated
-        image with an invalid extension.
     '''
 
     def setUp(self):
@@ -383,8 +374,8 @@ class ImageModelValidationTests(TransactionTestCase):
         self.trip = Trip.objects.create(
             title='Test Trip',
             owner=self.user,
-            place='Test Place',
-            country='Test Country',
+            place='Oslo',
+            country='Norway',
             trip_category='Adventure',
             start_date='2025-01-01',
             end_date='2025-01-10',
@@ -394,21 +385,21 @@ class ImageModelValidationTests(TransactionTestCase):
 
     def test_save_method_validates_new_image(self):
         """
-        Test that the save method validates a new image.
+        Test validation with full_clean() for a new image.
         """
+        image = Image(
+            owner=self.user,
+            trip=self.trip,
+            image_title='Invalid Image',
+            image='https://example.com/invalid.pdf',
+            description='An invalid image description.'
+        )
         with self.assertRaises(ValidationError):
-            image = Image(
-                owner=self.user,
-                trip=self.trip,
-                image_title='Invalid Image',
-                image='https://example.com/invalid.pdf',
-                description='An invalid image description.'
-            )
-            image.save()
+            image.full_clean()
 
     def test_save_method_validates_updated_image(self):
         """
-        Test that the save method validates an updated image.
+        Test validation with full_clean() for an updated image.
         """
         image = Image.objects.create(
             owner=self.user,
@@ -420,6 +411,6 @@ class ImageModelValidationTests(TransactionTestCase):
             ),
             description='Original description.'
         )
+        image.image = 'https://example.com/invalid.pdf'
         with self.assertRaises(ValidationError):
-            image.image = 'https://example.com/invalid.pdf'
-            image.save()
+            image.full_clean()

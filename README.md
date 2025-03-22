@@ -324,23 +324,23 @@ The database models in more detail are presented below:
 The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
 | App            | File         | CI Linter Result           |  Status |
 | --- | --- | --- | --- |
-| `trips`        | `models.py`  |All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `utils.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `profiles`     | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `followers`    | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| `likes`        | `models.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `serializers.py`  | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `urls.py`    | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-|                | `views.py`   | All clear, no errors found | ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| `trips`        | `models.py`  |All clear, no errors found |  ✅ Pass|
+|                | `serializers.py`  | All clear, no errors found |  ✅ Pass|
+|                | `utils.py`   | All clear, no errors found |  ✅ Pass|
+|                | `urls.py`    | All clear, no errors found |  ✅ Pass|
+|                | `views.py`   | All clear, no errors found |  ✅ Pass|
+| `profiles`     | `models.py`  | All clear, no errors found |  ✅ Pass|
+|                | `serializers.py`  | All clear, no errors found |  ✅ Pass|
+|                | `urls.py`    | All clear, no errors found |  ✅ Pass|
+|                | `views.py`   | All clear, no errors found |  ✅ Pass|
+| `followers`    | `models.py`  | All clear, no errors found |  ✅ Pass|
+|                | `serializers.py`  | All clear, no errors found |  ✅ Pass|
+|                | `urls.py`    | All clear, no errors found |  ✅ Pass|
+|                | `views.py`   | All clear, no errors found |  ✅ Pass|
+| `likes`        | `models.py`  | All clear, no errors found |  ✅ Pass|
+|                | `serializers.py`  | All clear, no errors found |  ✅ Pass|
+|                | `urls.py`    | All clear, no errors found |  ✅ Pass|
+|                | `views.py`   | All clear, no errors found |  ✅ Pass|
 |
 
 
@@ -405,37 +405,68 @@ python manage.py test trips.tests.TripListViewTests
 This command will execute the test suite and display the results in the terminal.
 
 The tests cover various scenarios to ensure the correctness and robustness of the API endpoints.
+
 <p align="center"><strong>Table: Overview of Test Classes and Methods for the Trip and Image API Endpoints</strong></p>
 
-| Type    | Name                                         | Description                                                                                                    | Expected Status |Result                     |
-|---------|----------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------|--------------------------|
-| Class   | `TripListViewTests`                          | Test suite for the TripListView. Checks listing of trips including shared and non-shared.          | -            |
-| Method  | `test_can_list_trips`                        | Verifies that trips can be listed through the TripListView endpoint.                  | Status code: 200 OK       |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_handle_list_trips_not_shared`      | Verifies handling of trips that are not shared.                                       | Status code: 200 OK       |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `TripDetailViewTests`                        | Test suite for the TripDetailView. Tests retrieving trips using valid and invalid IDs.| -                         |
-| Method  | `test_can_retrieve_post_using_valid_id`      | Ensures a trip can be retrieved by a valid ID.                                        | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_retrieve_post_using_invalid_id`    | Ensures appropriate handling of requests with an invalid trip ID.                     | Status code: 404 Not Found |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `TripImageListViewTests`                     | Test suite for the ImageListView. Checks listing of images including shared and non-shared. | -                    |
-| Method  | `test_can_list_trip_images`                  | Verifies that images can be listed through the ImageListView endpoint.                | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_handle_list_trip_images_not_shared`| Verifies handling of images that are not shared.                                      | Status code: 200 OK        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `TripImageDetailViewTests`                   | Test suite for the ImageDetailView. Tests retrieving images using valid and invalid IDs.| -                        |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_retrieve_trip_image_using_valid_id`| Ensures an image can be retrieved by a valid ID.                                        | Status code: 200 OK      |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_retrieve_trip_image_using_invalid_id`| Ensures appropriate handling of requests with an invalid image ID.   | Status code: 404 Not Found |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `ImageModelTests` | Test suite for the Image model. Tests creating and updating images with valid and invalid data.| -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_create_image_with_valid_data`|Verifies that an Image instance can be created with valid data. | - |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_create_image_with_invalid_image_extension`|Verifies that an Image instance cannot be created with an invalid image file extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_update_image_with_valid_image`|Verifies that an Image instance cannot be created with an invalid image file extension. | - |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_update_image_with_invalid_image_extension`|Verifies that an Image instance cannot be updated with an invalid image file extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_image_str_method`|Verifies the `__str__` method of the Image model. | - |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `ImageModelValidationTests`  | Test suite for the Image model. Tests creating and updating images with valid and invalid data.| -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_save_method_validates_new_image`|Verifies that the save method raises a ValidationError for a new image with an invalid extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_save_method_validates_updated_image`|Verifies that the save method raises a ValidationError for an updated image with an invalid extension. | Raises ValidationError |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `LikeViewTests` |  Verifies the listing and creating likes for images. | -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_list_likes`|Verifies that the API can retrieve a list of likes. | Status code: 200 OK |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_create_like`| Verifies that an authenticated user can create a new like for an image. | Status code: 201 Created |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Class   | `ProfilePageAccessTests` |  Verifies if an authenticated user can access their profile page. | -  |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| Method  | `test_can_access_profile_page`|Verifies if an authenticated user can access their profile page. | Status code: 200 OK |![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+### App: `trips`
+#### Class: `TripListViewTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_can_list_trips`                     | Verifies that trips can be listed through the TripListView endpoint.        | Status code: 200 OK   | ✅ Pass  |
+| `test_can_handle_list_trips_not_shared`   | Verifies handling of trips that are not shared.                             | Status code: 200 OK   | ✅ Pass  |
 
+
+#### Class: `TripDetailViewTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_can_retrieve_post_using_valid_id`    | Ensures a trip can be retrieved by a valid ID.                              | Status code: 200 OK   | ✅ Pass  |
+| `test_can_retrieve_post_using_invalid_id`  | Ensures appropriate handling of requests with an invalid trip ID.           | Status code: 404 Not Found | ✅ Pass  |
+
+#### Class: `TripImageListViewTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_can_list_trip_images`               | Verifies that images can be listed through the ImageListView endpoint.      | Status code: 200 OK   | ✅ Pass  |
+| `test_can_handle_list_trip_images_not_shared` | Verifies handling of images that are not shared.                         | Status code: 200 OK   | ✅ Pass  |
+
+#### Class: `TripImageDetailViewTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_can_retrieve_trip_image_using_valid_id` | Ensures an image can be retrieved by a valid ID.                         | Status code: 200 OK   | ✅ Pass  |
+| `test_can_retrieve_trip_image_using_invalid_id` | Ensures appropriate handling of requests with an invalid image ID.    | Status code: 404 Not Found | ✅ Pass  |
+
+#### Class: `ImageModelTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_create_image_with_valid_data`       | Verifies that an Image instance can be created with valid data.             | -                     | ✅ Pass  |
+| `test_create_image_with_invalid_image_extension` | Verifies that an Image instance cannot be created with an invalid image file extension. | Raises ValidationError | ✅ Pass  |
+| `test_update_image_with_valid_image`      | Verifies that an Image instance can be updated with a valid image.          | -                     | ✅ Pass  |
+| `test_update_image_with_invalid_image_extension` | Verifies that an Image instance cannot be updated with an invalid image file extension. | Raises ValidationError | ✅ Pass  |
+| `test_image_str_method`                   | Verifies the `__str__` method of the Image model.                           | -                     | ✅ Pass  |
+
+#### Class: `ImageModelValidationTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_save_method_validates_new_image`    | Verifies that the save method raises a ValidationError for a new image with an invalid extension. | Raises ValidationError | ✅ Pass  |
+| `test_save_method_validates_updated_image` | Verifies that the save method raises a ValidationError for an updated image with an invalid extension. | Raises ValidationError | ✅ Pass  |
+
+---
+
+### App: `likes`
+#### Class: `LikeViewTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_can_list_likes`                     | Verifies that the API can retrieve a list of likes.                         | Status code: 200 OK   | ✅ Pass  |
+| `test_can_create_like`                    | Verifies that an authenticated user can create a new like for an image.     | Status code: 201 Created | ✅ Pass  |
+
+---
+
+### App: `profiles`
+#### Class: `ProfilePageAccessTests`
+| Method Name                                | Description                                                                 | Expected Status       | Result   |
+|-------------------------------------------|-----------------------------------------------------------------------------|-----------------------|----------|
+| `test_can_access_profile_page`            | Verifies if an authenticated user can access their profile page.            | Status code: 200 OK   | ✅ Pass  |
+
+---
 
 
 ## Manual Testing
@@ -513,6 +544,6 @@ Generative AI tools, including the OpenAI GPT-4o model, were utilized to support
 
 ## Documentation version
 
-Last updated: Feb 4, 2025
+Last updated: March 22, 2025
 
 [*Back to top*](#)

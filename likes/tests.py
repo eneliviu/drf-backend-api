@@ -20,8 +20,8 @@ class LikeViewTests(TestCase):
         self.trip = Trip.objects.create(
             title='Test Trip',
             owner=self.user,
-            place='Test Place',
-            country='Test Country',
+            place='New York',
+            country='USA',
             trip_category='Adventure',
             start_date='2025-03-01',
             end_date='2025-03-10',
