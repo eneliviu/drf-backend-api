@@ -24,13 +24,13 @@ Content-Type: application/json
 GET http://127.0.0.1:8000/profiles/ HTTP/1.1
 
 ###
-GET http://127.0.0.1:8000/profiles/1/ HTTP/1.1
+GET http://127.0.0.1:8000/profiles/3/ HTTP/1.1
 
 ###
 GET http://127.0.0.1:8000/trips/
 
 ###
-GET http://127.0.0.1:8000/trips/1/
+GET http://127.0.0.1:8000/trips/11/
 
 ###
-GET http://127.0.0.1:8000/trips/1/images/
+GET http://127.0.0.1:8000/trips/11/images/

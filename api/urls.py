@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
-    # TokenObtainPairView,
     TokenRefreshView
 )
 from drf_spectacular.views import (
@@ -9,10 +8,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView
 )
-from .views import root_route
-
-# from profiles.views import CustomAuthToken
 from profiles.views import ExtendedTokenObtainPairView
+from .views import root_route
 
 urlpatterns = [
     path('', root_route),
