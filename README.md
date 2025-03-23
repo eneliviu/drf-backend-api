@@ -535,15 +535,14 @@ The code is accessible on GitHub, allowing developers to view, fork, and contrib
 * [`BugBytes` Youtube channel](https://www.youtube.com/watch?v=qzrE7cfc_3Q) for using Django Graphs and practical examples of using django extensions
 
 ### Use of GenAI
-Generative AI tools, including the OpenAI GPT-4o model, were utilized to support various tasks such as:
-* Debugging and upgrading deprecated libraries in the walkthrough CodeInstitute projects.
-* Creating initial drafts for documentation and writing code comments.
-* Ensuring the accuracy and clarity of technical descriptions.
+Generative AI tools (OpenAI GPT-4o model) was utilized for drafting the Readme file documentation and providing grammar and style editing.
+All AI generated content was reviewed and verified by the project author.
+
 
 [*Back to top*](#)
 
 ## Documentation version
 
-Last updated: March 22, 2025
+Last updated: March 23, 2025
 
 [*Back to top*](#)
