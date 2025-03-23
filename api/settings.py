@@ -59,7 +59,7 @@ REST_USE_JWT = True
 SIMPLE_JWT = {
     'ALGORITHM': 'HS256',
     'AUTH_COOKIE': 'jwt-auth',
-    'AUTH_COOKIE_SECURE': not DEBUG,  # local dev False, True for production
+    'AUTH_COOKIE_SECURE': not DEBUG,
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_PATH': '/',
     'AUTH_COOKIE_SAMESITE': 'Lax',
@@ -68,24 +68,22 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': True,  # Update last_login field on token issue
+    'UPDATE_LAST_LOGIN': True,
 }
 
 SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
+SESSION_COOKIE_SECURE = not DEBUG
 
 CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = False  # Must be False for frontend access
+CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = not DEBUG  # False for local dev, True for production
-
+CSRF_COOKIE_SECURE = not DEBUG
 REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'api.serializers.CurrentUserSerializer'
 }
 
 LOGIN_REDIRECT_URL = '/'
 
-# To use the API with React app: ALLOWED_HOST and CLIENT_ORIGIN_DEV in heroku
 ALLOWED_HOSTS = [
     '127.0.0.1',
     '127.0.0.1:8000',
@@ -201,7 +199,6 @@ else:
     DATABASES = {
         "default": dj_database_url.config(default=DATABASE_URL)
     }
-    print('NEON DB')
 
 
 AUTH_PASSWORD_VALIDATORS = [
