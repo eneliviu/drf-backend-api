@@ -22,7 +22,6 @@
 - [Documentation version](#documentation-version)
 
 ## Overview
-![alt text](image.png)
 
 ### **Project Description**
 LovinEscapades-API is a powerful API developed using Django and Django REST Framework, crafted to facilitate user interaction and content management with a strong focus on social connectivity and media sharing.
