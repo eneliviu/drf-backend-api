@@ -68,11 +68,15 @@ So that I can access protected resources and perform authorized actions.
 
 All critical user stories identified as "must-have" were successfully implemented within the project timeline.
 
-![Main menu](static/docs/Kanban.webp#center)
-*<center><font color="red">LovinEscapades</font>: Github Kanban baord with project User stories*.</center><br>
 
-![Main menu](static/docs/Kanban_detail.webp#center)
+<p align="center"><img src="images_doc/Kanban_board.png" alt="Kanban board"></p>
+![alt text](image.png)
+*<center><font color="red">LovinEscapades</font>: Github Kanban board with project User Stories*.</center><br>
+
+
+<p align="center"><img src="images_doc/Kanban_detail_user_story.png" alt="Kanban board"></p>
 *<center><font color="red">LovinEscapades</font>: Custom template for User Stories*.</center><br>
+
 
 This project builds upon the "LovinEscapades" project from Milestone Project 4 at CodeInstitute. It provides an opportunity to apply API development concepts and enhance my understanding of backend development principles. During development, I focused on code quality and maintainability, adhering to the DRY principle and utilizing frequent Git commits for effective version control.
 
@@ -108,7 +112,7 @@ This project builds upon the "LovinEscapades" project from Milestone Project 4 a
 More details about the API are provided in the [Usage and Screenshots](#usage-and-screenshots) section.
 
 ### Admin Panel
-The Django admin panel is available at `/admin` and is used for managing the database and application data. Access is restricted to superusers.
+The Django admin panel is available at `/admin` and is used for managing the database and application data.
 
 
 [*Back to top*](#)
@@ -339,7 +343,7 @@ The [Pep8 CI](https://pep8ci.herokuapp.com/) Python Linter returned no errors:
 | `likes`        | `models.py`  | All clear, no errors found |  ✅ Pass|
 |                | `serializers.py`  | All clear, no errors found |  ✅ Pass|
 |                | `urls.py`    | All clear, no errors found |  ✅ Pass|
-|                | `views.py`   | All clear, no errors found |  ✅ Pass|
+|                | `views.py`   | All clear, no errors found |  ✅ Pass |
 |
 
 
@@ -474,11 +478,11 @@ This testing strategy ensures that the API operates correctly under various cond
 
 | **Test Type**    | **Description and Steps**    | **Expected Result**  |  **Status** |
 |------------------|------------------------------|----------------------|----------------------|
-| **Functional Testing**               | 1. **List Trips:** Send a GET request to `/trips/`. Verify the response contains a correct list of trips. <br/>2. **Create Trip:** Send a POST request with valid trip data to `/trips/`. Verify that the trip is added correctly. | Successful responses with correct data format and content. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|                                                             |
-| **Authentication and Authorization Testing** | 1. Attempt to access a protected endpoint `/profiles/` without logging in. <br/> 2. Log in with valid credentials and try again. Verify access is granted. | Unauthorized returns 401/403 for unauthorized users. Authorized users can access and perform actions according to their roles. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| **Edge Case Testing (Large Images)** | Attempt to upload an >2MB image file <br/>  | System should handle the file gracefully by rejecting with a validation error. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| **Data Integrity Testing** | 1. Retrieve trip details using a GET request to `/trips/{id}/`. <br/> 2. Update the trip using a PATCH request with modified data. <br/> 3. Retrieve the updated trip to confirm changes are saved. | Data is consistently updated across requests, and changes persist correctly after updates. |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
-| **Third-Party Service Testing (Cloudinary)** | 1. Upload an image using the API. <br/> 2. Verify image is stored in Cloudinary and the response contains the correct URL. <br/> 3. Delete the image using the API and check it's removed from Cloudinary. | Image is correctly uploaded and referenced in Cloudinary, and deletions are reflected both locally and in Cloudinary.    |  ![pass](https://via.placeholder.com/10/00FF00?text=+) `pass`|
+| **Functional Testing**               | 1. **List Trips:** Send a GET request to `/trips/`. Verify the response contains a correct list of trips. <br/>2. **Create Trip:** Send a POST request with valid trip data to `/trips/`. Verify that the trip is added correctly. | Successful responses with correct data format and content. |   ✅ Pass|                                                             |
+| **Authentication and Authorization Testing** | 1. Attempt to access a protected endpoint `/profiles/` without logging in. <br/> 2. Log in with valid credentials and try again. Verify access is granted. | Unauthorized returns 401/403 for unauthorized users. Authorized users can access and perform actions according to their roles. |  ✅ Pass|
+| **Edge Case Testing (Large Images)** | Attempt to upload an >2MB image file <br/>  | System should handle the file gracefully by rejecting with a validation error. |  ✅ Pass|
+| **Data Integrity Testing** | 1. Retrieve trip details using a GET request to `/trips/{id}/`. <br/> 2. Update the trip using a PATCH request with modified data. <br/> 3. Retrieve the updated trip to confirm changes are saved. | Data is consistently updated across requests, and changes persist correctly after updates. |  ✅ Pass |
+| **Third-Party Service Testing (Cloudinary)** | 1. Upload an image using the API. <br/> 2. Verify image is stored in Cloudinary and the response contains the correct URL. <br/> 3. Delete the image using the API and check it's removed from Cloudinary. | Image is correctly uploaded and referenced in Cloudinary, and deletions are reflected both locally and in Cloudinary.    |   ✅ Pass |
 
 **Functional Testing**, as well as **Authentication and Authorization Testing**, were conducted locally using the [REST Client](https://tinyurl.com/mvz3w88e) extension for Visual Studio Code in depoyment mode (`DEBUG=False` in `settings.py`). For test examples, see the [`api.http`](api.http) file.
 
